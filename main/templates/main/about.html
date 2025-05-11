@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+	<link href="{% static 'deps/css/footer.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+	<div class="col-lg-8 mx-auto">
+		<div class="bg-light border shadow-sm rounded p-5 mb-5 mt-4">
+			<h2 class="fw-bold text-success mb-4 text-center">About ScheduleManager</h2>
+			<p class="text-dark mb-3">
+				ScheduleManager is a smart task management platform powered by cutting-edge artificial intelligence.
+				Plan, track, and analyze your daily tasks effortlessly. Our AI engine learns from your habits to
+				provide personalized insights, optimize your schedule, and keep you motivated.
+			</p>
+			<p class="text-dark mb-3">
+				With Task AI Tracker you get:
+			</p>
+			<ul class="list-unstyled mb-4">
+				<li class="mb-2">
+					<i class="bi bi-gear-fill text-success me-2"></i>
+					AI-driven task prioritization
+				</li>
+				<li class="mb-2">
+					<i class="bi bi-bar-chart-line-fill text-success me-2"></i>
+					Real-time performance dashboards
+				</li>
+				<li class="mb-2">
+					<i class="bi bi-cloud-arrow-up-fill text-success me-2"></i>
+					Secure cloud synchronization
+				</li>
+			</ul>
+			<h5 class="text-success mb-3">Contact Us</h5>
+			<address class="text-dark mb-1">
+				<strong>Email:</strong> <a href="mailto:support@taskaitracker.com" class="text-success">support@taskaitracker.com</a><br>
+				<strong>Twitter:</strong> <a href="https://twitter.com/TaskAITracker" class="text-success">@TaskAITracker</a><br>
+				<strong>Telegram:</strong> <a href="https://t.me/TaskAITracker" class="text-success">@TaskAITracker</a>
+			</address>
+		</div>
+	</div>
+{% endblock %}
+
+{% block footer %}
+	<footer class="mt-5 bg-success bg-gradient text-white py-4">
+		<div class="container text-center">
+			<p class="mb-0">ScheduleManager © 2025</p>
+			<p class="mb-0">Created by <span class="fw-bold text-light">An1cer</span></p>
+			<small>All rights reserved.</small>
+		</div>
+	</footer>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{ title }}</title>
+	<link href="{% static 'deps/css/bootstrap.css' %}" rel="stylesheet">
+	<link href="{% static 'deps/css/main.css' %}" rel="stylesheet">
+	{% block css %}
+		
+	{% endblock %}
+
+</head>
+<body>
+<header>
+	<nav class="navbar navbar-expand-lg bg-body-tertiary">
+		<div class="container">
+
+			<a class="navbar-brand text-success" href="#">
+				<img src="{% static 'deps/icons/logo.png' %}" alt="Logo" width="30" height="24"
+				     class="d-inline-block align-text-top">
+				ScheduleManager
+			</a>
+		</div>
+	</nav>
+
+</header>
+<section>
+
+	<div class="container">
+		<div class="row mt-1 justify-content-center">
+			{% block content %}
+				
+			{% endblock %}
+		</div>
+
+
+	</div>
+</section>
+
+{% block footer %}
+	
+{% endblock %}
+
+<script src="{% static 'deps/js/bootstrap.bundle.js' %}"></script>
+</body>
+</html>
