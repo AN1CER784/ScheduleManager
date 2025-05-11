@@ -9,8 +9,13 @@
 	<link href="{% static 'deps/css/bootstrap.css' %}" rel="stylesheet">
 	<link href="{% static 'deps/css/main.css' %}" rel="stylesheet">
 	{% block css %}
-		
+
 	{% endblock %}
+	<link rel="icon" type="image/png" href="{% static 'deps/favicons/favicon-96x96.png' %}" sizes="96x96"/>
+	<link rel="icon" type="image/svg+xml" href="{% static 'deps/favicons/favicon.svg' %}"/>
+	<link rel="shortcut icon" href="{% static 'deps/favicons/favicon.ico' %}"/>
+	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'deps/favicons/apple-touch-icon.png' %}"/>
+	<link rel="manifest" href="{% static 'deps/favicons/site.webmanifest' %}"/>
 
 </head>
 <body>
@@ -32,7 +37,7 @@
 	<div class="container">
 		<div class="row mt-1 justify-content-center">
 			{% block content %}
-				
+
 			{% endblock %}
 		</div>
 
@@ -41,7 +46,7 @@
 </section>
 
 {% block footer %}
-	
+
 {% endblock %}
 
 <script src="{% static 'deps/js/bootstrap.bundle.js' %}"></script>
