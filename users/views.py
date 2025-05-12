@@ -2,7 +2,8 @@ from django.contrib import auth, messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
+
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView
 
 from users.forms import LoginForm, ProfileForm, SignupForm
@@ -25,6 +26,9 @@ class UserLoginView(LoginView):
             return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
+        redirect_page = self.request.GET.get('next')
+        if redirect_page != reverse('users:logout') and redirect_page:
+            return redirect_page
         return reverse_lazy('users:profile')
 
 
@@ -45,6 +49,9 @@ class UserSignupView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
+        redirect_page = self.request.GET.get('next')
+        if redirect_page != reverse('users:logout') and redirect_page:
+            return redirect_page
         return reverse_lazy('users:profile')
 
 
