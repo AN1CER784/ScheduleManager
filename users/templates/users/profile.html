@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="col-12 col-md-6 col-lg-8 order-1 order-md-2 mb-4 ">
+		<div class="fs-3 fw-bold text-center text-success mb-3 shadow-sm p-3 bg-light rounded">
+			Profile
+		</div>
+		<div class="container bg-light rounded p-3">
+			<form method="post" action="{% url 'users:profile' %}" class="row justify-content-center gx-5 gy-4 py-4"  enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="col-md-7 mx-auto text-center">
+					<img src="
+							{% if user.image %}{{ user.image.url }}{% else %}{% static 'deps/images/baseavatar.jpg' %}{% endif %}"
+					     alt="User avatar" class="img-fluid rounded-circle"
+					     style="max-width: 150px;">
+					<input type="file" name="image" class="form-control mt-3" id="avatar"
+					       accept="image/*">
+					{% if form.image.errors %}
+						<div class="alert alert-danger alert-dismissible fade show">{{ form.image.errors }}</div>
+					{% endif %}
+				</div>
+				<div class="col-md-7 mx-auto">
+					<label for="id_username" class="form-label">Username</label>
+					<div class="input-group">
+						<span class="input-group-text" id="inputGroupPrepend2">@</span>
+						<input
+								type="text"
+								name="username"
+								class="form-control"
+								id="id_username"
+								value="{{ form.username.value }}"
+								required>
+
+					</div>
+					{% if form.username.errors %}
+						<div class="alert alert-danger alert-dismissible fade show">{{ form.username.errors }}</div>
+					{% endif %}
+				</div>
+				<div class="col-md-7 mx-auto">
+					<label for="id_password1" class="form-label">Password</label>
+					<input
+							type="password"
+							name="password1"
+							id="id_password1"
+							class="form-control"
+					>
+					{% if form.password1.errors %}
+						<div class="alert alert-danger alert-dismissible fade show">{{ form.password1.errors }}</div>
+					{% endif %}
+				</div>
+				<div class="col-md-7 mx-auto">
+					<label for="id_password2" class="form-label">New password</label>
+					<input
+							type="password"
+							name="password2"
+							id="id_password2"
+							class="form-control">
+					{% if form.password2.errors %}
+						<div class="alert alert-danger alert-dismissible fade show">{{ form.password2.errors }}</div>
+					{% endif %}
+				</div>
+				<div class="col-md-7 mx-auto">
+					<label for="id_description" class="form-label">Your main purpose of using our service</label>
+					<input type="text" id="id_description" name="description"
+					       value="{% if form.description.value %}{{ form.description.value }}{% endif %}"
+					       class="form-control">
+					{% if form.description.errors %}
+						<div class="alert alert-danger alert-dismissible fade show">{{ form.description.errors }}</div>
+					{% endif %}
+				</div>
+
+				<div class="col-12 text-center">
+					<button class="btn btn-success px-4 fw-bold" type="submit">
+						Submit
+					</button>
+				</div>
+
+
+			</form>
+		</div>
+	</div>
+
+
+{% endblock %}

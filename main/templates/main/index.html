@@ -7,7 +7,7 @@
 
 {% block content %}
   <div class="col-lg-8 mx-auto">
-    <div class="bg-light border shadow-sm rounded p-5 text-center mt-4">
+    <div class="bg-light border shadow-sm rounded p-5 text-center">
       <h1 class="fw-bold text-success mb-3">Welcome to ScheduleManager</h1>
       <p class="text-secondary mb-4">
         Streamline your workflow and boost productivity with our intelligent task monitoring
@@ -28,7 +28,8 @@
           Custom reports with AI-driven insights
         </li>
       </ul>
-      <a href=# class="btn btn-success btn-lg px-5">
+
+      <a href="{% if not user.is_authenticated %}{% url 'users:login' %}{% else %}{% url 'users:profile' %}{% endif %}" class="btn btn-success btn-lg px-5">
         Let's Go
       </a>
     </div>
