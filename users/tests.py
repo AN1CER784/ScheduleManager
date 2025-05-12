@@ -5,7 +5,7 @@ from django.urls import reverse
 from .models import User
 
 
-class UserViewTestCase(TestCase):
+class UserViewsTestCase(TestCase):
     def test_login(self):
         User.objects.create_user(username='XXXX', password='1111')
         response = self.client.post(reverse('users:login'), {'username': 'XXXX', 'password': '1111'},
