@@ -1,0 +1,76 @@
+{% load task_tags %}
+<div class="accordion-item rounded bg-light shadow-sm" id="task-{{ task.id }}">
+	<h2 class="accordion-header">
+		<button
+				class="accordion-button bg-light"
+				type="button"
+				data-bs-toggle="collapse"
+				data-bs-target="#{{ type }}{{ task.id }}"
+				aria-expanded="true"
+				aria-controls="{{ type }}{{ task.id }}">
+			{{ task.name }}
+		</button>
+	</h2>
+	<div
+			id="{{ type }}{{ task.id }}"
+			class="accordion-collapse collapse"
+			data-bs-parent="{% if type == "pending" %}#accordionPending{% else %}#accordionDone{% endif %}">
+		<div class="accordion-body bg-light">
+
+			{% if task.description %}
+				<strong>Description:</strong> {{ task.description }}<br>
+			{% endif %}
+
+			{% if type == "pending" %}
+				<strong>Due:</strong> {{ task.date }} {{ task.time }}<br>
+
+				<form action="{% url 'schedule:complete_task' %}" method="POST"
+				      class="mt-3 justify-content-start complete-task-form">
+					<div class="form_errors">
+					</div>
+					{% csrf_token %}
+					<div class="mb-3">
+						<input type="hidden" name="task_id" value="{{ task.id }}">
+						<label for="status{{ task.id }}" class="form-label">Task Status</label>
+						<select class="form-select" id="status{{ task.id }}" name="status">
+							<option value="">Select…</option>
+							<option value="True">Completed</option>
+							<option value="False">Could not complete</option>
+						</select>
+						{% if form.status.errors %}
+							<div class="alert alert-danger">{{ form.status.errors }}</div>
+						{% endif %}
+					</div>
+					<div class="mb-3">
+						<label for="comments{{ task.id }}" class="form-label">Comments</label>
+						<textarea class="form-control" id="comments{{ task.id }}" name="status_comment"
+						          rows="2"></textarea>
+						{% if form.status_comment.errors %}
+							<div class="alert alert-danger">{{ form.status_comment.errors }}</div>
+						{% endif %}
+					</div>
+					<button class="btn btn-success" type="submit">Submit</button>
+				</form>
+
+
+
+			{% elif type == "done" %}
+				{% dict_get status_dict task.status as task_status %}
+				<strong>Status:</strong> {{ task_status }}<br>
+				{% if task.status_comment %}
+					<p><em>{{ task.status_comment }}</em></p>
+				{% endif %}
+				<strong>Completed On:</strong> {{ task.completed_on|default:"Unknown" }}<br>
+				<p class="mt-3"><em>No further action required.</em></p>
+			{% endif %}
+							<form action="{% url 'schedule:del_task' %}" method="post"
+				      class="mt-1 justify-content-start delete-task-form">
+					<div class="form_errors">
+					</div>
+					{% csrf_token %}
+					<input type="hidden" name="task_id" value="{{ task.id }}">
+					<button class="btn btn-danger" type="submit">&nbsp;Delete</button>
+				</form>
+		</div>
+	</div>
+</div>

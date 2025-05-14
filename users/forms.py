@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-
 from users.models import User
 
 
@@ -59,3 +58,6 @@ class ProfileForm(UserChangeForm):
                 self.add_error('password2', error=e)
 
         return cleaned_data
+
+
+

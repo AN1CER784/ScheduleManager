@@ -2,10 +2,10 @@ from django.contrib import auth, messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
-
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView
 
+from schedule.models import Task
 from users.forms import LoginForm, ProfileForm, SignupForm
 
 
@@ -81,3 +81,21 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
     def form_invalid(self, form):
         messages.warning(self.request, 'Data update error')
         return super().form_invalid(form)
+
+
+class UserScheduleView(LoginRequiredMixin, ListView):
+    template_name = 'schedule/schedule.html'
+    success_url = reverse_lazy('users:schedule')
+    context_object_name = 'tasks'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Schedule'
+        context['schedule'] = True
+        status_dict = {True: 'Completed', False: 'Could not complete'}
+        context['status_dict'] = status_dict
+        return context
+
+    def get_queryset(self):
+        tasks = Task.objects.filter(user_id=self.request.user.id)
+        return tasks

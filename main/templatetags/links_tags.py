@@ -12,7 +12,7 @@ def navigation_links():
             {'url': reverse_lazy('users:profile'), 'name': 'Profile', 'url_name': '/users/profile/'},
         ],
         'nav_links2': [
-            {'url': '#', 'name': 'Schedule', 'url_name': '/schedule/'},
+            {'url': reverse('users:schedule'), 'name': 'Schedule', 'url_name': '/users/schedule/'},
             {'url': '#', 'name': 'Analysis', 'url_name': '/analysis/'},
         ]
 
