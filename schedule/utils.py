@@ -4,7 +4,7 @@ import fasttext
 
 model = fasttext.load_model("fasttext_models/lid.176.bin")
 COMMON_ENGLISH_WORDS = {
-    'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
+    'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i',
     'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
     'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her',
     'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there',
@@ -27,11 +27,13 @@ def detect_lang_fasttext(text):
 
 
 def is_meaningful(text, allowed_langs=('en', 'ru'), confidence_threshold=0.5):
+    lang, conf = detect_lang_fasttext(text)
+    print(f'Detected: {lang} ({conf:.2f})')
+    if lang in allowed_langs and conf >= confidence_threshold:
+        return True
     tokens = re.findall(r'\b[a-zA-Z]+\b', text.lower())
     word_ratio = sum(1 for t in tokens if t in COMMON_ENGLISH_WORDS) / max(1, len(tokens))
     print(f'Word ratio: {word_ratio:.2f}')
     if word_ratio > 0.5:
         return True
-    lang, conf = detect_lang_fasttext(text)
-    print(f'Detected: {lang} ({conf:.2f})')
-    return lang in allowed_langs and conf >= confidence_threshold
+

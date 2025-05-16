@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load analysis_tags %}
+{% block css %}
+	<link href="{% static 'deps/css/analysis.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+	<div class="col-12 col-md-6 col-lg-8 order-1 order-md-2 mb-4">
+		<div class="fs-3 fw-bold text-center text-success bg-light mb-3 shadow-sm p-3 rounded shadow">
+			Analysis
+		</div>
+
+		<div class="container bg-light text-black rounded p-3 border shadow">
+
+			{% if all_analysis %}
+				{% for analysis in all_analysis %}
+					<div class="analysis-summary">
+						{% subtract_seven_days analysis.created_at as start_week %}
+						<div class="toggle-summary py-2 fw-bolder">Summary for {{ start_week }} - {{ analysis.created_at }}</div>
+						<div class="summary-body justify-content-center"></div>
+						<div class="raw class">
+							{{ analysis.summary }}
+						</div>
+					</div>
+				{% endfor %}
+			{% else %}
+				<div
+						class="p-5 text-center text-secondary fs-3">
+					<p>Add more tasks to see week summary next time <br>(10 tasks at least)</p>
+				</div>
+			{% endif %}
+		</div>
+
+	</div>
+<script src="{% static "deps/js/analysis.js" %}"></script>
+{% endblock %}
+

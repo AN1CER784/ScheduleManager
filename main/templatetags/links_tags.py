@@ -13,7 +13,7 @@ def navigation_links():
         ],
         'nav_links2': [
             {'url': reverse('users:schedule'), 'name': 'Schedule', 'url_name': '/users/schedule/'},
-            {'url': '#', 'name': 'Analysis', 'url_name': '/analysis/'},
+            {'url': reverse('analysis:summary'), 'name': 'Analysis', 'url_name': '/analysis/summary/'},
         ]
 
     }
