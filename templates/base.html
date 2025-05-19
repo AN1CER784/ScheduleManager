@@ -59,7 +59,10 @@
 {% endblock %}
 
 <script src="{% static "deps/js/jquery/jquery-3.7.0.min.js" %}"></script>
-<script src="{% static "deps/js/jquery/jquery-ajax.js" %}"></script>
+{% block js %}
+	
+{% endblock %}
+<script src="{% static "deps/js/jquery/notifications.js" %}"></script>
 <script src="{% static "deps/js/bootstrap/bootstrap.bundle.min.js" %}"></script>
 </body>
 </html>

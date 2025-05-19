@@ -17,6 +17,8 @@ class Command(BaseCommand):
                                                    start_date__range=[
                                                        datetime.datetime.now().date() - datetime.timedelta(days=7),
                                                        datetime.datetime.now().date()])
+            if not tasks:
+                continue
             request = structure_tasks(tasks)
             analysis = generate_analysis(request)
             AnalysisSummary.objects.create(user=user, summary=analysis)

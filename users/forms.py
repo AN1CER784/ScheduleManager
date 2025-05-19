@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+
+from ScheduleManager.utils import is_meaningful
 from users.models import User
 
 
@@ -58,6 +60,17 @@ class ProfileForm(UserChangeForm):
                 self.add_error('password2', error=e)
 
         return cleaned_data
+
+    def clean_description(self):
+        description = self.cleaned_data['description']
+        if not description:
+            return description
+        elif len(description) > 300:
+            raise forms.ValidationError('Description must be no more than 300 characters long')
+        elif not is_meaningful(description):
+            raise forms.ValidationError(
+                'Task description must be in English or Russian; Give more understandable description')
+        return description
 
 
 

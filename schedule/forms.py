@@ -2,7 +2,7 @@ from django import forms
 from django.utils import timezone
 
 from schedule.models import Task, TaskComment
-from .utils import is_meaningful
+from ScheduleManager.utils import is_meaningful
 
 
 class TaskForm(forms.ModelForm):
@@ -61,7 +61,7 @@ class TaskForm(forms.ModelForm):
         description = self.cleaned_data['description']
         if not description:
             return description
-        if len(description) > 300:
+        elif len(description) > 300:
             raise forms.ValidationError('Task description must be no more than 300 characters long')
         elif not is_meaningful(description):
             raise forms.ValidationError(

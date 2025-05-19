@@ -43,31 +43,12 @@ $(document).ready(function () {
         }
     });
 
-
-    var notification = $('#notification');
-    if (notification.length > 0) {
-        setTimeout(function () {
-            notification.alert('close');
-        }, 3000);
-    }
     const pendingTabBtn = document.querySelector('#pending-tab');
     bootstrap.Tab.getOrCreateInstance(pendingTabBtn).show();
     toggleNoTasksPlaceholder();
     toggleNoCompletedTasksPlaceholder();
 
-    function showMessage(message, success = true) {
-        let alertType = success ? 'bg-success text-white ' : 'bg-white text-danger'
-        let html = `<div id="notification" class="position-fixed start-50 translate-middle-x z-3 alert fade show shadow-sm ${alertType} border border-dark" role="alert">
-                  ${message}
-                </div>`;
-        $('#message-container').html(html);
-        setTimeout(function () {
-            $('#message-container').html('');
-        }, 3000);
-    }
 
-
-    // Добавление задачи
     $('#task-add-form').on('submit', function (e) {
         e.preventDefault();
         const form = $(this);
@@ -297,5 +278,15 @@ $(document).ready(function () {
             $accordion.hide();
             $('#no-completed-tasks-placeholder').show();
         }
+    }
+        function showMessage(message, success = true) {
+        let alertType = success ? 'bg-success text-white ' : 'bg-white text-danger'
+        let html = `<div id="notification" class="position-fixed start-50 translate-middle-x z-3 alert fade show shadow-sm ${alertType} border border-dark" role="alert">
+                  ${message}
+                </div>`;
+        $('#message-container').html(html);
+        setTimeout(function () {
+            $('#message-container').html('');
+        }, 3000);
     }
 });

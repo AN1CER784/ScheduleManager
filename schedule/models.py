@@ -10,7 +10,7 @@ class TaskQuerySet(models.QuerySet):
 
 
 class Task(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='tasks')
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     start_date = models.DateField()
