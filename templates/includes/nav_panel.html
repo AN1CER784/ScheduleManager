@@ -1,5 +1,5 @@
 {% if user.is_authenticated and request.path != '/' %}
-	<div class="col-6 col-md-3 col-lg-2 d-flex flex-column {{ alignment }} gap-4 mb-4
+	<div class="col-6 col-md-6 col-lg-2 d-flex flex-column {{ alignment }} gap-4 mb-4
 	               {{ order }}">
 		{% for link in links %}
 			{% if request.path != link.url %}

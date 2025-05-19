@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block css %}
+		<link rel="stylesheet" href="{% static 'deps/css/schedule.css' %}">
+{% endblock %}
 
 {% block content %}
-
-	<div class="col-12 col-md-6 col-lg-8 order-1 order-md-2 mb-4">
-		<div class="fs-3 fw-bold text-center text-success mb-3 shadow-sm p-3 bg-light rounded">
+<div class="fs-3 fw-bold text-center text-success mb-3 shadow-sm p-3 bg-light rounded">
 			Your Tasks
 		</div>
 		<ul class="nav nav-tabs justify-content-center py-1 mb-1 bg-light rounded rounded shadow-sm"
@@ -68,7 +70,4 @@
 
 			</div>
 		</div>
-	</div>
-
-
 {% endblock %}

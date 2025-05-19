@@ -31,9 +31,3 @@ def is_meaningful(text, allowed_langs=('en', 'ru'), confidence_threshold=0.5):
     print(f'Detected: {lang} ({conf:.2f})')
     if lang in allowed_langs and conf >= confidence_threshold:
         return True
-    tokens = re.findall(r'\b[a-zA-Z]+\b', text.lower())
-    word_ratio = sum(1 for t in tokens if t in COMMON_ENGLISH_WORDS) / max(1, len(tokens))
-    print(f'Word ratio: {word_ratio:.2f}')
-    if word_ratio > 0.5:
-        return True
-

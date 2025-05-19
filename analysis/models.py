@@ -8,3 +8,7 @@ class AnalysisSummary(models.Model):
 
     def __str__(self):
         return f"AnalysisSummary {self.id}"
+
+    class Meta:
+        verbose_name = "Analysis Summary"
+        ordering = ['-created_at']

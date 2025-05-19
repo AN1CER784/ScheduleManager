@@ -4,15 +4,12 @@
             const rawBlock = container.querySelector('.raw');
             const rawHTML = rawBlock?.innerHTML?.trim();
 
-            // Аккордеон
             toggle?.addEventListener('click', () => {
                 body.classList.toggle('open');
                 toggle.classList.toggle('open');
             });
 
-            // Парсинг
             if (rawHTML) {
-                // Удаляем внешние теги <p>, если есть
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = rawHTML;
                 const raw = tempDiv.textContent;

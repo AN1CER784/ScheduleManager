@@ -30,7 +30,7 @@
 				ScheduleManager
 			</a>
 			{% if schedule %}
-				{% include 'schedule/includes/included_modal_add_task.html' %}
+				{% include 'schedule/includes/modal_add_task.html' %}
 			{% endif %}
 		</div>
 	</nav>
@@ -42,9 +42,12 @@
 		{% include 'includes/notifications.html' %}
 		<div id="message-container"></div>
 		<div class="row mt-5 justify-content-center">
-			{% include 'includes/nav_panel.html' with links=links.nav_links1 alignment="align-items-start" order="order-2 order-md-1" %}
-			{% block content %}{% endblock %}
-			{% include 'includes/nav_panel.html' with links=links.nav_links2 alignment="align-items-end" order="order-3" %}
+			{% include 'includes/nav_panel.html' with links=links.nav_links1 alignment="align-items-start" order="order-2 order-md-2 order-lg-1" %}
+			<div class="col-12 col-md-12 col-lg-8 order-1 order-md-1 order-lg-2 mb-4">
+				{% block content %}{% endblock %}
+			</div>
+
+			{% include 'includes/nav_panel.html' with links=links.nav_links2 alignment="align-items-end" order="order-3 order-md-3 order-lg-3" %}
 		</div>
 
 

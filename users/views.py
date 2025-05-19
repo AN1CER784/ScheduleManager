@@ -92,8 +92,6 @@ class UserScheduleView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Schedule'
         context['schedule'] = True
-        status_dict = {True: 'Completed', False: 'Could not complete'}
-        context['status_dict'] = status_dict
         return context
 
     def get_queryset(self):

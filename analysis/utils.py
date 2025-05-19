@@ -8,12 +8,18 @@ def structure_tasks(tasks):
         structured_task = {
             "name": task.name,
             "description": task.description,
-            "status": task.status,
-            "status_comment": task.status_comment
+            "comments": '\n'.join(task.comments),
+            "start_time": task.start_time,
+            "start_date": task.start_date,
+            "due_time": task.due_time,
+            "due_date": task.due_date,
+            "status": "Completed" if task.is_completed else "In Progress",
+            "complete_percentage": task.complete_percentage,
         }
         structured_tasks.append(structured_task)
     for task in structured_tasks:
-        request_in_string += f"Task: {task['name']}\nDescription: {task['description']}\nStatus: {task['status']}\nStatus Comment: {task['status_comment']}\n\n"
+        request_in_string += f"Task: {task['name']}\nDescription: {task['description']}\nStatus: {task['status']}\nComplete percentage: {task['complete_percentage']}\nStart date and time:  {task['start_date']} {task['start_time']}\nDue date and time: {task['due_date']} {task['due_time']}\nComments: {task['comments']}\n\n"
+
     return request_in_string
 
 

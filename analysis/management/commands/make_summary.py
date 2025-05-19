@@ -13,8 +13,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for user in User.objects.all():
-            tasks = Task.objects.get_done().filter(user_id=user.id,
-                                                   date__range=[
+            tasks = Task.objects.filter(user_id=user.id,
+                                                   start_date__range=[
                                                        datetime.datetime.now().date() - datetime.timedelta(days=7),
                                                        datetime.datetime.now().date()])
             request = structure_tasks(tasks)
