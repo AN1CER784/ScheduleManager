@@ -102,7 +102,7 @@ class TaskCommentForm(forms.ModelForm):
         model = TaskComment
         fields = ['task_id', 'text']
 
-    task_id = forms.IntegerField()
+    task_id = forms.IntegerField(required=False)
     text = forms.CharField(label='text')
 
     def clean_text(self):

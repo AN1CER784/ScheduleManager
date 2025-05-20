@@ -91,3 +91,17 @@ class UserScheduleDeleteComment(LoginRequiredMixin, View):
         html = render_to_string('schedule/includes/comment_item.html', context={'comment_id': comment_id},
                                 request=request)
         return JsonResponse({'success': True, 'message': 'Task was deleted', 'html': html})
+
+
+class UserScheduleEditComment(LoginRequiredMixin, View):
+    def post(self, request):
+        comment_id = request.POST.get('comment_id')
+        comment = TaskComment.objects.get(id=comment_id)
+        form = TaskCommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            item_html = render_to_string('schedule/includes/comment_item.html', context={'comment': comment},
+                                         request=request)
+            return JsonResponse({'success': True, 'message': 'Comment was successfully edited', 'item_html': item_html})
+        errors_html = render_to_string('schedule/includes/form_errors.html', context={'form': form}, request=request)
+        return JsonResponse({'success': False, 'message': 'Comment was\'nt edited', 'errors_html': errors_html})
