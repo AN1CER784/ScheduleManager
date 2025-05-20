@@ -85,7 +85,7 @@
 
 				{% if type == "pending" %}
 					<div class="col-md-6">
-						<div class="bg-white border rounded shadow-sm p-3 text-center">
+						<div class="bg-white border rounded p-3 text-center">
 							<label for="status-range{{ task.id }}"
 							       class="form-label fw-semibold text-black fw-5">Task
 								Progress</label>
@@ -117,7 +117,7 @@
 				</div>
 				<form action="{% url 'schedule:add_comment' %}" method="post" class="send-comment-form">
 					{% csrf_token %}
-					<div class="chat-input-wrapper p-3  shadow-sm rounded bg-light">
+					<div class="chat-input-wrapper p-3 shadow-sm rounded bg-light">
 						<div class="form_errors">
 						</div>
 						<div class="position-relative">

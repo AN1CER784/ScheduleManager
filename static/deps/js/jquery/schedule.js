@@ -223,6 +223,46 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(document).on('click', '.edit-btn', function () {
+        const item = $(this).closest('.comment-item');
+        item.find('.comment-view').addClass('d-none');
+        item.find('.comment-edit-form').removeClass('d-none');
+    });
+
+    $(document).on('click', '.cancel-edit-btn', function () {
+        const item = $(this).closest('.comment-item');
+        item.find('.comment-edit-form').addClass('d-none');
+        item.find('.comment-view').removeClass('d-none');
+    });
+
+
+    $(document).on('submit', '.comment-edit-form', function (e) {
+        e.preventDefault();
+        const form = $(this);
+        const item = form.closest('.comment-item');
+
+        $.ajax({
+            type: 'POST',
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (response) {
+                if (response.success) {
+                    const $newItem = $(response.item_html);
+                    item.replaceWith($newItem);
+                    form.addClass('d-none');
+                    item.find('.comment-view').removeClass('d-none');
+                    showMessage(response.message, true);
+                } else {
+                    form.find('.form_errors').html(response.errors_html);
+                    showMessage(response.message, false);
+                }
+            },
+            error: function () {
+                form.find('.form_errors').text('Server error, try again.');
+            }
+        });
+    });
     $(document).on('submit', '.delete-comment-form', function (e) {
         e.preventDefault();
         const form = $(this);
@@ -279,7 +319,8 @@ $(document).ready(function () {
             $('#no-completed-tasks-placeholder').show();
         }
     }
-        function showMessage(message, success = true) {
+
+    function showMessage(message, success = true) {
         let alertType = success ? 'bg-success text-white ' : 'bg-white text-danger'
         let html = `<div id="notification" class="position-fixed start-50 translate-middle-x z-3 alert fade show shadow-sm ${alertType} border border-dark" role="alert">
                   ${message}
