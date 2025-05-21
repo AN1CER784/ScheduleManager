@@ -11,6 +11,27 @@ $(document).ready(function () {
         });
     });
 
+
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    const sendProgressUpdate = debounce(function (taskId, value) {
+        $.ajax({
+            type: 'POST',
+            url: '/schedule/task-update-progress/',
+            data: {
+                task_id: taskId,
+                complete_percentage: parseInt(value),
+                csrfmiddlewaretoken: document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            },
+        });
+    }, 500);
+
     document.addEventListener('input', function (event) {
         if (event.target.matches('[id^="status-range"]')) {
             const range = event.target;
@@ -18,11 +39,13 @@ $(document).ready(function () {
             const bar = document.getElementById('progress-bar' + suffix);
             const value = range.value;
 
+
             if (bar) {
                 bar.style.width = value + '%';
                 bar.textContent = value + '%';
             }
 
+            // Если 100% — отправляем сразу
             if (parseInt(value) === 100) {
                 const accordionItem = range.closest('.accordion-item');
                 const form = accordionItem?.querySelector('.complete-task-form');
@@ -31,17 +54,10 @@ $(document).ready(function () {
                 }
             }
 
-            $.ajax({
-                type: 'POST',
-                url: '/schedule/task-update-progress/',
-                data: {
-                    task_id: suffix,
-                    complete_percentage: parseInt(value),
-                    csrfmiddlewaretoken: document.querySelector('input[name="csrfmiddlewaretoken"]').value
-                },
-            });
+            sendProgressUpdate(suffix, value);
         }
     });
+
 
     const pendingTabBtn = document.querySelector('#pending-tab');
     bootstrap.Tab.getOrCreateInstance(pendingTabBtn).show();

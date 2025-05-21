@@ -17,44 +17,53 @@
     cursor: pointer;
 }
 
-.commentList {
-    background-color: #9dc3aa;
+.commentBlock{
+    border: rgba(25, 135, 84, 0.15) solid 0.01rem;
 }
 
+.chat-input-wrapper{
+    background-color: white;
+}
 
+.commentList{
+    background-color: rgba(25, 135, 84, 0.51)
+}
 
 .accordion-item {
-  border: none;
-  background: transparent;
+    border: none;
+    background: transparent;
 }
 
 .accordion-header {
-  padding: 0;
-  border-radius: .75rem;
-  overflow: hidden;
+    padding: 0;
+    border-radius: .75rem;
+    overflow: hidden;
 }
 
 .accordion-button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: none;
-  outline: none;
-  box-shadow: none;
-  padding: .75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: .75rem 1rem;
 }
 
 .accordion-button:not(.collapsed), .accordion-button:focus {
     outline: none;
-  box-shadow: 0 0 0 0
+    box-shadow: 0 0 0 0
 }
 
- .accordion-button::after {
-  display: none;
+.accordion-button::after {
+    display: none;
 }
 
 
- .accordion-collapse {
-  border: none;
+.accordion-collapse {
+    border: none;
 }
 
+.dropdown-toggle::after {
+    display: none;
+}
