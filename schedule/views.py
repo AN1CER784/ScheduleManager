@@ -3,20 +3,18 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.views import View
 
-from schedule.forms import TaskForm, TaskCompleteForm, TaskIncompleteForm, TaskCommentForm
+from schedule.forms import TaskCreateForm, TaskCompleteForm, TaskIncompleteForm, TaskCommentForm
 from schedule.models import Task, TaskComment
-
-from django.utils import timezone
 
 
 class UserScheduleAddTask(LoginRequiredMixin, View):
     def post(self, request):
-        form = TaskForm(request.POST)
+        form = TaskCreateForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
             task.user = self.request.user
             task.save()
-            html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'pending'},
+            html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'InProgress'},
                                     request=request)
             return JsonResponse({'success': True, 'message': 'Task was successfully added', 'html': html})
         errors_html = render_to_string('schedule/includes/form_errors.html', context={'form': form}, request=request)
@@ -36,7 +34,7 @@ class UserScheduleCompleteTask(LoginRequiredMixin, View):
         task = Task.objects.get(id=request.POST.get('task_id'))
         form = TaskCompleteForm(request.POST, instance=task)
         form.save()
-        html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'done'},
+        html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'Done'},
                                 request=request)
         return JsonResponse({'success': True, 'message': 'Task was successfully completed', 'html': html})
 
@@ -46,7 +44,7 @@ class UserScheduleIncompleteTask(LoginRequiredMixin, View):
         task = Task.objects.get(id=request.POST.get('task_id'))
         form = TaskIncompleteForm(request.POST, instance=task)
         form.save()
-        html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'pending'},
+        html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'InProgress'},
                                 request=request)
         return JsonResponse({'success': True, 'message': 'Task was successfully incompleted', 'html': html})
 
@@ -54,14 +52,10 @@ class UserScheduleIncompleteTask(LoginRequiredMixin, View):
 class UserUpdateProgressTask(LoginRequiredMixin, View):
     def post(self, request):
         task = Task.objects.get(id=request.POST.get('task_id'))
-        task.complete_percentage = request.POST.get('complete_percentage')
+        task.complete_percentage = int(request.POST.get('complete_percentage'))
         task.save()
-        html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'pending'},
+        html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'InProgress'},
                                 request=request)
-        if task.complete_percentage == 100:
-            task.complete_datetime = timezone.now()
-            task.is_completed = True
-            task.save()
         return JsonResponse({'success': True, 'message': 'Task was successfully updated', 'html': html})
 
 

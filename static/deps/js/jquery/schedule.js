@@ -1,16 +1,74 @@
 $(document).ready(function () {
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('[id^="status-range"]').forEach(range => {
-            const suffix = range.id.replace('status-range', '');
-            const bar = document.getElementById('progress-bar' + suffix);
-            if (bar) {
-                const value = range.value;
-                bar.style.width = value + '%';
-                bar.textContent = value + '%';
-            }
-        });
+
+    toggleNoTasksPlaceholder();
+    toggleNoCompletedTasksPlaceholder();
+
+
+    $(document).on('click', '.accordion-toggle', function () {
+        const target = $($(this).data('target'));
+        const $this = $(this);
+        if (target.length) {
+            target.slideToggle(200, function () {
+                updateProgressBars(target);
+            });
+            $this.toggleClass('open');
+        }
     });
 
+    function initTaskViewer() {
+        const $taskList = $('#taskList');
+        const $taskDetails = $('#taskDetails');
+
+        $(document).off('click.task-viewer').on('click.task-viewer', '.show-task-btn', function () {
+            const $item = $(this).closest('.accordion-item');
+            const $accordionCollapse = $item.children('.accordion-collapse');
+
+            if ($accordionCollapse.length === 0) return;
+
+            $taskDetails.removeClass('d-none').empty();
+            $taskList.removeClass('col-lg-6').addClass('col-lg-5');
+            $taskDetails.addClass('col-12 col-lg-6');
+
+            const $clone = $accordionCollapse.clone().css('display', 'block');
+            $taskDetails.append($clone);
+
+            updateProgressBars($taskDetails);
+        });
+
+        updateProgressBars($(document));
+    }
+
+    function updateProgressBars($scope = $(document)) {
+        $scope.find('[id^="status-range"]').each(function () {
+            const $range = $(this);
+            const suffix = this.id.replace('status-range', '');
+            const $bar = $scope.find('#progress-bar' + suffix);
+
+            if ($bar.length) {
+                // начальная отрисовка
+                const value = $range.val();
+                $bar.css('width', value + '%').text(value + '%');
+
+                // удаляем старые обработчики, вешаем новые
+                $range.off('input.progress').on('input.progress', function () {
+                    const newVal = $(this).val();
+                    $bar.css('width', newVal + '%').text(newVal + '%');
+                });
+            }
+        });
+    }
+
+    initTaskViewer();
+
+    // Обработчик события закрытия задачи
+    $(document).on('click', '.close-task-btn', function () {
+        const $taskDetails = $('#taskDetails');
+        const $taskList = $('#taskList');
+
+        $taskDetails.addClass('d-none').empty();
+        $taskList.removeClass('col-lg-5').addClass('col-lg-6');
+        $taskDetails.removeClass('col-12 col-lg-6');
+    });
 
     function debounce(func, delay) {
         let timeout;
@@ -26,7 +84,7 @@ $(document).ready(function () {
             url: '/schedule/task-update-progress/',
             data: {
                 task_id: taskId,
-                complete_percentage: parseInt(value),
+                complete_percentage: value,
                 csrfmiddlewaretoken: document.querySelector('input[name="csrfmiddlewaretoken"]').value
             },
         });
@@ -45,9 +103,10 @@ $(document).ready(function () {
                 bar.textContent = value + '%';
             }
 
-            // Если 100% — отправляем сразу
             if (parseInt(value) === 100) {
-                const accordionItem = range.closest('.accordion-item');
+                const accordionId = range.closest('.accordion-collapse.collapse').id;
+                const accordionItem = document.getElementById("task-" + accordionId)
+                console.log(accordionItem);
                 const form = accordionItem?.querySelector('.complete-task-form');
                 if (form) {
                     $(form).trigger('submit');
@@ -57,12 +116,6 @@ $(document).ready(function () {
             sendProgressUpdate(suffix, value);
         }
     });
-
-
-    const pendingTabBtn = document.querySelector('#pending-tab');
-    bootstrap.Tab.getOrCreateInstance(pendingTabBtn).show();
-    toggleNoTasksPlaceholder();
-    toggleNoCompletedTasksPlaceholder();
 
 
     $('#task-add-form').on('submit', function (e) {
@@ -87,22 +140,20 @@ $(document).ready(function () {
                 const $newItem = $(response.html.trim());
 
                 let containerSelector;
-                if (response.type === 'pending') {
-                    containerSelector = '#accordionPending';
-                } else if (response.type === 'done') {
+                if (response.type === 'InProgress') {
+                    containerSelector = '#accordionInProgress';
+                } else if (response.type === 'Done') {
                     containerSelector = '#accordionDone';
                 } else {
-                    containerSelector = '#accordionPending';
+                    containerSelector = '#accordionInProgress';
                 }
 
                 $(containerSelector).prepend($newItem);
 
-                $newItem.find('.accordion-collapse').addClass('show');
-
-                form[0].reset();
                 showMessage(response.message, true);
                 toggleNoTasksPlaceholder();
                 toggleNoCompletedTasksPlaceholder();
+                initTaskViewer();
             },
             error: function () {
                 showMessage('Server error. Try again later.', false);
@@ -130,12 +181,26 @@ $(document).ready(function () {
                 form.find('.form_errors').empty();
 
                 const $newItem = $(response.html.trim());
-                form.closest('.accordion-item').remove();
+
+                const $oldAccordionItem = form.closest('.accordion-item');
+                $oldAccordionItem.remove();
+
                 $('#accordionDone').prepend($newItem);
+
+                const $taskDetails = $('#taskDetails');
+                const $taskList = $('#taskList');
+                $taskDetails.removeClass('d-none').empty();
+                $taskList.removeClass('col-lg-6').addClass('col-lg-5');
+                $taskDetails.addClass('col-12 col-lg-6');
+
+                const $accordionCollapse = $newItem.find('.accordion-collapse').first();
+                const $clone = $accordionCollapse.clone().css('display', 'block');
+                $taskDetails.append($clone);
 
                 showMessage(response.message, true);
                 toggleNoTasksPlaceholder();
                 toggleNoCompletedTasksPlaceholder();
+                initTaskViewer();
             },
             error: function () {
                 showMessage('Server error. Try completing task.', false);
@@ -202,10 +267,22 @@ $(document).ready(function () {
                 form.find('.form_errors').empty();
 
                 const $newItem = $(response.html.trim());
-                form.closest('.accordion-item').remove();
-                $('#accordionPending').prepend($newItem);
 
-                showMessage(response.message, true);
+                const $oldAccordionItem = form.closest('.accordion-item');
+                $oldAccordionItem.remove();
+
+                $('#accordionInProgress').prepend($newItem);
+
+                const $taskDetails = $('#taskDetails');
+                const $taskList = $('#taskList');
+                $taskDetails.removeClass('d-none').empty();
+                $taskList.removeClass('col-lg-6').addClass('col-lg-5');
+                $taskDetails.addClass('col-12 col-lg-6');
+
+                const $accordionCollapse = $newItem.find('.accordion-collapse').first();
+                const $clone = $accordionCollapse.clone().css('display', 'block');
+                $taskDetails.append($clone);
+                updateProgressBars($taskDetails);
                 toggleNoTasksPlaceholder();
                 toggleNoCompletedTasksPlaceholder();
             },
@@ -228,8 +305,15 @@ $(document).ready(function () {
                 if (response.success) {
                     form.closest('.accordion-item').remove();
                     showMessage(response.message, true);
+                    const $taskId = form.find('input[name="task_id"]').val();
+                    const $taskDetails = $('#taskDetails');
+                    if ($taskDetails.find('input[name="task_id"]').val() === $taskId) {
+                        $taskDetails.addClass('d-none');
+                    }
+
                     toggleNoTasksPlaceholder();
                     toggleNoCompletedTasksPlaceholder();
+                    initTaskViewer();
                 } else {
                     showMessage('Could not delete task.', false);
                 }
@@ -293,6 +377,7 @@ $(document).ready(function () {
                     toggleNoComments($container);
                     showMessage(response.message, true);
 
+
                 } else {
                     showMessage('Could not delete task.', false);
                 }
@@ -313,13 +398,11 @@ $(document).ready(function () {
     }
 
     function toggleNoTasksPlaceholder() {
-        const $accordion = $('#accordionPending');
+        const $accordion = $('#accordionInProgress');
         const hasItems = $accordion.children('.accordion-item').length > 0;
         if (hasItems) {
             $('#no-tasks-placeholder').hide();
-            $accordion.show();
         } else {
-            $accordion.hide();
             $('#no-tasks-placeholder').show();
         }
     }
@@ -327,11 +410,11 @@ $(document).ready(function () {
     function toggleNoCompletedTasksPlaceholder() {
         const $accordion = $('#accordionDone');
         const hasItems = $accordion.children('.accordion-item').length > 0;
+        console.log($accordion.children('.accordion-item').length);
+        console.log($accordion.children('.accordion-item'));
         if (hasItems) {
             $('#no-completed-tasks-placeholder').hide();
-            $accordion.show();
         } else {
-            $accordion.hide();
             $('#no-completed-tasks-placeholder').show();
         }
     }

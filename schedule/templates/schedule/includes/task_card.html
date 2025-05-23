@@ -1,26 +1,21 @@
 {% load task_tags %}
 {% load static %}
 
-<div class="accordion-item rounded bg-light shadow-sm" id="task-{{ task.id }}">
+<div class="accordion-item rounded bg-light shadow-sm" id="task-{{ type }}{{ task.id }}">
 	<div class="accordion-header d-flex justify-content-between align-items-center
             border border-secondary border-opacity-25 rounded px-2 bg-light">
 
 		<h2 class="m-0 flex-grow-1">
-			<button class="accordion-button bg-light text-black border-end border-secondary border-opacity-25 d-flex align-items-center fw-bold w-100"
+			<button class="accordion-button bg-light text-black border-end border-secondary border-opacity-25 d-flex align-items-center fw-bold w-100 show-task-btn"
 			        type="button"
-			        data-bs-toggle="collapse"
-			        data-bs-target="#{{ type }}{{ task.id }}"
-			        aria-expanded="true"
-			        aria-controls="{{ type }}{{ task.id }}">
-				{% if type == "pending" %}
+			        data-task-id="{{ type }}{{ task.id }}">
+				{% if type == "InProgress" %}
 					<img src="{% static "deps/icons/person-walking.svg" %}"
-					     alt="Catalog Icon" width="20" height="20" class="text-success"
-					     style="filter: invert(48%) sepia(78%) saturate(534%) hue-rotate(84deg) brightness(92%) contrast(85%);">
+					     alt="Catalog Icon" width="20" height="20" class="img-green">
 
 				{% else %}
 					<img src="{% static "deps/icons/check2-circle.svg" %}"
-					     alt="Catalog Icon" width="20" height="20" class="text-success"
-					     style="filter: invert(48%) sepia(78%) saturate(534%) hue-rotate(84deg) brightness(92%) contrast(85%);">
+					     alt="Catalog Icon" width="20" height="20" class="img-green">
 				{% endif %}
 				{{ task.name }}
 			</button>
@@ -33,7 +28,7 @@
 				<input type="hidden" name="task_id" value="{{ task.id }}">
 			</button>
 		</form>
-		{% if type == "pending" %}
+		{% if type == "InProgress" %}
 			<form action="{% url 'schedule:complete_task' %}" method="post" class="ms-2 complete-task-form">
 				<button type="submit" class="btn btn-sm btn-success" title="Mark as done">
 					{% csrf_token %}
@@ -56,56 +51,73 @@
 	<div
 			id="{{ type }}{{ task.id }}"
 			class="accordion-collapse collapse"
-			data-bs-parent="{% if type == "pending" %}#accordionPending{% else %}#accordionDone{% endif %}">
-		<div class="accordion-body bg-light">
-
-			<div class="row">
-				<div class="col-md-6">
-					<p class="mb-1">
-						<img src="{% static "deps/icons/person-walking.svg" %}" alt="Start Icon" width="16" height="16">
-						<strong>Start:</strong> {{ task.start_date }} {{ task.start_time }}
-					</p>
-					<p class="mb-1">
-						<img src="{% static "deps/icons/calendar3-event.svg" %}" alt="Due Icon" width="16" height="16">
-						<strong>Due:</strong> {{ task.due_date }} {{ task.due_time }}
-					</p>
-					{% if type == "done" %}
-						<p class="mb-1">
-							<img src="{% static "deps/icons/check2-circle.svg" %}" alt="Completed Icon" width="16"
-							     height="16">
-							<strong>Completed:</strong> {{ task.complete_datetime }}
-						</p>
-					{% endif %}
-					<p>
-						<img src="{% static "deps/icons/file-text.svg" %}" alt="Description Icon" width="16"
-						     height="16">
-						<strong>Description:</strong> {{ task.description }}
-					</p>
+			data-bs-parent="{% if type == "InProgress" %}#accordionInProgress{% else %}#accordionDone{% endif %}">
+		<div  class="accordion-body bg-light d-flex flex-column" style="min-height: 250px;">
+			<div class="flex-grow-1">
+				<div class="row">
+					<div class="col-11">
+						<h3>{{ task.name }}</h3>
+					</div>
+					<div class="col-1">
+						<button type="button"
+						        class="btn border-0 bg-transparent p-1 close-task-btn"
+						        title="Cancel">
+							<img src="{% static 'deps/icons/x-lg.svg' %}"
+							     alt="Close" width="20" height="20">
+						</button>
+					</div>
 				</div>
-
-				{% if type == "pending" %}
+				<div class="row">
 					<div class="col-md-6">
-						<div class="bg-white border rounded p-3 text-center">
-							<label for="status-range{{ task.id }}"
-							       class="form-label fw-semibold text-black fw-5">Task
-								Progress</label>
-							<div class="progress-container">
-								<div class="progress">
-									<div id="progress-bar{{ task.id }}"
-									     class="progress-bar bg-success progress-bar-striped progress-bar-animated text-black fw-bold"
-									     style="width: {{ task.complete_percentage }}%;">
-										{{ task.complete_percentage }}%
+						<p class="mb-1">
+							<img src="{% static "deps/icons/person-walking.svg" %}" alt="Start Icon" width="16"
+							     height="16">
+							<strong>Start:</strong> {{ task.start_date }} {{ task.start_time }}
+						</p>
+						<p class="mb-1">
+							<img src="{% static "deps/icons/calendar3-event.svg" %}" alt="Due Icon" width="16"
+							     height="16">
+							<strong>Due:</strong> {{ task.due_date }} {{ task.due_time }}
+						</p>
+						{% if type == "Done" %}
+							<p class="mb-1">
+								<img src="{% static "deps/icons/check2-circle.svg" %}" alt="Completed Icon" width="16"
+								     height="16">
+								<strong>Completed:</strong> {{ task.complete_datetime }}
+							</p>
+						{% endif %}
+						<p>
+							<img src="{% static "deps/icons/file-text.svg" %}" alt="Description Icon" width="16"
+							     height="16">
+							<strong>Description:</strong> {{ task.description }}
+						</p>
+					</div>
+
+					{% if type == "InProgress" %}
+						<div class="col-md-8 mx-auto">
+							<div class="p-3 rounded text-center m-3">
+								<label for="status-range{{ task.id }}"
+								       class="form-label fw-semibold text-black fw-5">Task
+									Progress</label>
+								<div class="progress-container">
+									<div class="progress">
+										<div id="progress-bar{{ task.id }}"
+										     class="progress-bar bg-success progress-bar-striped progress-bar-animated text-black fw-bold"
+										     style="width: {{ task.complete_percentage }}%;">
+											{{ task.complete_percentage }}%
+										</div>
 									</div>
+									<input type="range" class="form-range range-slider" min="5" max="100" step="5"
+									       value="{{ task.complete_percentage }}" id="status-range{{ task.id }}"
+									       name="status">
 								</div>
-								<input type="range" class="form-range range-slider" min="5" max="100" step="5"
-								       value="{{ task.complete_percentage }}" id="status-range{{ task.id }}"
-								       name="status">
 							</div>
 						</div>
-					</div>
-				{% endif %}
+					{% endif %}
+				</div>
 			</div>
-			<div class="commentBlock rounded" id="comment{{ task.id }}" class="mb-3">
+
+			<div class="commentBlock rounded" id="comment{{ task.id }}">
 				{% group_comments_by_date task.comments.all|dictsort:"created_date" as group_comments %}
 				<div class="commentList rounded px-5" style="max-height: 300px; overflow-y: auto;">
 					{% for comment_date, comments in group_comments.items %}

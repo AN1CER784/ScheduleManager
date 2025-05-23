@@ -11,3 +11,11 @@ body{
   width:150px;
   height:150px;
 }
+
+.img-green{
+  filter: invert(48%) sepia(78%) saturate(534%) hue-rotate(84deg) brightness(92%) contrast(85%);
+}
+
+.img-green-dim{
+  filter: invert(48%) sepia(78%) saturate(100%) hue-rotate(84deg) brightness(92%) contrast(85%);
+}

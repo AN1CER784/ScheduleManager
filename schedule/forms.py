@@ -5,7 +5,7 @@ from schedule.models import Task, TaskComment
 from ScheduleManager.utils import is_meaningful
 
 
-class TaskForm(forms.ModelForm):
+class TaskCreateForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['start_date', 'start_time', 'due_date', 'due_time', 'name', 'description']
@@ -77,7 +77,6 @@ class TaskCompleteForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.complete_percentage = 100
-        instance.complete_datetime = timezone.now()
         if commit:
             instance.save()
         return instance
@@ -91,7 +90,6 @@ class TaskIncompleteForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.complete_percentage = 5
-        instance.complete_date = None
         if commit:
             instance.save()
         return instance

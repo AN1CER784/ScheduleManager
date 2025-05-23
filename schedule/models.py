@@ -1,5 +1,7 @@
 from django.db import models
 
+from django.utils import timezone
+
 
 class TaskQuerySet(models.QuerySet):
     def get_pending(self):
@@ -24,13 +26,15 @@ class Task(models.Model):
 
     class Meta:
         verbose_name = 'task'
-        ordering = ['created_at']
+        ordering = ['-created_at']
 
     def save(self, *args, **kwargs):
         if self.complete_percentage == 100:
             self.is_completed = True
+            self.complete_datetime = timezone.now()
         else:
             self.is_completed = False
+            self.complete_datetime = None
         super().save()
 
     objects = TaskQuerySet.as_manager()

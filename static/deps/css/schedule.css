@@ -67,3 +67,29 @@
 .dropdown-toggle::after {
     display: none;
 }
+
+.accordion-toggle {
+    cursor: pointer;
+    border: 1px solid #ced4da;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    font-weight: 600;
+}
+
+.accordion-toggle:hover {
+    background-color: #e9f7ef;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.accordion-toggle.open {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.accordion-toggle .toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.accordion-toggle.open .toggle-icon {
+    transform: rotate(180deg);
+}
