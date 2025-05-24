@@ -73,7 +73,7 @@
 							<form action="{% url 'users:logout' %}" method="post">
 								{% csrf_token %}
 								<button class="nav-link text-success d-flex align-items-center gap-2"
-								   >
+								>
 									<img src="{% static 'deps/icons/arrow-left-square.svg' %}"
 									     alt="Logout" width="20" height="20" class="img-green-dim">
 									Logout
@@ -110,8 +110,9 @@
 		{% include 'includes/notifications.html' %}
 		<div id="message-container"></div>
 		<div class="row mt-5 justify-content-center align-items-start">
-			{% block content %}{% endblock %}
-
+			<div id="mainContent" class="col-12 col-lg-6 mx-auto mb-5">
+				{% block content %}{% endblock %}
+			</div>
 			{% block additional_content %}{% endblock %}
 
 		</div>
@@ -125,10 +126,11 @@
 {% endblock %}
 
 <script src="{% static "deps/js/jquery/jquery-3.7.0.min.js" %}"></script>
-{% block js %}
 
-{% endblock %}
 <script src="{% static "deps/js/jquery/notifications.js" %}"></script>
 <script src="{% static "deps/js/bootstrap/bootstrap.bundle.min.js" %}"></script>
+{% block js %}
+	
+{% endblock %}
 </body>
 </html>

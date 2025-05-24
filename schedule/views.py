@@ -14,9 +14,9 @@ class UserScheduleAddTask(LoginRequiredMixin, View):
             task = form.save(commit=False)
             task.user = self.request.user
             task.save()
-            html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'InProgress'},
+            item_html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'InProgress'},
                                     request=request)
-            return JsonResponse({'success': True, 'message': 'Task was successfully added', 'html': html})
+            return JsonResponse({'success': True, 'message': 'Task was successfully added', 'item_html': item_html})
         errors_html = render_to_string('schedule/includes/form_errors.html', context={'form': form}, request=request)
         return JsonResponse({'success': False, 'message': 'Task was\'nt added', 'errors_html': errors_html})
 
@@ -25,8 +25,8 @@ class UserScheduleDeleteTask(LoginRequiredMixin, View):
     def post(self, request):
         task_id = request.POST.get('task_id')
         Task.objects.get(id=task_id).delete()
-        html = render_to_string('schedule/includes/task_card.html', context={'task_id': task_id}, request=request)
-        return JsonResponse({'success': True, 'message': 'Task was deleted', 'html': html})
+        item_html = render_to_string('schedule/includes/task_card.html', context={'task_id': task_id}, request=request)
+        return JsonResponse({'success': True, 'message': 'Task was deleted', 'item_html': item_html})
 
 
 class UserScheduleCompleteTask(LoginRequiredMixin, View):
@@ -34,9 +34,9 @@ class UserScheduleCompleteTask(LoginRequiredMixin, View):
         task = Task.objects.get(id=request.POST.get('task_id'))
         form = TaskCompleteForm(request.POST, instance=task)
         form.save()
-        html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'Done'},
+        item_html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'Done'},
                                 request=request)
-        return JsonResponse({'success': True, 'message': 'Task was successfully completed', 'html': html})
+        return JsonResponse({'success': True, 'message': 'Task was successfully completed', 'item_html': item_html})
 
 
 class UserScheduleIncompleteTask(LoginRequiredMixin, View):
@@ -44,9 +44,9 @@ class UserScheduleIncompleteTask(LoginRequiredMixin, View):
         task = Task.objects.get(id=request.POST.get('task_id'))
         form = TaskIncompleteForm(request.POST, instance=task)
         form.save()
-        html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'InProgress'},
+        item_html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'InProgress'},
                                 request=request)
-        return JsonResponse({'success': True, 'message': 'Task was successfully incompleted', 'html': html})
+        return JsonResponse({'success': True, 'message': 'Task was successfully incompleted', 'item_html': item_html})
 
 
 class UserUpdateProgressTask(LoginRequiredMixin, View):
@@ -54,9 +54,9 @@ class UserUpdateProgressTask(LoginRequiredMixin, View):
         task = Task.objects.get(id=request.POST.get('task_id'))
         task.complete_percentage = int(request.POST.get('complete_percentage'))
         task.save()
-        html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'InProgress'},
+        item_html = render_to_string('schedule/includes/task_card.html', context={'task': task, 'type': 'InProgress'},
                                 request=request)
-        return JsonResponse({'success': True, 'message': 'Task was successfully updated', 'html': html})
+        return JsonResponse({'success': True, 'message': 'Task was successfully updated', 'item_html': item_html})
 
 
 class UserScheduleAddComment(LoginRequiredMixin, View):
@@ -82,9 +82,9 @@ class UserScheduleDeleteComment(LoginRequiredMixin, View):
     def post(self, request):
         comment_id = request.POST.get('comment_id')
         TaskComment.objects.get(id=comment_id).delete()
-        html = render_to_string('schedule/includes/comment_item.html', context={'comment_id': comment_id},
+        item_html = render_to_string('schedule/includes/comment_item.html', context={'comment_id': comment_id},
                                 request=request)
-        return JsonResponse({'success': True, 'message': 'Task was deleted', 'html': html})
+        return JsonResponse({'success': True, 'message': 'Task was deleted', 'html': item_html})
 
 
 class UserScheduleEditComment(LoginRequiredMixin, View):

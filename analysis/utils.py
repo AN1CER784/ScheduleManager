@@ -24,20 +24,8 @@ def structure_tasks(tasks):
     return request_in_string
 
 
-def generate_analysis(content):
+def generate_analysis(content, main_prompt):
     client = Client()
-    main_prompt = """
-    You are a professional productivity analyst and self-organization mentor. Analyze a list of tasks including titles, descriptions, completion statuses, and comments. Based on this, generate a motivational and structured summary. Do not analyze each task individually — instead, provide an overall assessment focused on praise and suggestions for improving self-organization.
-    
-    Structure the output as follows:
-    [1. Overall Productivity and Dynamics] — general evaluation of activity, volume, and quality of execution.
-    [2. Strengths and Successes] — what worked well and what skills were demonstrated.
-    [3. Areas for Growth] — what can be optimized going forward, patterns, and recommendations.
-    [4. Recommendations for Self-Organization] — techniques, tools, and practical tips.
-    [5. Motivational Conclusion] — praise, positive feedback, and encouragement.
-    
-    Tone — professional, inspiring, and friendly. The goal is to motivate, highlight progress, and offer useful advice for improving personal productivity.
-    \n\n\n"""
 
     models = ("deepseek-r1-turbo", "deepseek-r1", "qvq-72b",
               "qwq-32b-arliai", "qwq-32b-preview", "qwq-32b", "qwen-3-0.6b", "qwen-3-1.7b", "qwen-3-4b", "qwen-3-14b")

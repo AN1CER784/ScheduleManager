@@ -16,7 +16,7 @@ $(document).ready(function () {
     });
 
     function initTaskViewer() {
-        const $taskList = $('#taskList');
+        const $taskList = $('#mainContent');
         const $taskDetails = $('#taskDetails');
 
         $(document).off('click.task-viewer').on('click.task-viewer', '.show-task-btn', function () {
@@ -45,11 +45,9 @@ $(document).ready(function () {
             const $bar = $scope.find('#progress-bar' + suffix);
 
             if ($bar.length) {
-                // начальная отрисовка
                 const value = $range.val();
                 $bar.css('width', value + '%').text(value + '%');
 
-                // удаляем старые обработчики, вешаем новые
                 $range.off('input.progress').on('input.progress', function () {
                     const newVal = $(this).val();
                     $bar.css('width', newVal + '%').text(newVal + '%');
@@ -60,10 +58,9 @@ $(document).ready(function () {
 
     initTaskViewer();
 
-    // Обработчик события закрытия задачи
     $(document).on('click', '.close-task-btn', function () {
         const $taskDetails = $('#taskDetails');
-        const $taskList = $('#taskList');
+        const $taskList = $('#mainContent');
 
         $taskDetails.addClass('d-none').empty();
         $taskList.removeClass('col-lg-5').addClass('col-lg-6');
@@ -137,7 +134,7 @@ $(document).ready(function () {
                 form.find('.form_errors').empty();
 
 
-                const $newItem = $(response.html.trim());
+                const $newItem = $(response.item_html.trim());
 
                 let containerSelector;
                 if (response.type === 'InProgress') {
@@ -172,7 +169,7 @@ $(document).ready(function () {
                 if (!response.success) {
                     const errorsHtml = response.errors_html !== undefined
                         ? response.errors_html
-                        : response.html || '';
+                        : response.item_html || '';
 
                     form.find('.form_errors').html(errorsHtml);
                     return showMessage(response.message, false);
@@ -180,7 +177,7 @@ $(document).ready(function () {
 
                 form.find('.form_errors').empty();
 
-                const $newItem = $(response.html.trim());
+                const $newItem = $(response.item_html.trim());
 
                 const $oldAccordionItem = form.closest('.accordion-item');
                 $oldAccordionItem.remove();
@@ -188,7 +185,7 @@ $(document).ready(function () {
                 $('#accordionDone').prepend($newItem);
 
                 const $taskDetails = $('#taskDetails');
-                const $taskList = $('#taskList');
+                const $taskList = $('#mainContent');
                 $taskDetails.removeClass('d-none').empty();
                 $taskList.removeClass('col-lg-6').addClass('col-lg-5');
                 $taskDetails.addClass('col-12 col-lg-6');
@@ -219,7 +216,7 @@ $(document).ready(function () {
                 if (!response.success) {
                     const errorsHtml = response.errors_html !== undefined
                         ? response.errors_html
-                        : response.html || '';
+                        : response.item_html || '';
 
                     form.find('.form_errors').html(errorsHtml);
                     return showMessage(response.message, false);
@@ -258,7 +255,7 @@ $(document).ready(function () {
                 if (!response.success) {
                     const errorsHtml = response.errors_html !== undefined
                         ? response.errors_html
-                        : response.html || '';
+                        : response.item_html || '';
 
                     form.find('.form_errors').html(errorsHtml);
                     return showMessage(response.message, false);
@@ -266,7 +263,7 @@ $(document).ready(function () {
 
                 form.find('.form_errors').empty();
 
-                const $newItem = $(response.html.trim());
+                const $newItem = $(response.item_html.trim());
 
                 const $oldAccordionItem = form.closest('.accordion-item');
                 $oldAccordionItem.remove();
@@ -274,7 +271,7 @@ $(document).ready(function () {
                 $('#accordionInProgress').prepend($newItem);
 
                 const $taskDetails = $('#taskDetails');
-                const $taskList = $('#taskList');
+                const $taskList = $('#mainContent');
                 $taskDetails.removeClass('d-none').empty();
                 $taskList.removeClass('col-lg-6').addClass('col-lg-5');
                 $taskDetails.addClass('col-12 col-lg-6');

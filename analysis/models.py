@@ -1,14 +1,15 @@
 from django.db import models
 
 
+class AnalysisSummaryQuerySet(models.QuerySet):
+    def get_summaries_by_period(self, period):
+        return self.filter(period=period)
+
+
 class AnalysisSummary(models.Model):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     summary = models.TextField()
     created_at = models.DateField(auto_now_add=True)
+    period = models.IntegerField()
 
-    def __str__(self):
-        return f"AnalysisSummary {self.id}"
-
-    class Meta:
-        verbose_name = "Analysis Summary"
-        ordering = ['-created_at']
+    objects = AnalysisSummaryQuerySet.as_manager()
