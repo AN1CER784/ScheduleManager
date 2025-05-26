@@ -17,7 +17,6 @@ class UserScheduleAddTask(JsonFormMixin, ScheduleMixin, View):
             if not self.request.session.session_key:
                 self.request.session.create()
             task.session_key = self.request.session.session_key
-            print(self.request.session.get_expiry_date(), )
         task.save()
         item_html = self.render_task(task=task, type='InProgress', request=self.request)
         return JsonResponse(self.response('Task was successfully added', item_html, True))
