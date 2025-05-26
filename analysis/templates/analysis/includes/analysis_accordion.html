@@ -1,0 +1,67 @@
+{% load static %}
+{% load analysis_tags %}
+
+<div id="{{ container_id }}">
+	<h4 class="accordion-toggle d-flex justify-content-between align-items-center bg-white text-success p-3 rounded shadow-sm  border border-secondary border-opacity-25"
+	    data-target="#{{ section_id }}" role="button">
+		{{ title }}
+		<img src="{% static 'deps/icons/chevron-down.svg' %}" class="toggle-icon">
+	</h4>
+
+	<div id="{{ section_id }}" class="accordion-section">
+		{% if summaries %}
+			<div class="accordion analysis-summary"
+			     id="{{ accordion_id }}">
+
+				{% for analysis in summaries %}
+					<div class="accordion-item rounded mb-1">
+						{% if week_mode %}
+							{% subtract_seven_days analysis.created_at as start_week %}
+						{% endif %}
+						<div class="accordion-header border rounded border-secondary border-opacity-25">
+							<button class="toggle-summary rounded border-0 d-flex align-items-center bg-white fw-bold w-100 p-2 text-success"
+							        type="button"
+							        data-task-id="{{ prefix }}{{ analysis.id }}"> Summary for
+								{% if week_mode %} week {{ start_week }} - {{ analysis.created_at }}{% else %}
+									day {{ analysis.created_at }}{% endif %}
+							</button>
+						</div>
+						<div id="{{ prefix }}{{ analysis.id }}" class="accordion-collapse collapse"
+						     data-bs-parent="#{{ accordion_id }}">
+							<div class="accordion-body summary-body justify-content-center text-success">
+								<div class="row">
+									<div class="col-11">
+										<div class="py-2 fw-bolder h4 text-success">Summary for
+											{% if week_mode %} week {{ start_week }} -
+												{{ analysis.created_at }}{% else %}
+												day {{ analysis.created_at }}{% endif %}
+										</div>
+									</div>
+									<div class="col-1">
+										<button type="button"
+										        class="btn border-0 bg-transparent p-1 close-task-btn"
+										        title="Close">
+											<img src="{% static 'deps/icons/x-lg.svg' %}"
+											     alt="Close" width="20" height="20">
+										</button>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+					<div class="raw class">
+						{{ analysis.summary }}
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<div
+					class="container bg-white p-3 rounded shadow text-secondary fs-5  justify-content-center align-items-center text-center mb-3">
+				<p class="m-0">Add more tasks to see {{ title }} next time</p>
+			</div>
+		{% endif %}
+
+	</div>
+</div>

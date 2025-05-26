@@ -23,6 +23,8 @@ class UserLoginView(LoginView):
         if user:
             auth.login(self.request, user)
             messages.success(self.request, f'{user.username}, You have successfully logged in')
+            if self.request.session.session_key:
+                Task.objects.filter(user=user).update(session_key=self.request.session.session_key)
             return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
@@ -83,7 +85,7 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
         return super().form_invalid(form)
 
 
-class UserScheduleView(LoginRequiredMixin, ListView):
+class UserScheduleView(ListView):
     template_name = 'schedule/schedule.html'
     success_url = reverse_lazy('users:schedule')
     context_object_name = 'tasks'
@@ -95,5 +97,11 @@ class UserScheduleView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        tasks = Task.objects.filter(user_id=self.request.user.id)
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            tasks = Task.objects.filter(user=user)
+        else:
+            if not self.request.session.session_key:
+                self.request.session.create()
+            tasks = Task.objects.filter(session_key=self.request.session.session_key)
         return tasks

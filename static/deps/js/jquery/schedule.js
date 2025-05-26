@@ -125,7 +125,7 @@ $(document).ready(function () {
             data: form.serialize(),
             success: function (response) {
                 if (!response.success) {
-                    const errorsHtml = response.errors_html
+                    const errorsHtml = response.item_html
 
                     form.find('.form_errors').html(errorsHtml);
                     return showMessage(response.message, false);
@@ -151,6 +151,7 @@ $(document).ready(function () {
                 toggleNoTasksPlaceholder();
                 toggleNoCompletedTasksPlaceholder();
                 initTaskViewer();
+                form.trigger('reset');
             },
             error: function () {
                 showMessage('Server error. Try again later.', false);
@@ -167,8 +168,8 @@ $(document).ready(function () {
             data: form.serialize(),
             success: function (response) {
                 if (!response.success) {
-                    const errorsHtml = response.errors_html !== undefined
-                        ? response.errors_html
+                    const errorsHtml = response.item_html !== undefined
+                        ? response.item_html
                         : response.item_html || '';
 
                     form.find('.form_errors').html(errorsHtml);
@@ -214,8 +215,8 @@ $(document).ready(function () {
             data: form.serialize(),
             success: function (response) {
                 if (!response.success) {
-                    const errorsHtml = response.errors_html !== undefined
-                        ? response.errors_html
+                    const errorsHtml = response.item_html !== undefined
+                        ? response.item_html
                         : response.item_html || '';
 
                     form.find('.form_errors').html(errorsHtml);
@@ -237,6 +238,7 @@ $(document).ready(function () {
 
                 showMessage(response.message, true);
                 toggleNoComments($container);
+                form.trigger('reset');
             },
             error: function () {
                 showMessage('Server error. Try completing task.', false);
@@ -253,8 +255,8 @@ $(document).ready(function () {
             data: form.serialize(),
             success: function (response) {
                 if (!response.success) {
-                    const errorsHtml = response.errors_html !== undefined
-                        ? response.errors_html
+                    const errorsHtml = response.item_html !== undefined
+                        ? response.item_html
                         : response.item_html || '';
 
                     form.find('.form_errors').html(errorsHtml);
@@ -282,6 +284,7 @@ $(document).ready(function () {
                 updateProgressBars($taskDetails);
                 toggleNoTasksPlaceholder();
                 toggleNoCompletedTasksPlaceholder();
+                showMessage(response.message, true);
             },
             error: function () {
                 showMessage('Server error. Try completing task.', false);
@@ -350,8 +353,9 @@ $(document).ready(function () {
                     form.addClass('d-none');
                     item.find('.comment-view').removeClass('d-none');
                     showMessage(response.message, true);
+                    form.trigger('reset');
                 } else {
-                    form.find('.form_errors').html(response.errors_html);
+                    form.find('.form_errors').html(response.item_html);
                     showMessage(response.message, false);
                 }
             },
