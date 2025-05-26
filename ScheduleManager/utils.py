@@ -28,6 +28,5 @@ def detect_lang_fasttext(text):
 
 def is_meaningful(text, allowed_langs=('en', 'ru'), confidence_threshold=0.5):
     lang, conf = detect_lang_fasttext(text)
-    print(f'Detected: {lang} ({conf:.2f})')
     if lang in allowed_langs and conf >= confidence_threshold:
         return True

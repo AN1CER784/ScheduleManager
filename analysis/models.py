@@ -2,8 +2,8 @@ from django.db import models
 
 
 class AnalysisSummaryQuerySet(models.QuerySet):
-    def get_summaries_by_period(self, period):
-        return self.filter(period=period)
+    def get_summaries_by_period(self, period, user):
+        return self.filter(period=period, user=user)
 
 
 class AnalysisSummary(models.Model):

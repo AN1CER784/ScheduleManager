@@ -12,7 +12,7 @@ class TaskQuerySet(models.QuerySet):
 
 
 class Task(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='tasks')
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='tasks',  blank=True, null=True)
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     start_date = models.DateField()
@@ -23,6 +23,7 @@ class Task(models.Model):
     complete_datetime = models.DateTimeField(blank=True, null=True)
     complete_percentage = models.IntegerField(default=5)
     is_completed = models.BooleanField(default=False)
+    session_key = models.CharField(max_length=40, blank=True, null=True)
 
     class Meta:
         verbose_name = 'task'

@@ -1,20 +1,18 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
+from django.views.generic import TemplateView
 
 from analysis.models import AnalysisSummary
 
 
-class AnalysisView(LoginRequiredMixin, ListView):
-    model = AnalysisSummary
+class AnalysisView(TemplateView):
     template_name = 'analysis/analysis.html'
-    context_object_name = 'all_analysis'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Analysis'
-        context['week_summaries'] = AnalysisSummary.objects.get_summaries_by_period(7)
-        context['day_summaries'] = AnalysisSummary.objects.get_summaries_by_period(1)
+        if self.request.user.is_authenticated:
+            context['week_summaries'] = AnalysisSummary.objects.get_summaries_by_period(period=7,
+                                                                                        user=self.request.user)
+            context['day_summaries'] = AnalysisSummary.objects.get_summaries_by_period(period=1, user=self.request.user)
         return context
 
-    def get_queryset(self):
-        return AnalysisSummary.objects.filter(user=self.request.user)
+
