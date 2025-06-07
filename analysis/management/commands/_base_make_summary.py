@@ -18,13 +18,9 @@ class BaseMakeSummaryCommand(BaseCommand):
     def handle(self, *args, **options):
         for user in User.objects.all():
             tasks = Task.objects.filter(user_id=user.id,
-                                        start_date__range=[
+                                        start_datetime__range=[
                                             timezone.now() - timezone.timedelta(days=self.days),
-                                            timezone.now()]) | Task.objects.filter(user_id=user.id,
-                                                                                                   complete_datetime__range=[
-                                                                                                       timezone.now() - timezone.timedelta(
-                                                                                                           days=self.days),
-                                                                                                       timezone.now()])
+                                            timezone.now()]) | Task.objects.filter(user_id=user.id,)
             if not tasks:
                 continue
             request = structure_tasks(tasks)

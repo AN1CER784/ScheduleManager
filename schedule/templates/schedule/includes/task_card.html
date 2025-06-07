@@ -72,18 +72,18 @@
 						<p class="mb-1">
 							<img src="{% static "deps/icons/person-walking.svg" %}" alt="Start Icon" width="16"
 							     height="16">
-							<strong>Start:</strong> {{ task.start_date }} {{ task.start_time }}
+							<strong>Start:</strong> {{ task.start_datetime }}
 						</p>
 						<p class="mb-1">
 							<img src="{% static "deps/icons/calendar3-event.svg" %}" alt="Due Icon" width="16"
 							     height="16">
-							<strong>Due:</strong> {{ task.due_date }} {{ task.due_time }}
+							<strong>Due:</strong> {{ task.due_datetime }}
 						</p>
 						{% if type == "Done" %}
 							<p class="mb-1">
 								<img src="{% static "deps/icons/check2-circle.svg" %}" alt="Completed Icon" width="16"
 								     height="16">
-								<strong>Completed:</strong> {{ task.complete_datetime }}
+								<strong>Completed:</strong> {{ task.progress.updated_datetime }}
 							</p>
 						{% endif %}
 						<p>
@@ -104,11 +104,11 @@
 										<div id="progress-bar{{ task.id }}"
 										     class="progress-bar bg-success progress-bar-striped progress-bar-animated text-black fw-bold"
 										     style="width: {{ task.complete_percentage }}%;">
-											{{ task.complete_percentage }}%
+											{{ task.progress.percentage }}%
 										</div>
 									</div>
 									<input type="range" class="form-range range-slider" min="5" max="100" step="5"
-									       value="{{ task.complete_percentage }}" id="status-range{{ task.id }}"
+									       value="{{ task.progress.percentage }}" id="status-range{{ task.id }}"
 									       name="status">
 								</div>
 							</div>

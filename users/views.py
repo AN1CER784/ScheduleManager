@@ -7,6 +7,7 @@ from django.views.generic import CreateView, UpdateView, ListView
 
 from schedule.models import Task
 from users.forms import LoginForm, ProfileForm, SignupForm
+from users.utils import update_task_user
 
 
 class UserLoginView(LoginView):
@@ -19,12 +20,12 @@ class UserLoginView(LoginView):
         return context
 
     def form_valid(self, form):
+        session_key = self.request.session.session_key
         user = form.get_user()
         if user:
             auth.login(self.request, user)
             messages.success(self.request, f'{user.username}, You have successfully logged in')
-            if self.request.session.session_key:
-                Task.objects.filter(user=user).update(session_key=self.request.session.session_key)
+            update_task_user(session_key, user)
             return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
@@ -44,10 +45,12 @@ class UserSignupView(CreateView):
         return context
 
     def form_valid(self, form):
+        session_key = self.request.session.session_key
         form.save()
         user = form.instance
         auth.login(self.request, user)
         messages.success(self.request, f'{user.username}, You have successfully registered and logged in')
+        update_task_user(session_key, user)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):

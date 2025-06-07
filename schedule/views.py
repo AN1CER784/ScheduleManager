@@ -1,9 +1,10 @@
+
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.views import View
-
 from schedule.forms import TaskCreateForm, TaskCompleteForm, TaskIncompleteForm, TaskCommentForm
 from schedule.mixins import ScheduleMixin, JsonFormMixin
+from schedule.models import TaskProgress
 
 
 class UserScheduleAddTask(JsonFormMixin, ScheduleMixin, View):
@@ -17,8 +18,8 @@ class UserScheduleAddTask(JsonFormMixin, ScheduleMixin, View):
             if not self.request.session.session_key:
                 self.request.session.create()
             task.session_key = self.request.session.session_key
-            print(self.request.session.get_expiry_date(), )
         task.save()
+        TaskProgress.objects.create(task=task)
         item_html = self.render_task(task=task, type='InProgress', request=self.request)
         return JsonResponse(self.response('Task was successfully added', item_html, True))
 
@@ -56,8 +57,8 @@ class UserScheduleIncompleteTask(ScheduleMixin, View):
 class UserUpdateProgressTask(ScheduleMixin, View):
     def post(self, request):
         task = self.get_task(request)
-        task.complete_percentage = int(request.POST.get('complete_percentage'))
-        task.save()
+        task.progress.percentage = int(request.POST.get('complete_percentage'))
+        task.progress.save()
         item_html = self.render_task(task=task, type='InProgress', request=request)
         return JsonResponse(self.response('Task progress was successfully updated', item_html, True))
 
@@ -75,7 +76,8 @@ class UserScheduleAddComment(JsonFormMixin, ScheduleMixin, View):
             'comment_date': comment.created_date
         }, request=self.request)
         return JsonResponse(
-            self.response('Comment was successfully added', item_html, True, divider_html=divider_html))
+            self.response('Comment was successfully added', item_html, True, divider_html=divider_html,
+                          comment_date=comment.created_date))
 
     def form_invalid(self, form):
         item_html = self.render_errors(form=form, request=self.request)

@@ -1,3 +1,4 @@
+from django.db.backends.utils import logger
 from g4f.client import Client
 
 
@@ -10,17 +11,15 @@ def structure_tasks(tasks):
             "name": task.name,
             "description": task.description if task.description else 'No description',
             "comments": '\n'.join(task.comments.values_list('text', flat=True)) if task.comments.values_list('text', flat=True) else 'No comments',
-            "start_time": task.start_time,
-            "start_date": task.start_date,
-            "due_time": task.due_time,
-            "due_date": task.due_date,
-            "status": "Completed" if task.is_completed else "In Progress",
-            "complete_percentage": task.complete_percentage,
-            "completed_datetime":  task.complete_datetime if task.is_completed else "Task is not complete"
+            "start_datetime": task.start_datetime,
+            "due_datetime": task.due_datetime,
+            "complete_percentage": task.progress.percentage,
+            "progress_updated": task.progress.updated_datetime,
+            "status": task.is_completed,
         }
         structured_tasks.append(structured_task)
     for task in structured_tasks:
-        request_in_string += f"Task: {task['name']}\nDescription: {task['description']}\nStatus: {task['status']}\nComplete percentage: {task['complete_percentage']}\nStart date and time:  {task['start_date']} {task['start_time']}\nDue date and time: {task['due_date']} {task['due_time']}\nComplete date and time: {task['completed_datetime']}\nComments: {task['comments']}\n\n"
+        request_in_string += f"Task: {task['name']}\nDescription: {task['description']}\nStatus: {task['status']}\nComplete percentage: {task['complete_percentage']}\nStart date and time:  {task['start_datetime']}\nDue date and time: {task['due_datetime']}\nUpdated date and time: {task['progress_updated']}\nComments: {task['comments']}\n\n"
     return request_in_string
 
 
@@ -33,14 +32,14 @@ def generate_analysis(content, main_prompt):
         try:
             response = client.chat.completions.create(
                 model=model,
-                messages=[{"role": "user", "content": main_prompt + content}],
+                messages=[{"role": "assistant", "content": main_prompt + content}],
                 web_search=False
             )
-            print(f"Model: {model}")
+            logger.info(f"Model: {model}")
             message = response.choices[0].message.content
             if "</think>" in message:
                 message = message.split("</think>")[1]
             return message
-        except:
-            print(f"Error with model {model}")
+        except Exception as e:
+            logger.warning(f"Error with model {model}")
             continue

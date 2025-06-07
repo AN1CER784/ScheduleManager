@@ -11,5 +11,5 @@ class AnalysisSummary(models.Model):
     summary = models.TextField()
     created_at = models.DateField(auto_now_add=True)
     period = models.IntegerField()
-
     objects = AnalysisSummaryQuerySet.as_manager()
+

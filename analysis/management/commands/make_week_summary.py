@@ -1,4 +1,4 @@
-from analysis.management.commands.base_make_summary import BaseMakeSummaryCommand
+from analysis.management.commands._base_make_summary import BaseMakeSummaryCommand
 
 
 class Command(BaseMakeSummaryCommand):

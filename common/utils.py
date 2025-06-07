@@ -1,5 +1,3 @@
-import re
-
 import fasttext
 
 model = fasttext.load_model("fasttext_models/lid.176.bin")
@@ -28,5 +26,6 @@ def detect_lang_fasttext(text):
 
 def is_meaningful(text, allowed_langs=('en', 'ru'), confidence_threshold=0.5):
     lang, conf = detect_lang_fasttext(text)
+    print(conf)
     if lang in allowed_langs and conf >= confidence_threshold:
         return True
