@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     toggleNoTasksPlaceholder();
     toggleNoCompletedTasksPlaceholder();
-
+    toggleNoProjectsPlaceholder();
 
     $(document).on('click', '.accordion-toggle', function () {
         const target = $($(this).data('target'));
@@ -26,7 +26,7 @@ $(document).ready(function () {
             if ($accordionCollapse.length === 0) return;
 
             $taskDetails.removeClass('d-none').empty();
-            $taskList.removeClass('col-lg-6').addClass('col-lg-5');
+            $taskList.removeClass('col-lg-8 col-xxl-6').addClass('col-lg-5');
             $taskDetails.addClass('col-12 col-lg-6');
 
             const $clone = $accordionCollapse.clone().css('display', 'block');
@@ -63,7 +63,7 @@ $(document).ready(function () {
         const $taskList = $('#mainContent');
 
         $taskDetails.addClass('d-none').empty();
-        $taskList.removeClass('col-lg-5').addClass('col-lg-6');
+        $taskList.removeClass('col-lg-5').addClass('col-lg-8 col-xxl-6');
         $taskDetails.removeClass('col-12 col-lg-6');
     });
 
@@ -76,9 +76,10 @@ $(document).ready(function () {
     }
 
     const sendProgressUpdate = debounce(function (taskId, value) {
+        const projectId = $('#project-data').data('project-id');
         $.ajax({
             type: 'POST',
-            url: '/schedule/task-update-progress/',
+            url: `/users/projects/${projectId}/tasks/task-update-progress/`,
             data: {
                 task_id: taskId,
                 complete_percentage: value,
@@ -114,6 +115,59 @@ $(document).ready(function () {
         }
     });
 
+    $('#proj-add-form').on('submit', function (e) {
+        e.preventDefault();
+        const form = $(this);
+        $.ajax({
+            type: 'POST',
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (response) {
+                if (!response.success) {
+                    const errorsHtml = response.item_html
+
+                    form.find('.form_errors').html(errorsHtml);
+                    return showMessage(response.message, false);
+                }
+
+                form.find('.form_errors').empty();
+                const $newItem = $(response.item_html.trim());
+                let containerSelector;
+                containerSelector = '#projectsContainer';
+                $(containerSelector).prepend($newItem);
+                toggleNoProjectsPlaceholder();
+                showMessage(response.message, true);
+            },
+            error: function () {
+                showMessage('Server error. Try again later.', false);
+            }
+        });
+
+    });
+
+    $(document).on('submit', '.proj-del-form', function (e) {
+        e.preventDefault();
+        const form = $(this);
+        $.ajax({
+            type: 'POST',
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (response) {
+                if (response.success) {
+                    form.closest('.project-card').remove();
+                    showMessage(response.message, true);
+                    toggleNoProjectsPlaceholder();
+
+
+                } else {
+                    showMessage('Could not delete project.', false);
+                }
+            },
+            error: function () {
+                showMessage('Server error. Try deleting project.', false);
+            }
+        });
+    });
 
     $('#task-add-form').on('submit', function (e) {
         e.preventDefault();
@@ -188,7 +242,7 @@ $(document).ready(function () {
                 const $taskDetails = $('#taskDetails');
                 const $taskList = $('#mainContent');
                 $taskDetails.removeClass('d-none').empty();
-                $taskList.removeClass('col-lg-6').addClass('col-lg-5');
+                $taskList.removeClass('col-lg-8 col-xxl-6').addClass('col-lg-5');
                 $taskDetails.addClass('col-12 col-lg-6');
 
                 const $accordionCollapse = $newItem.find('.accordion-collapse').first();
@@ -275,7 +329,7 @@ $(document).ready(function () {
                 const $taskDetails = $('#taskDetails');
                 const $taskList = $('#mainContent');
                 $taskDetails.removeClass('d-none').empty();
-                $taskList.removeClass('col-lg-6').addClass('col-lg-5');
+                $taskList.removeClass('col-lg-8 col-xxl-6').addClass('col-lg-5');
                 $taskDetails.addClass('col-12 col-lg-6');
 
                 const $accordionCollapse = $newItem.find('.accordion-collapse').first();
@@ -324,18 +378,58 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click', '.edit-btn', function () {
+    $(document).on('click', '.edit-comment-btn', function () {
         const item = $(this).closest('.comment-item');
         item.find('.comment-view').addClass('d-none');
         item.find('.comment-edit-form').removeClass('d-none');
     });
 
-    $(document).on('click', '.cancel-edit-btn', function () {
+    $(document).on('click', '.cancel-edit-comment-btn', function () {
         const item = $(this).closest('.comment-item');
         item.find('.comment-edit-form').addClass('d-none');
         item.find('.comment-view').removeClass('d-none');
     });
 
+    $(document).on('click', '.edit-proj-btn', function () {
+        const item = $(this).closest('.project-card');
+        item.find('.project-name').addClass('d-none');
+        item.find('.proj-edit-form').removeClass('d-none');
+    });
+
+    $(document).on('click', '.cancel-proj-edit-btn', function () {
+        const item = $(this).closest('.project-card');
+        item.find('.proj-edit-form').addClass('d-none');
+        item.find('.project-name').removeClass('d-none');
+    });
+
+
+    $(document).on('submit', '.proj-edit-form', function (e) {
+        e.preventDefault();
+        const form = $(this);
+        const item = form.closest('.project-card');
+
+        $.ajax({
+            type: 'POST',
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (response) {
+                if (response.success) {
+                    const $newItem = $(response.item_html);
+                    item.replaceWith($newItem);
+                    form.addClass('d-none');
+                    item.find('.project-name').removeClass('d-none');
+                    showMessage(response.message, true);
+                    form.trigger('reset');
+                } else {
+                    form.find('.form_errors').html(response.item_html);
+                    showMessage(response.message, false);
+                }
+            },
+            error: function () {
+                form.find('.form_errors').text('Server error, try again.');
+            }
+        });
+    });
 
     $(document).on('submit', '.comment-edit-form', function (e) {
         e.preventDefault();
@@ -388,13 +482,78 @@ $(document).ready(function () {
             }
         });
     });
+    // Клик по полю — показать форму
+    $(document).on('click', '.editable-field', function () {
+        const $wrapper = $(this).closest('.field-wrapper');
+        const $form = $wrapper.find('.edit-form');
+        $(this).hide();
+        $form.css('display', 'inline-block');
+        $form.find('[name]').focus();
+    });
+
+// Клик по кнопке отмены
+    $(document).on('click', '.cancel-btn', function () {
+        const $wrapper = $(this).closest('.field-wrapper');
+        $wrapper.find('.edit-form').hide();
+        $wrapper.find('.editable-field').show();
+    });
+
+// Клик по кнопке подтверждения
+    $(document).on('click', '.confirm-btn', function (e) {
+        e.preventDefault();
+
+        const $wrapper = $(this).closest('.field-wrapper');
+        const $form = $wrapper.find('.edit-form');
+
+        $.ajax({
+            type: 'POST',
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            success: function (response) {
+                if (response.success) {
+                    const taskId = $form.find('input[name="task_id"]').val();
+                    const accordionItem =  document.getElementById(`task-InProgress${taskId}`) || document.getElementById(`task-Done${taskId}`);
+                    $(accordionItem).replaceWith(response.item_html);
+                    showMessage(response.message, true);
+                    $wrapper.find('.edit-form').hide();
+                    $wrapper.find('.editable-field').show();
+                    const $taskDetails = $('#taskDetails');
+                    const $taskList = $('#mainContent');
+                    $taskDetails.removeClass('d-none').empty();
+                    $taskList.removeClass('col-lg-8 col-xxl-6').addClass('col-lg-5');
+                    $taskDetails.addClass('col-12 col-lg-6');
+                    const $accordionCollapse = $(response.item_html).find('.accordion-collapse').first();
+                    const $clone = $accordionCollapse.clone().css('display', 'block');
+                    $taskDetails.append($clone);
+                    updateProgressBars($taskDetails);
+
+                } else {
+                    $wrapper.find('.form_errors').html(response.item_html);
+                    showMessage(response.message, false);
+                }
+            },
+            error: function () {
+                showMessage('Server error. Could not update task.', false);
+            }
+        });
+    });
+
 
     function toggleNoComments($container) {
         const $commentList = $container.find('.commentList');
         const hasComments = $commentList.find('.comment-item').length > 0;
-        console.log(hasComments);
         if (!hasComments) {
             $commentList.empty();
+        }
+    }
+
+    function toggleNoProjectsPlaceholder() {
+        const $container = $('#projectsContainer');
+        const hasProjects = $container.find('.project-card').length > 0;
+        if (hasProjects) {
+            $('#no-proj-placeholder').hide();
+        } else {
+            $('#no-proj-placeholder').show();
         }
     }
 
@@ -430,4 +589,6 @@ $(document).ready(function () {
             $('#message-container').html('');
         }, 3000);
     }
+
+
 });

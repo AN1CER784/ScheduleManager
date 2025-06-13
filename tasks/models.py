@@ -8,22 +8,45 @@ class TaskQuerySet(models.QuerySet):
     def get_done(self):
         return self.filter(is_completed=True)
 
+    def get_proj_period(self):
+        if self.count() == 0:
+            return "No term"
+
+        earliest_task = self.order_by('start_datetime')[0]
+        latest_task = self.order_by('-due_datetime') \
+            .filter(due_datetime__isnull=False)[0]
+
+        if not latest_task.due_datetime:
+            return f"Term: since {earliest_task.start_datetime.date()}"
+        return f"Term: since {earliest_task.start_datetime.date()} to {latest_task.due_datetime.date()}"
+
+    def get_percent_completion(self):
+        total_tasks = self.count()
+        completed_tasks = self.filter(is_completed=True).count()
+        return (completed_tasks / total_tasks) * 100 if total_tasks > 0 else 0
+
+
 class Task(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='tasks',  blank=True, null=True)
+    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE, related_name='tasks')
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     start_datetime = models.DateTimeField(blank=True, null=True)
     due_datetime = models.DateTimeField(blank=True, null=True)
     description = models.TextField()
     is_completed = models.BooleanField(default=False)
-    session_key = models.CharField(max_length=40, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        task_id = self.id
+        super().save(*args, **kwargs)
+        if task_id is None:
+            TaskProgress.objects.create(task=self)
+
 
     class Meta:
         verbose_name = 'task'
-        ordering = ['created_at']
+        ordering = ['due_datetime']
 
     objects = TaskQuerySet.as_manager()
-
 
 
 class TaskComment(models.Model):
@@ -43,6 +66,7 @@ class TaskComment(models.Model):
         verbose_name = 'task_comment'
         ordering = ['created_at']
 
+
 class TaskProgress(models.Model):
     task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='progress')
     percentage = models.IntegerField(default=5)
@@ -59,3 +83,5 @@ class TaskProgress(models.Model):
             self.task.is_completed = False
         self.task.save()
         super().save(*args, **kwargs)
+
+

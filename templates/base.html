@@ -1,6 +1,4 @@
 {% load static %}
-{% load links_tags %}
-{% navigation_links as links %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -28,10 +26,6 @@
 				     class="d-inline-block">
 				ScheduleManager
 			</a>
-				{% if schedule %}
-					{% include 'schedule/includes/modal_add_task.html' %}
-				{% endif %}
-
 
 			<button class="navbar-toggler" type="button"
 			        data-bs-toggle="collapse" data-bs-target="#navbarContent"
@@ -47,10 +41,10 @@
 				<ul class="navbar-nav mb-2 mb-lg-0 gap-4">
 					<li class="nav-item">
 						<a class="nav-link text-success d-flex align-items-center gap-2"
-						   href="{% url 'users:schedule' %}">
+						   href="{% url 'users:projects' %}">
 							<img src="{% static 'deps/icons/calendar-range.svg' %}"
-							     alt="Schedule" width="20" height="20" class="img-green-dim">
-							Schedule
+							     alt="Projects" width="20" height="20" class="img-green-dim">
+							Projects
 						</a>
 					</li>
 					<li class="nav-item">
@@ -112,7 +106,7 @@
 		{% include 'includes/notifications.html' %}
 		<div id="message-container"></div>
 		<div class="row mt-5 justify-content-center align-items-start">
-			<div id="mainContent" class="col-12 col-lg-6 mx-auto mb-5">
+			<div id="mainContent" class="col-12 col-lg-8 col-xxl-6 mx-auto mb-5">
 				{% block content %}{% endblock %}
 			</div>
 			{% block additional_content %}{% endblock %}

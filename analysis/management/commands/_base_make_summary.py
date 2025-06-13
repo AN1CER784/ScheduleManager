@@ -1,10 +1,11 @@
 from django.core.management.base import BaseCommand
+from django.utils import timezone
 
 from analysis.models import AnalysisSummary
 from analysis.utils import generate_analysis, structure_tasks
-from schedule.models import Task
+from projects.models import Project
+from tasks.models import Task
 from users.models import User
-from django.utils import timezone
 
 
 class BaseMakeSummaryCommand(BaseCommand):
@@ -17,10 +18,10 @@ class BaseMakeSummaryCommand(BaseCommand):
 
     def handle(self, *args, **options):
         for user in User.objects.all():
-            tasks = Task.objects.filter(user_id=user.id,
-                                        start_datetime__range=[
-                                            timezone.now() - timezone.timedelta(days=self.days),
-                                            timezone.now()]) | Task.objects.filter(user_id=user.id,)
+            projects = Project.objects.filter(user=user)
+            tasks = Task.objects.filter(project__in=projects).filter(start_datetime__range=[
+                timezone.now() - timezone.timedelta(days=self.days),
+                timezone.now()])
             if not tasks:
                 continue
             request = structure_tasks(tasks)

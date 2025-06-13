@@ -1,7 +1,6 @@
-from schedule.models import Task
+from projects.models import Project
 
-
-def update_task_user(session_key, user_obj):
+def update_projects_user(session_key, user_obj):
     if session_key:
-        Task.objects.filter(session_key=session_key).update(user=user_obj)
+        Project.objects.filter(session_key=session_key).update(user=user_obj)
 

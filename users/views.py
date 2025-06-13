@@ -3,11 +3,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView, ListView
-
-from schedule.models import Task
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
+from projects.mixins import ProjectMixin
+from projects.models import Project
 from users.forms import LoginForm, ProfileForm, SignupForm
-from users.utils import update_task_user
+from users.utils import update_projects_user
 
 
 class UserLoginView(LoginView):
@@ -25,7 +25,7 @@ class UserLoginView(LoginView):
         if user:
             auth.login(self.request, user)
             messages.success(self.request, f'{user.username}, You have successfully logged in')
-            update_task_user(session_key, user)
+            update_projects_user(session_key, user)
             return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
@@ -50,7 +50,7 @@ class UserSignupView(CreateView):
         user = form.instance
         auth.login(self.request, user)
         messages.success(self.request, f'{user.username}, You have successfully registered and logged in')
-        update_task_user(session_key, user)
+        update_projects_user(session_key, user)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
@@ -88,23 +88,38 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
         return super().form_invalid(form)
 
 
-class UserScheduleView(ListView):
-    template_name = 'schedule/schedule.html'
-    success_url = reverse_lazy('users:schedule')
-    context_object_name = 'tasks'
+class UserScheduleView(ProjectMixin, DetailView):
+    template_name = 'tasks/tasks.html'
+    success_url = reverse_lazy('users:tasks')
+    context_object_name = 'project'
+    slug_url_kwarg = 'id'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Schedule'
-        context['schedule'] = True
+        return context
+
+    def get_object(self, queryset=None):
+        project = self.get_project(user_id=self.request.user.id, project_id=self.kwargs.get(self.slug_url_kwarg), session_key=self.request.session.session_key)
+        return project
+
+
+class UserProjectsView(ListView):
+    template_name = 'projects/projects.html'
+    success_url = reverse_lazy('users:projects')
+    context_object_name = 'projects'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Projects'
         return context
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
             user = self.request.user
-            tasks = Task.objects.filter(user=user)
+            projects = Project.objects.filter(user=user)
         else:
             if not self.request.session.session_key:
                 self.request.session.create()
-            tasks = Task.objects.filter(session_key=self.request.session.session_key)
-        return tasks
+            projects = Project.objects.filter(session_key=self.request.session.session_key)
+        return projects

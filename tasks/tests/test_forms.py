@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from django.test import TestCase
 
-from schedule.forms import TaskCreateForm, TaskCommentForm
+from tasks.forms import TaskCreateForm, TaskCommentForm
 
 
 
@@ -10,10 +10,8 @@ class TaskCreateFormTestCase(TestCase):
     def test_create_task(self):
         form_data = {'name': 'Title for the test task',
                      'description': 'Description for the test task',
-                     'start_date': datetime.now().date(),
-                     'start_time': datetime.now().time(),
-                     'due_date': datetime.now().date() + timedelta(days=1),
-                     'due_time': datetime.now().time()}
+                     'start_date': datetime.now().date() + timedelta(days=1),
+                     'start_time': datetime.now().time(),}
         form = TaskCreateForm(data=form_data)
         self.assertTrue(form.is_valid())
 

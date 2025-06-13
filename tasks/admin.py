@@ -17,8 +17,8 @@ class TaskProgressInline(admin.TabularInline):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user')
-    list_filter = ('user', 'created_at')
-    search_fields = ('name', 'user__username')
+    list_display = ('name', 'project')
+    list_filter = ('created_at',)
+    search_fields = ('name', 'project__name')
     ordering = ('-created_at',)
     inlines = [TaskCommentInline, TaskProgressInline]

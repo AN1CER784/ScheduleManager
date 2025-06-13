@@ -4,7 +4,7 @@ from g4f.client import Client
 
 def structure_tasks(tasks):
     structured_tasks = []
-    request_in_string = f'Main purpose of creating this request is to help user to understand his tasks. {" User personal purpose is described by him as " + tasks[0].user.description if tasks[0].user.description else "No description provided"};\n\n'
+    request_in_string = f'Main purpose of creating this request is to help user to understand his tasks. {" User personal purpose is described by him as " + tasks[0].project.user.description if tasks[0].project.user.description else "No description provided"};\n\n'
     request_in_string += 'TASKS:\n\n'
     for task in tasks:
         structured_task = {

@@ -20,7 +20,7 @@
 				{{ task.name }}
 			</button>
 		</h2>
-		<form action="{% url 'schedule:del_task' %}" method="post" class="ms-2 delete-task-form">
+		<form action="{% url 'tasks:del_task' project.id %}" method="post" class="ms-2 delete-task-form">
 			<button type="submit" class="btn btn-sm btn-danger" title="Delete Task">
 				{% csrf_token %}
 				<img src="{% static "deps/icons/trash3.svg" %}"
@@ -29,7 +29,7 @@
 			</button>
 		</form>
 		{% if type == "InProgress" %}
-			<form action="{% url 'schedule:complete_task' %}" method="post" class="ms-2 complete-task-form">
+			<form action="{% url 'tasks:complete_task' project.id %}" method="post" class="ms-2 complete-task-form">
 				<button type="submit" class="btn btn-sm btn-success" title="Mark as done">
 					{% csrf_token %}
 					<img src="{% static "deps/icons/check2-circle.svg" %}"
@@ -38,7 +38,7 @@
 				</button>
 			</form>
 		{% else %}
-			<form action="{% url 'schedule:incomplete_task' %}" method="post" class="ms-2 incomplete-task-form">
+			<form action="{% url 'tasks:incomplete_task' project.id %}" method="post" class="ms-2 incomplete-task-form">
 				<button type="submit" class="btn btn-sm btn-success" title="Mark as pending">
 					{% csrf_token %}
 					<img src="{% static "deps/icons/person-walking.svg" %}"
@@ -52,11 +52,25 @@
 			id="{{ type }}{{ task.id }}"
 			class="accordion-collapse collapse"
 			data-bs-parent="{% if type == "InProgress" %}#accordionInProgress{% else %}#accordionDone{% endif %}">
-		<div  class="accordion-body bg-light d-flex flex-column">
+		<div class="accordion-body bg-light d-flex flex-column">
+		<div id="project-data" data-project-id="{{ project.id }}"></div>
 			<div class="flex-grow-1">
 				<div class="row">
 					<div class="col-11">
-						<h3>{{ task.name }}</h3>
+						<div class="field-wrapper" data-field="name" data-id="{{ task.id }}">
+							<div class="form_errors"></div>
+							<h3 class="editable-field">{{ task.name }}</h3>
+							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form name w-100 align-items-start" method="post">
+								{% csrf_token %}
+								<input type="hidden" name="task_id" value="{{ task.id }}">
+								<input type="hidden" name="start_datetime" value="{{ task.start_datetime|date:'Y-m-d\\TH:i:s' }}">
+								<input type="hidden" name="due_datetime" value="{{ task.due_datetime|date:'Y-m-d\\TH:i:s' }}">
+								<input type="text" name="name" value="{{ task.name }}"
+								       class="form-control fs-3 fw-bold w-100 "/>
+								<button type="submit" class="confirm-btn">✓</button>
+								<button type="button" class="cancel-btn">✕</button>
+							</form>
+						</div>
 					</div>
 					<div class="col-1">
 						<button type="button"
@@ -69,28 +83,70 @@
 				</div>
 				<div class="row">
 					<div class="col-md-6">
-						<p class="mb-1">
-							<img src="{% static "deps/icons/person-walking.svg" %}" alt="Start Icon" width="16"
+						<div class="field-wrapper" data-field="start" data-id="{{ task.id }}">
+							<div class="form_errors"></div>
+							<p class="editable-field">
+								<img src="{% static "deps/icons/person-walking.svg" %}" alt="Start Icon" width="16"
 							     height="16">
-							<strong>Start:</strong> {{ task.start_datetime }}
-						</p>
-						<p class="mb-1">
-							<img src="{% static "deps/icons/calendar3-event.svg" %}" alt="Due Icon" width="16"
+								<strong>Start:</strong> {{ task.start_datetime }}</p>
+							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form start-datetime" method="post">
+								{% csrf_token %}
+																<input type="hidden" name="task_id" value="{{ task.id }}">
+																<input type="hidden" name="name" value="{{ task.name }}">
+								<input type="hidden" name="due_datetime" value="{{ task.due_datetime|date:'Y-m-d\\TH:i:s' }}">
+								<input type="datetime-local" name="start_datetime"
+								       value="{{ task.start_datetime|date:'Y-m-d\\TH:i:s' }}"
+								       class="form-control form-control-sm"/>
+								<button type="submit" class="confirm-btn">✓</button>
+								<button type="button" class="cancel-btn">✕</button>
+							</form>
+						</div>
+
+						<div class="field-wrapper" data-field="due" data-id="{{ task.id }}">
+							<div class="form_errors"></div>
+							<p class="editable-field">
+								<img src="{% static "deps/icons/calendar3-event.svg" %}" alt="Due Icon" width="16"
 							     height="16">
-							<strong>Due:</strong> {{ task.due_datetime }}
-						</p>
+								<strong>Due:</strong> {{ task.due_datetime|default:"Not specified" }}</p>
+							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form due-datetime" method="post">
+								{% csrf_token %}
+								<input type="hidden" name="task_id" value="{{ task.id }}">
+																<input type="hidden" name="name" value="{{ task.name }}">
+								<input type="hidden" name="start_datetime" value="{{ task.start_datetime|date:'Y-m-d\\TH:i:s' }}">
+								<input type="datetime-local" name="due_datetime"
+								       value="{{ task.due_datetime|date:'Y-m-d\\TH:i:s' }}"
+								       class="form-control form-control-sm"/>
+								<button type="submit" class="confirm-btn">✓</button>
+								<button type="button" class="cancel-btn">✕</button>
+							</form>
+						</div>
+
+
 						{% if type == "Done" %}
-							<p class="mb-1">
+							<p class="mb-3">
 								<img src="{% static "deps/icons/check2-circle.svg" %}" alt="Completed Icon" width="16"
 								     height="16">
 								<strong>Completed:</strong> {{ task.progress.updated_datetime }}
 							</p>
 						{% endif %}
-						<p>
-							<img src="{% static "deps/icons/file-text.svg" %}" alt="Description Icon" width="16"
-							     height="16">
-							<strong>Description:</strong> {{ task.description }}
-						</p>
+						<div class="field-wrapper" data-field="desc" data-id="{{ task.id }}">
+							<div class="form_errors"></div>
+							<p class="editable-field">
+								<img src="{% static "deps/icons/file-text.svg" %}" alt="Description Icon" width="16"
+							     height="16"> <strong>Description:</strong>
+								{{ task.description|default:"No description" }}</p>
+							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form description" method="post">
+								{% csrf_token %}
+								<input type="hidden" name="task_id" value="{{ task.id }}">
+																<input type="hidden" name="name" value="{{ task.name }}">
+								<input type="hidden" name="start_datetime" value="{{ task.start_datetime|date:'Y-m-d\\TH:i:s' }}">
+								<input type="hidden" name="due_datetime" value="{{ task.due_datetime|date:'Y-m-d\\TH:i:s' }}">
+								<input name="description"
+								          class="form-control form-control-sm" value="{{ task.description }}"/>
+								<button type="submit" class="confirm-btn">✓</button>
+								<button type="button" class="cancel-btn">✕</button>
+							</form>
+						</div>
 					</div>
 
 					{% if type == "InProgress" %}
@@ -121,13 +177,13 @@
 				{% group_comments_by_date task.comments.all|dictsort:"created_date" as group_comments %}
 				<div class="commentList rounded px-5" style="max-height: 300px; overflow-y: auto;">
 					{% for comment_date, comments in group_comments.items %}
-						{% include 'schedule/includes/comment_divider.html' %}
+						{% include 'tasks/includes/comment_divider.html' %}
 						{% for comment in comments %}
-							{% include 'schedule/includes/comment_item.html' %}
+							{% include 'tasks/includes/comment_item.html' %}
 						{% endfor %}
 					{% endfor %}
 				</div>
-				<form action="{% url 'schedule:add_comment' %}" method="post" class="send-comment-form">
+				<form action="{% url 'tasks:add_comment' project.id %}" method="post" class="send-comment-form">
 					{% csrf_token %}
 					<div class="chat-input-wrapper bg-light p-3 rounded">
 						<div class="form_errors">

@@ -3,7 +3,7 @@ services:
     image: postgres:17.5-alpine3.21
     restart: always
     volumes:
-      - db_info:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=schedule_db
       - POSTGRES_USER=root
@@ -31,5 +31,6 @@ services:
       - ../cache:/data
 
 volumes:
-  db_info:
+  db_data:
+
 

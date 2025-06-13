@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+	<link rel="stylesheet" href="{% static 'deps/css/schedule.css' %}">
+{% endblock %}
+{% block content %}
+	<div class="fs-3 fw-bold text-center text-success mb-3 shadow-sm p-3 bg-light rounded">
+		Projects
+	</div>
+	<div>
+		<div id="projectsContainer">
+			{% for project in projects %}
+				{% include "projects/includes/project_item.html" with project=project %}
+			{% endfor %}
+		</div>
+		<div id="no-proj-placeholder"
+		     class="container bg-light p-3 rounded shadow text-secondary fs-5 justify-content-center align-items-center text-center"
+		     style="display: none">
+			<p class="m-0">Add some projects here to see them in list</p>
+		</div>
+
+
+		<div class="card my-2 shadow-sm add-project-card text-center text-success"
+		     style="border: 2px dashed #28a745; cursor: pointer;">
+			<button type="button" class="card-body py-2 border-0 bg-transparent w-100 p-0" data-bs-toggle="modal"
+			        data-bs-target="#addProjectModal">
+				<span class="h5">+ Add project</span>
+			</button>
+			<div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel"
+			     aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content shadow-lg border-0 rounded-4 bg-white">
+						<form method="POST" action="{% url 'projects:add_proj' %}" id="proj-add-form">
+							{% csrf_token %}
+
+							<div class="modal-header bg-success text-white rounded-top-4">
+								<h5 class="modal-title" id="addProjectModalLabel">Add New Project</h5>
+								<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+								        aria-label="Close"></button>
+							</div>
+							<div class="form_errors p-2 text-danger small"></div>
+							<div class="modal-body">
+								<div class="mb-3">
+									<label for="id_name" class="form-label">Project name</label>
+									<input type="text" class="form-control" id="id_name" name="name"
+									       placeholder="e.g. Website redesign" required>
+								</div>
+
+							</div>
+
+							<div class="modal-footer bg-white border-top">
+								<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel
+								</button>
+								<button type="submit" class="btn btn-success">Create</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block js %}
+	<script src="{% static 'deps/js/jquery/schedule.js' %}"></script>
+{% endblock %}

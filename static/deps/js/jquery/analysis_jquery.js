@@ -9,20 +9,12 @@ $(document).ready(function () {
 
 
             $summaryDetails.removeClass('d-none').empty();
-            $mainContent.removeClass('col-lg-6').addClass('col-lg-5');
+            $mainContent.removeClass('col-lg-8 col-xxl-6').addClass('col-lg-5');
             $summaryDetails.addClass('col-12 col-lg-6');
 
             const $clone = $accordionCollapse.clone().css('display', 'block');
             $summaryDetails.append($clone);
 
-            // const $analysisSummary = $(this).closest('.analysis-summary');
-            // const $summaryBody = $analysisSummary.find('.summary-body');
-            // $summaryDetails.removeClass('d-none').empty();
-            // $mainContent.removeClass('col-lg-6').addClass('col-lg-5');
-            // $summaryDetails.addClass('col-12 col-lg-6');
-            //
-            // const $clone = $summaryBody.clone().css('display', 'block');
-            // $summaryDetails.append($clone);
         });
     }
 
@@ -45,7 +37,7 @@ $(document).ready(function () {
         const $taskList = $('#mainContent');
 
         $taskDetails.addClass('d-none').empty();
-        $taskList.removeClass('col-lg-5').addClass('col-lg-6');
+        $taskList.removeClass('col-lg-5').addClass('col-lg-8 col-xxl-6');
         $taskDetails.removeClass('col-12 col-lg-6');
     });
 });
