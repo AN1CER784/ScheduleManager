@@ -1,38 +1,25 @@
 from django.db import models
 
 
+
 class TaskQuerySet(models.QuerySet):
-    def get_pending(self):
-        return self.filter(is_completed=False)
-
-    def get_done(self):
-        return self.filter(is_completed=True)
-
-    def get_proj_period(self):
-        if self.count() == 0:
-            return "No term"
-
-        earliest_task = self.order_by('start_datetime')[0]
-        latest_task = self.order_by('-due_datetime') \
-            .filter(due_datetime__isnull=False)[0]
-
-        if not latest_task.due_datetime:
-            return f"Term: since {earliest_task.start_datetime.date()}"
-        return f"Term: since {earliest_task.start_datetime.date()} to {latest_task.due_datetime.date()}"
-
-    def get_percent_completion(self):
-        total_tasks = self.count()
-        completed_tasks = self.filter(is_completed=True).count()
-        return (completed_tasks / total_tasks) * 100 if total_tasks > 0 else 0
+    def split_pending_done(self):
+        tasks = self.all().select_related("progress").prefetch_related("comments")
+        pending = [t for t in tasks if not t.is_completed]
+        done = [t for t in tasks if t.is_completed]
+        return {
+            "pending": pending,
+            "done": done
+        }
 
 
 class Task(models.Model):
     project = models.ForeignKey('projects.Project', on_delete=models.CASCADE, related_name='tasks')
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    start_datetime = models.DateTimeField(blank=True, null=True)
+    start_datetime = models.DateTimeField(blank=False, null=False)
     due_datetime = models.DateTimeField(blank=True, null=True)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     is_completed = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
@@ -40,7 +27,6 @@ class Task(models.Model):
         super().save(*args, **kwargs)
         if task_id is None:
             TaskProgress.objects.create(task=self)
-
 
     class Meta:
         verbose_name = 'task'
@@ -51,7 +37,7 @@ class Task(models.Model):
 
 class TaskComment(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
-    text = models.TextField()
+    text = models.TextField(blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -69,7 +55,7 @@ class TaskComment(models.Model):
 
 class TaskProgress(models.Model):
     task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='progress')
-    percentage = models.IntegerField(default=5)
+    percentage = models.PositiveIntegerField(default=5)
     updated_datetime = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -83,5 +69,3 @@ class TaskProgress(models.Model):
             self.task.is_completed = False
         self.task.save()
         super().save(*args, **kwargs)
-
-

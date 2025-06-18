@@ -2,12 +2,6 @@ from django import template
 
 register = template.Library()
 
-
-@register.simple_tag()
-def dict_get(d, key):
-    return d.get(key)
-
-
 @register.simple_tag()
 def group_comments_by_date(comments):
     grouped_comments = {}

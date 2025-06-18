@@ -9,7 +9,11 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=1111
   web:
-    command: sleep infinity
+    command: >
+      /bin/bash -c "
+      python manage.py makemigrations &&
+      python manage.py migrate &&
+      sleep infinity"
     build:
       context: ..
       dockerfile: docker/Dockerfile

@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from debug_toolbar.toolbar import debug_toolbar_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',  include('main.urls', namespace="main")),
@@ -25,9 +26,12 @@ urlpatterns = [
     path('users/projects/<int:id>/tasks/', include('tasks.urls', namespace="tasks")),
     path('users/projects/', include('projects.urls', namespace="projects")),
 
+    path('users/schedule/', include('schedule.urls', namespace="schedule")),
+
     path('analysis/',  include('analysis.urls', namespace="analysis")),
 ]
 
 
 if settings.DEBUG:
+    urlpatterns += debug_toolbar_urls()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

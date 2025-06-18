@@ -11,8 +11,11 @@ class AnalysisView(CacheMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Analysis'
         if self.request.user.is_authenticated:
-            week_summaries = AnalysisSummary.objects.get_summaries_by_period(period=7, user=self.request.user)
-            day_summaries = AnalysisSummary.objects.get_summaries_by_period(period=1, user=self.request.user)
-            context['week_summaries'] = self.find_cache(week_summaries, 'week_summaries_for_user_{self.request.user.id}', 60 * 60 * 24)
-            context['day_summaries'] = self.find_cache(day_summaries, f'day_summaries_for_user_{self.request.user.id}', 60 * 60 * 24)
+            query = AnalysisSummary.objects.get_summaries_by_period(periods=[1,7], user=self.request.user)
+            summaries =  self.find_cache(query, 'summaries_for_user_{self.request.user.id}', 60 * 60 * 24)
+            if summaries:
+                week_summaries = summaries[7]
+                day_summaries = summaries[1]
+                context['week_summaries'] = week_summaries
+                context['day_summaries'] = day_summaries
         return context

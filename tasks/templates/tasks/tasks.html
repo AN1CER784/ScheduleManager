@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block css %}
-	<link rel="stylesheet" href="{% static 'deps/css/schedule.css' %}">
+	<link rel="stylesheet" href="{% static 'deps/css/tasks.css' %}">
 {% endblock %}
 {% block content %}
 
@@ -9,125 +9,130 @@
 	<div class="fs-3 fw-bold text-center text-success mb-3 shadow-sm p-3 bg-light rounded">
 		{{ project.name }} Tasks
 	</div>
-	<div id="pending-tasks-container">
-		<h4 class="accordion-toggle d-flex justify-content-between align-items-center bg-light text-success p-3 rounded shadow-sm"
-		    data-target="#pending-content" role="button">
-			In progress
-			<img src="{% static 'deps/icons/chevron-down.svg' %}" class="toggle-icon">
-		</h4>
-		<div id="pending-content" class="accordion-section">
-			<div class="accordion" id="accordionInProgress">
-				{% for task in project.tasks.get_pending %}
-					{% include 'tasks/includes/task_item.html' with task=task type='InProgress' %}
-				{% endfor %}
+	{% with project.tasks.split_pending_done as all_tasks %}
+		<div id="pending-tasks-container">
+			<h4 class="accordion-toggle d-flex justify-content-between align-items-center bg-light text-success p-3 rounded shadow-sm"
+			    data-target="#pending-content" role="button">
+				In progress
+				<img src="{% static 'deps/icons/chevron-down.svg' %}" class="toggle-icon">
+			</h4>
+			<div id="pending-content" class="accordion-section">
+				<div class="accordion" id="accordionInProgress">
+					{% for task in all_tasks.pending %}
+						{% include 'tasks/includes/task_item.html' with task=task type='InProgress' %}
+					{% endfor %}
+				</div>
+				<div id="no-tasks-placeholder"
+				     class="container bg-light p-3 rounded shadow text-secondary fs-5 justify-content-center align-items-center text-center"
+				     style="display: none">
+					<p class="m-0">Add some tasks here to see them in list</p>
+				</div>
+
 			</div>
-			<div id="no-tasks-placeholder"
-			     class="container bg-light p-3 rounded shadow text-secondary fs-5 justify-content-center align-items-center text-center"
-			     style="display: none">
-				<p class="m-0">Add some tasks here to see them in list</p>
+			<div class="card my-2 shadow-sm add-task-card text-center text-success "
+			     style="border: 2px dashed #28a745; cursor: pointer;">
+				<button type="button" class="card-body py-2 border-0 bg-white w-100 p-0" data-bs-toggle="modal"
+				        data-bs-target="#staticBackdrop">
+					<span class="h5">+ Add task</span>
+				</button>
 			</div>
 
-		</div>
-		<div class="card my-2 shadow-sm add-task-card text-center text-success "
-		     style="border: 2px dashed #28a745; cursor: pointer;">
-			<button type="button" class="card-body py-2 border-0 bg-white w-100 p-0" data-bs-toggle="modal"
-			        data-bs-target="#staticBackdrop">
-				<span class="h5">+ Add task</span>
-			</button>
-		</div>
 
+			<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content shadow-lg border-0 rounded-4" style="background-color: #f8f9fa;">
+						<div class="modal-header bg-success text-white rounded-top-4">
+							<h5 class="modal-title d-flex align-items-center gap-2" id="staticBackdropLabel">
+								<i class="bi bi-journal-plus"></i> New Task
+							</h5>
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+							        aria-label="Close"></button>
+						</div>
 
-		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-		     aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content shadow-lg border-0 rounded-4" style="background-color: #f8f9fa;">
-					<div class="modal-header bg-success text-white rounded-top-4">
-						<h5 class="modal-title d-flex align-items-center gap-2" id="staticBackdropLabel">
-							<i class="bi bi-journal-plus"></i> New Task
-						</h5>
-						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-						        aria-label="Close"></button>
+						<form id="task-add-form" action="{% url 'tasks:add_task' project.id %}" method="post">
+							<div class="form_errors p-2 text-danger small"></div>
+							{% csrf_token %}
+
+							<div class="modal-body py-3">
+								<div class="row g-3">
+									<div class="col-md-6">
+										<label for="id_start_date" class="form-label">Start date</label>
+										<input type="date" class="form-control" id="id_start_date" name="start_date"
+										       required>
+									</div>
+									<div class="col-md-6">
+										<label for="id_start_time" class="form-label">Start time</label>
+										<input type="time" class="form-control" id="id_start_time" name="start_time"
+										       required>
+									</div>
+								</div>
+								<div class="row g-3 my-1" id="due-fields">
+									<div class="col-md-6">
+										<label for="id_due_date" class="form-label">Due date</label>
+										<input type="date" class="form-control" id="id_due_date" name="due_date">
+									</div>
+									<div class="col-md-6">
+										<label for="id_due_time" class="form-label">Due time</label>
+										<input type="time" class="form-control" id="id_due_time" name="due_time">
+									</div>
+								</div>
+							</div>
+							<div class="form-check form-switch form-switch-lg my-3 ms-3">
+								<input class="form-check-input" type="checkbox" id="enable_due_fields"
+								       style="cursor: pointer;">
+								<label class="form-check-label fw-semibold text-secondary" for="enable_due_fields">
+									Add due date & time
+								</label>
+							</div>
+							<hr class="my-3">
+							<div class="row justify-content-center">
+								<div class="mb-3 col-md-11">
+									<label for="id_name" class="form-label">Task title</label>
+									<input type="text" class="form-control" id="id_name" name="name"
+									       placeholder="e.g. Finish project proposal" required>
+								</div>
+								<div class="mb-3 col-md-11">
+									<label for="id_description" class="form-label">Description</label>
+									<input class="form-control" id="id_description" name="description"
+									       placeholder="Task details...">
+								</div>
+							</div>
+
+							<input type="hidden" name="pproject_id" value="{{ project.id }}">
+							<div class="modal-footer bg-light border-top rounded-bottom-4">
+								<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel
+								</button>
+								<button type="submit" class="btn btn-success px-4">Save</button>
+							</div>
+						</form>
 					</div>
-
-					<form id="task-add-form" action="{% url 'tasks:add_task' project.id %}" method="post">
-						<div class="form_errors p-2 text-danger small"></div>
-						{% csrf_token %}
-
-						<div class="modal-body py-3">
-							<div class="row g-3">
-								<div class="col-md-6">
-									<label for="id_start_date" class="form-label">Start date</label>
-									<input type="date" class="form-control" id="id_start_date" name="start_date" required>
-								</div>
-								<div class="col-md-6">
-									<label for="id_start_time" class="form-label">Start time</label>
-									<input type="time" class="form-control" id="id_start_time" name="start_time" required>
-								</div>
-							</div>
-							<div class="row g-3 my-1" id="due-fields">
-								<div class="col-md-6">
-									<label for="id_due_date" class="form-label">Due date</label>
-									<input type="date" class="form-control" id="id_due_date" name="due_date" >
-								</div>
-								<div class="col-md-6">
-									<label for="id_due_time" class="form-label">Due time</label>
-									<input type="time" class="form-control" id="id_due_time" name="due_time" >
-								</div>
-							</div>
-						</div>
-						<div class="form-check form-switch form-switch-lg my-3 ms-3">
-							<input class="form-check-input" type="checkbox" id="enable_due_fields"
-							       style="cursor: pointer;">
-							<label class="form-check-label fw-semibold text-secondary" for="enable_due_fields">
-								Add due date & time
-							</label>
-						</div>
-						<hr class="my-3">
-						<div class="row justify-content-center">
-							<div class="mb-3 col-md-11">
-								<label for="id_name" class="form-label">Task title</label>
-								<input type="text" class="form-control" id="id_name" name="name"
-								       placeholder="e.g. Finish project proposal" required>
-							</div>
-							<div class="mb-3 col-md-11">
-								<label for="id_description" class="form-label">Description</label>
-								<input class="form-control" id="id_description" name="description"
-								       placeholder="Task details...">
-							</div>
-						</div>
-
-						<input type="hidden" name="pproject_id" value="{{ project.id }}">
-						<div class="modal-footer bg-light border-top rounded-bottom-4">
-							<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel
-							</button>
-							<button type="submit" class="btn btn-success px-4">Save</button>
-						</div>
-					</form>
 				</div>
 			</div>
 		</div>
-	</div>
-	<br>
-	<div id="done-tasks-container">
-		<h4 class="accordion-toggle d-flex justify-content-between align-items-center bg-light text-success p-3 rounded shadow-sm"
-		    data-target="#done-content" role="button">
-			Done
-			<img src="{% static 'deps/icons/chevron-down.svg' %}" class="toggle-icon">
-		</h4>
+		<br>
+		<div id="done-tasks-container">
+			<h4 class="accordion-toggle d-flex justify-content-between align-items-center bg-light text-success p-3 rounded shadow-sm"
+			    data-target="#done-content" role="button">
+				Done
+				<img src="{% static 'deps/icons/chevron-down.svg' %}" class="toggle-icon">
+			</h4>
 
-		<div id="done-content" class="accordion-section">
-			<div class="accordion" id="accordionDone">
-				{% for task in project.tasks.get_done %}
-					{% include 'tasks/includes/task_item.html' with task=task type='Done' %}
-				{% endfor %}
-			</div>
-			<div id="no-completed-tasks-placeholder"
-			     class="container bg-light p-3 rounded shadow text-secondary fs-5 justify-content-center align-items-center text-center"
-			     style="display: none">
-				<p class="m-0">There is no completed task</p>
+			<div id="done-content" class="accordion-section">
+				<div class="accordion" id="accordionDone">
+					{% for task in all_tasks.done %}
+						{% include 'tasks/includes/task_item.html' with task=task type='Done' %}
+					{% endfor %}
+				</div>
+				<div id="no-completed-tasks-placeholder"
+				     class="container bg-light p-3 rounded shadow text-secondary fs-5 justify-content-center align-items-center text-center"
+				     style="display: none">
+					<p class="m-0">There is no completed task</p>
+				</div>
 			</div>
 		</div>
-	</div>
+
+	{% endwith %}
 
 
 
@@ -139,6 +144,6 @@
 {% endblock %}
 
 {% block js %}
-	<script src="{% static 'deps/js/jquery/schedule.js' %}"></script>
+	<script src="{% static 'deps/js/jquery/tasks.js' %}"></script>
 	<script src="{% static "deps/js/add-task.js" %}"></script>
 {% endblock %}

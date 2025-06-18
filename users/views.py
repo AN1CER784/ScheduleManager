@@ -88,7 +88,7 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
         return super().form_invalid(form)
 
 
-class UserScheduleView(ProjectMixin, DetailView):
+class UserTasksView(ProjectMixin, DetailView):
     template_name = 'tasks/tasks.html'
     success_url = reverse_lazy('users:tasks')
     context_object_name = 'project'
@@ -116,10 +116,10 @@ class UserProjectsView(ListView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            user = self.request.user
-            projects = Project.objects.filter(user=user)
+            projects = Project.objects.filter(user=self.request.user)
         else:
             if not self.request.session.session_key:
                 self.request.session.create()
             projects = Project.objects.filter(session_key=self.request.session.session_key)
+        projects = projects.prefetch_related('tasks').get_projects_percent_complete().get_projects_periods()
         return projects

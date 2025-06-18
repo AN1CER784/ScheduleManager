@@ -26,13 +26,14 @@ class BaseTaskForm(forms.ModelForm):
     def _validate_datetime(self, datetime, prefix, update):
         if not update:
             fields = [f'{prefix}_date', f'{prefix}_time', ]
+            if datetime < timezone.now():
+                msg = f'{prefix.capitalize()} date and time must be in the future'
+                for field in fields:
+                    self.add_error(field, msg)
         else:
             fields = [f'{prefix}_datetime']
-        if datetime < timezone.now():
-            msg = f'{prefix.capitalize()} date and time must be in the future'
-            for field in fields:
-                self.add_error(field, msg)
-        elif datetime > timezone.now() + timezone.timedelta(days=60):
+
+        if datetime > timezone.now() + timezone.timedelta(days=60):
             msg = f'{prefix.capitalize()} date and time must be within 2 month'
             for field in fields:
                 self.add_error(field, msg)

@@ -1,5 +1,58 @@
 $(document).ready(function () {
     toggleNoProjectsPlaceholder();
+     $('#proj-add-form').on('submit', function (e) {
+        e.preventDefault();
+        const form = $(this);
+        $.ajax({
+            type: 'POST',
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (response) {
+                if (!response.success) {
+                    const errorsHtml = response.item_html
+
+                    form.find('.form_errors').html(errorsHtml);
+                    return showMessage(response.message, false);
+                }
+
+                form.find('.form_errors').empty();
+                const $newItem = $(response.item_html.trim());
+                let containerSelector;
+                containerSelector = '#projectsContainer';
+                $(containerSelector).prepend($newItem);
+                toggleNoProjectsPlaceholder();
+                showMessage(response.message, true);
+            },
+            error: function () {
+                showMessage('Server error. Try again later.', false);
+            }
+        });
+
+    });
+
+    $(document).on('submit', '.proj-del-form', function (e) {
+        e.preventDefault();
+        const form = $(this);
+        $.ajax({
+            type: 'POST',
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (response) {
+                if (response.success) {
+                    form.closest('.project-card').remove();
+                    showMessage(response.message, true);
+                    toggleNoProjectsPlaceholder();
+
+
+                } else {
+                    showMessage('Could not delete project.', false);
+                }
+            },
+            error: function () {
+                showMessage('Server error. Try deleting project.', false);
+            }
+        });
+    });
     $(document).on('click', '.edit-proj-btn', function () {
         const item = $(this).closest('.project-card');
         item.find('.project-name').addClass('d-none');

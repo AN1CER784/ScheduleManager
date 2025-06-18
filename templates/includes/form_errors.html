@@ -1,4 +1,4 @@
-{% load task_tags %}
+{% load common_tags %}
 
 {% if form.errors %}
 	<div id="all-errors" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -6,8 +6,9 @@
 			{% for field, errs in form.errors.items %}
 				{% for err in errs %}
 					<li>
-						{% dict_get form.fields field as response %}
-						<strong>{{ response.label }}:</strong>
+						{% with form.fields|get_item:field as response %}
+							<strong>{{ response.label }}:</strong>
+						{% endwith %}
 						{{ err }}
 					</li>
 				{% endfor %}

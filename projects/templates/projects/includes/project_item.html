@@ -1,4 +1,6 @@
 {% load static %}
+
+{% load common_tags %}
 <div class="card mb-2 shadow-sm project-card" data-id="{{ project.id }}">
 	<div class="card-body d-flex flex-wrap py-2">
 		<div class="col-12 col-lg-6 d-flex flex-column justify-content-start">
@@ -33,20 +35,22 @@
 				</div>
 			</form>
 
-			<small class="text-muted">{{ project.tasks.get_proj_period }}</small>
+			<small class="text-muted">{{ project.term }}</small>
 		</div>
 
 
 		<div class="col-6 col-lg-6 d-flex align-items-center">
+
+
 			<div class="d-flex flex-column me-3 mx-lg-3 w-100">
 				<div class="progress mb-1" style="height: 4px;">
+
 					<div class="progress-bar bg-success"
-					     style="width: {{ project.tasks.get_percent_completion }}%;"></div>
+					     style="width: {{ project.percent_complete }}%;"></div>
 				</div>
 				<small class="text-muted"
-				       style="font-size: 0.75rem;">{{ project.tasks.get_percent_completion|truncatechars:5 }}%</small>
+				       style="font-size: 0.75rem;">{{ project.percent_complete|truncatechars:5 }}%</small>
 			</div>
-
 			<div class="d-flex flex-row gap-2">
 				<form action="{% url 'projects:edit_proj' %}" method="post" class="m-0 p-0">
 					{% csrf_token %}

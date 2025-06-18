@@ -1,110 +1,37 @@
-.progress-container {
-    position: relative;
+.calendar-day {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  margin: 0.2rem;
+  text-align: center;
+  box-sizing: border-box;
 }
 
-.edit-form {
-    display: none;
-}
-
-.editable-field:hover {
-    outline: 2px dashed #2c9000;
-    cursor: pointer;
-}
-
-.progress-bar {
-    z-index: 1;
-}
-
-.range-slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    opacity: 0;
-    cursor: pointer;
-}
-
-.commentBlock {
-    border: rgba(25, 135, 84, 0.15) solid 0.01rem;
-}
-
-.chat-input-wrapper {
-    background-color: white;
-}
-
-.commentList {
-    background-color: rgba(25, 135, 84, 0.51)
-}
-
-.accordion-item {
-    border: none;
-    background: transparent;
-}
-
-.accordion-header {
-    padding: 0;
-    border-radius: .75rem;
-    overflow: hidden;
-}
-
-.accordion-button {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: none;
-    outline: none;
-    box-shadow: none;
-    padding: .75rem 1rem;
-}
-
-.accordion-button:not(.collapsed), .accordion-button:focus {
-    outline: none;
-    box-shadow: 0 0 0 0
-}
-
-.accordion-button::after {
-    display: none;
-}
-
-
-.accordion-collapse {
-    border: none;
-}
-
-.dropdown-toggle::after {
-    display: none;
-}
-
-.accordion-toggle {
-    cursor: pointer;
-    border: 1px solid #ced4da;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-    font-weight: 600;
-}
-
-.accordion-toggle:hover {
-    background-color: #e9f7ef;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.accordion-toggle.open {
+  .calendar-start {
     background-color: #d4edda;
     color: #155724;
-    border-color: #c3e6cb;
-}
+    font-weight: bold;
 
-.accordion-toggle .toggle-icon {
-    transition: transform 0.3s ease;
-}
+  }
 
-.accordion-toggle.open .toggle-icon {
-    transform: rotate(180deg);
-}
+  .calendar-deadline {
+    background-color: #f8d7da;
+    color: #721c24;
+    font-weight: bold;
 
-@media (max-width: 992px) {
-    #taskDetails {
-        min-height: 420px;
-    }
-}
+  }
+    .task-list {
+    border-left: 4px solid #28a745;
+    background: #f8f9fa;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+  }
+
+
+  .bg-lightgray {
+    background-color: #f1f3f5;
+  }

@@ -1,5 +1,4 @@
 from django import forms
-from common.validators import ValidateText
 from projects.models import Project
 
 

@@ -72,7 +72,8 @@ class TaskUpdateInfoView(TasksMixin, JsonFormMixin, View):
 
     def form_valid(self, form):
         task = form.save()
-        item_html = self.render_task(task=task, request=self.request, project=task.project)
+        task_type = 'Done' if task.is_completed else "InProgress"
+        item_html = self.render_task(task=task, request=self.request, project=task.project, task_type=task_type)
         return JsonResponse(self.response(message='Task was successfully updated', item_html=item_html, success=True))
 
     def form_invalid(self, form):

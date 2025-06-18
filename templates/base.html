@@ -41,8 +41,16 @@
 				<ul class="navbar-nav mb-2 mb-lg-0 gap-4">
 					<li class="nav-item">
 						<a class="nav-link text-success d-flex align-items-center gap-2"
-						   href="{% url 'users:projects' %}">
+						   href="{% url 'schedule:calendar' %}">
 							<img src="{% static 'deps/icons/calendar-range.svg' %}"
+							     alt="Projects" width="20" height="20" class="img-green-dim">
+							Schedule
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-success d-flex align-items-center gap-2"
+						   href="{% url 'users:projects' %}">
+							<img src="{% static 'deps/icons/list-ul.svg' %}"
 							     alt="Projects" width="20" height="20" class="img-green-dim">
 							Projects
 						</a>
@@ -55,13 +63,7 @@
 							Analysis
 						</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link text-success d-flex align-items-center gap-2" href="{% url 'main:about' %}">
-							<img src="{% static 'deps/icons/file-text.svg' %}"
-							     alt="About" width="20" height="20" class="img-green-dim">
-							About
-						</a>
-					</li>
+
 					{% if user.is_authenticated %}
 						<li class="nav-item">
 							<a class="nav-link text-success d-flex align-items-center gap-2"
@@ -92,6 +94,13 @@
 							</a>
 						</li>
 					{% endif %}
+					<li class="nav-item">
+						<a class="nav-link text-success d-flex align-items-center gap-2" href="{% url 'main:about' %}">
+							<img src="{% static 'deps/icons/file-text.svg' %}"
+							     alt="About" width="20" height="20" class="img-green-dim">
+							About
+						</a>
+					</li>
 
 				</ul>
 			</div>
@@ -122,9 +131,9 @@
 {% endblock %}
 
 <script src="{% static "deps/js/jquery/jquery-3.7.0.min.js" %}"></script>
-
 <script src="{% static "deps/js/jquery/notifications.js" %}"></script>
 <script src="{% static "deps/js/bootstrap/bootstrap.bundle.min.js" %}"></script>
+
 {% block js %}
 
 {% endblock %}

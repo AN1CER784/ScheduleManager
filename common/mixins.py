@@ -33,4 +33,4 @@ class CommonFormMixin:
         return base
 
     def render_errors(self, request, form, project=None):
-        return render_to_string(template_name='tasks/includes/form_errors.html', context={'form': form, 'project': project}, request=request)
+        return render_to_string(template_name='includes/form_errors.html', context={'form': form, 'project': project}, request=request)
