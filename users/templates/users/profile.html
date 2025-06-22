@@ -3,82 +3,83 @@
 
 {% block content %}
 
-		<div class="fs-3 fw-bold text-center text-success mb-3 shadow-sm p-3 bg-light rounded">
-			Profile
-		</div>
-		<div class="container bg-light rounded p-3">
-			<form method="post" action="{% url 'users:profile' %}" class="row justify-content-center gx-5 gy-4 py-4"  enctype="multipart/form-data">
-				{% csrf_token %}
-				<div class="col-md-7 mx-auto text-center">
-					<img src="
-							{% if user.image %}{{ user.image.url }}{% else %}{% static 'deps/images/baseavatar.jpg' %}{% endif %}"
-					     alt="User avatar" class="img-fluid rounded-circle"
-					     style="max-width: 150px;">
-					<input type="file" name="image" class="form-control mt-3" id="avatar"
-					       accept="image/*">
-					{% if form.image.errors %}
-						<div class="alert alert-danger alert-dismissible fade show">{{ form.image.errors }}</div>
-					{% endif %}
-				</div>
-				<div class="col-md-7 mx-auto">
-					<label for="id_username" class="form-label">Username</label>
-					<div class="input-group">
-						<span class="input-group-text" id="inputGroupPrepend2">@</span>
-						<input
-								type="text"
-								name="username"
-								class="form-control"
-								id="id_username"
-								value="{{ form.username.value }}"
-								required>
+	<div class="fs-3 fw-bold text-center text-success mb-3 shadow-sm p-3 bg-light rounded">
+		Profile
+	</div>
+	<div class="container bg-light rounded p-3">
+		<form method="post" action="{% url 'users:profile' %}" class="row justify-content-center gx-5 gy-4 py-4"
+		      enctype="multipart/form-data">
+			{% csrf_token %}
+			<div class="col-md-7 mx-auto text-center">
+				<img src="
 
-					</div>
-					{% if form.username.errors %}
-						<div class="alert alert-danger alert-dismissible fade show">{{ form.username.errors }}</div>
-					{% endif %}
-				</div>
-				<div class="col-md-7 mx-auto">
-					<label for="id_password1" class="form-label">Password</label>
+
+						{% if user.image %}{{ user.image.url }}{% else %}{% static 'deps/images/baseavatar.jpg' %}{% endif %}"
+				     alt="User avatar" class="img-fluid rounded-circle"
+				     style="max-width: 150px;">
+				<input type="file" name="image" class="form-control mt-3" id="avatar"
+				       accept="image/*">
+				{% if form.image.errors %}
+					<div class="alert alert-danger alert-dismissible fade show">{{ form.image.errors }}</div>
+				{% endif %}
+			</div>
+			<div class="col-md-7 mx-auto">
+				<label for="id_username" class="form-label">Username</label>
+				<div class="input-group">
 					<input
-							type="password"
-							name="password1"
-							id="id_password1"
+							type="text"
+							name="username"
 							class="form-control"
-					>
-					{% if form.password1.errors %}
-						<div class="alert alert-danger alert-dismissible fade show">{{ form.password1.errors }}</div>
-					{% endif %}
+							id="id_username"
+							value="{{ form.username.value }}"
+							required>
+
 				</div>
-				<div class="col-md-7 mx-auto">
-					<label for="id_password2" class="form-label">New password</label>
+				{% if form.username.errors %}
+					<div class="alert alert-danger alert-dismissible fade show">{{ form.username.errors }}</div>
+				{% endif %}
+			</div>
+			<div class="col-md-7 mx-auto">
+				<label for="id_email" class="form-label">Email</label>
+				<div class="input-group">
 					<input
-							type="password"
-							name="password2"
-							id="id_password2"
-							class="form-control">
-					{% if form.password2.errors %}
-						<div class="alert alert-danger alert-dismissible fade show">{{ form.password2.errors }}</div>
-					{% endif %}
-				</div>
-				<div class="col-md-7 mx-auto">
-					<label for="id_description" class="form-label">Your main purpose of using our service</label>
-					<input type="text" id="id_description" name="description"
-					       value="{% if form.description.value %}{{ form.description.value }}{% endif %}"
-					       class="form-control">
-					{% if form.description.errors %}
-						<div class="alert alert-danger alert-dismissible fade show">{{ form.description.errors }}</div>
-					{% endif %}
-				</div>
+							type="email"
+							name="email"
+							class="form-control"
+							id="id_email"
+							value="{{ form.email.value }}"
+							required disabled>
 
-				<div class="col-12 text-center">
-					<button class="btn btn-success px-4 fw-bold" type="submit">
-						Submit
-					</button>
 				</div>
+				{% if form.email.errors %}
+					<div class="alert alert-danger alert-dismissible fade show">{{ form.email.errors }}</div>
+				{% endif %}
+			</div>
+			<div class="col-md-7 mx-auto">
+				<label for="id_description" class="form-label">Your main purpose of using our service</label>
+				<input type="text" id="id_description" name="description"
+				       value="{% if form.description.value %}{{ form.description.value }}{% endif %}"
+				       class="form-control">
+				{% if form.description.errors %}
+					<div class="alert alert-danger alert-dismissible fade show">{{ form.description.errors }}</div>
+				{% endif %}
+			</div>
 
+			<div class="col-12 text-center">
+				<button class="btn btn-success px-4 fw-bold rounded-pill" type="submit">
+					Submit
+				</button>
+			</div>
 
-			</form>
-		</div>
+			<div class="text-center mt-3">
+				<a href="{% url 'users:password_change' %}" class="btn btn-outline-success px-4 fw-bold rounded-pill">
+					Change password
+				</a>
+			</div>
+		</form>
+
+	</div>
+
 
 
 

@@ -165,3 +165,46 @@ class AddCommentTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         task = Task.objects.first()
         self.assertEqual(task.comments.count(), 0)
+
+
+class TaskUpdateInfoTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='XXXXXXXX', password='XXXXXXXXXXXX')
+        self.client.login(username='XXXXXXXX', password='XXXXXXXXXXXX')
+        self.project = Project.objects.create(name='Test Project', user=self.user)
+        self.task = Task.objects.create(name='Title for the test task',
+                                        description='Description for the test task',
+                                        start_datetime=datetime.now(),
+                                        due_datetime=datetime.now() + timedelta(days=1),
+                                        is_completed=False,
+                                        project=self.project)
+
+    def test_edit_task(self):
+        response = self.client.post(reverse('tasks:task_update_info', kwargs={"id": self.project.id}), {'task_id': self.task.id,
+            'name': 'Title for the test task 1',
+            'description': 'Description for the test task 1',
+            'start_datetime': datetime.now(),
+            'due_datetime': datetime.now() + timedelta(days=2),
+            'project_id': self.project.id,
+        })
+        self.assertEqual(response.status_code, 200)
+        task = Task.objects.first()
+        self.assertEqual(task.name, 'Title for the test task 1')
+        self.assertEqual(task.description, 'Description for the test task 1')
+        self.assertEqual(task.start_datetime.date(), datetime.now().date())
+        self.assertEqual(task.due_datetime.date(), datetime.now().date() + timedelta(days=2))
+
+    def test_edit_task_invalid_data(self):
+        response = self.client.post(reverse('tasks:task_update_info', kwargs={"id": self.project.id}), {'task_id': self.task.id,
+            'name': 'Title for the test task',
+            'description': 'Description for the test task',
+            'start_datetime': datetime.now(),
+            'due_datetime': datetime.now() - timedelta(days=1),
+            'project_id': self.project.id,
+        })
+        self.assertEqual(response.status_code, 200)
+        task = Task.objects.first()
+        self.assertEqual(task.name, 'Title for the test task')
+        self.assertEqual(task.description, 'Description for the test task')
+        self.assertEqual(task.start_datetime.date(), datetime.now().date())
+        self.assertEqual(task.due_datetime.date(), datetime.now().date() + timedelta(days=1))

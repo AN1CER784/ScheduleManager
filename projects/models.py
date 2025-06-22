@@ -2,6 +2,8 @@ from django.db import models
 from django.db.models import Count, Q, F, Case, When, Value, FloatField, ExpressionWrapper, Min, Max, CharField
 from django.db.models.functions import Cast, Concat
 
+from common.models import AbstractCreatedModel
+
 
 class ProjectQuerySet(models.QuerySet):
     def get_projects_periods(self):
@@ -20,7 +22,7 @@ class ProjectQuerySet(models.QuerySet):
                 ),
                 default=Concat(
                     Value("Start "),
-                    Cast('earliest', CharField()),
+                    Cast('earliest', CharField()), 
                     Value(" To "),
                     Cast('latest', CharField())
                 ),
@@ -43,14 +45,15 @@ class ProjectQuerySet(models.QuerySet):
         return projects
 
 
-class Project(models.Model):
+class Project(AbstractCreatedModel):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='projects', blank=True, null=True)
     session_key = models.CharField(max_length=40, blank=True, null=True)
-    name = models.CharField(max_length=100, blank=False, null=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=100)
 
     class Meta:
         verbose_name = 'project'
         ordering = ['created_at']
 
     objects = ProjectQuerySet.as_manager()
+
+    REQUIRED_FIELDS = ['name']

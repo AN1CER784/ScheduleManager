@@ -2,8 +2,7 @@ from datetime import datetime, timedelta
 
 from django.test import TestCase
 
-from tasks.forms import TaskCreateForm, TaskCommentForm
-
+from tasks.forms import TaskCreateForm, TaskCommentForm, TaskUpdateForm
 
 
 class TaskCreateFormTestCase(TestCase):
@@ -11,7 +10,7 @@ class TaskCreateFormTestCase(TestCase):
         form_data = {'name': 'Title for the test task',
                      'description': 'Description for the test task',
                      'start_date': datetime.now().date() + timedelta(days=1),
-                     'start_time': datetime.now().time(),}
+                     'start_time': datetime.now().time(), }
         form = TaskCreateForm(data=form_data)
         self.assertTrue(form.is_valid())
 
@@ -67,4 +66,48 @@ class CommentFormTestCase(TestCase):
     def test_create_comment_with_invalid_text(self):
         form_data = {'text': '#########'}
         form = TaskCommentForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
+
+class TaskUpdateFormTestCase(TestCase):
+    def test_update_task(self):
+        form_data = {'name': 'Title for the test task',
+                     'description': 'Description for the test task',
+                     'start_datetime': datetime.now(),
+                     'due_datetime': datetime.now() + timedelta(days=1), }
+        form = TaskUpdateForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_update_task_with_invalid_due_date(self):
+        form_data = {'name': 'Title for the test task',
+                     'description': 'Description for the test task',
+                     'start_datetime': datetime.now(),
+                     'due_datetime': datetime.now() - timedelta(days=1),}
+        form = TaskCreateForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
+    def test_update_task_with_invalid_start_date(self):
+        form_data = {'name': 'Title for the test task',
+                     'description': 'Description for the test task',
+                     'start_datetime': datetime.now() + timedelta(days=1) ,
+                     'due_datetime': datetime.now()}
+        form = TaskCreateForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
+    def test_update_task_with_invalid_name(self):
+        form_data = {'name': '#########',
+                     'description': 'Description for the test task',
+                     'start_datetime': datetime.now(),
+                     'due_datetime': datetime.now() + timedelta(days=1),}
+
+        form = TaskCreateForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
+    def test_update_task_with_invalid_description(self):
+        form_data = {'name': 'Title for the test task',
+                     'description': '#########',
+                     'start_datetime': datetime.now(),
+                     'due_datetime': datetime.now() + timedelta(days=1),}
+
+        form = TaskCreateForm(data=form_data)
         self.assertFalse(form.is_valid())

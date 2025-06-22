@@ -1,5 +1,6 @@
 from django.db import models
 
+from common.models import AbstractCreatedModel
 
 
 class TaskQuerySet(models.QuerySet):
@@ -13,11 +14,10 @@ class TaskQuerySet(models.QuerySet):
         }
 
 
-class Task(models.Model):
+class Task(AbstractCreatedModel):
     project = models.ForeignKey('projects.Project', on_delete=models.CASCADE, related_name='tasks')
-    name = models.CharField(max_length=100, blank=False, null=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    start_datetime = models.DateTimeField(blank=False, null=False)
+    name = models.CharField(max_length=100)
+    start_datetime = models.DateTimeField()
     due_datetime = models.DateTimeField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     is_completed = models.BooleanField(default=False)
@@ -34,11 +34,12 @@ class Task(models.Model):
 
     objects = TaskQuerySet.as_manager()
 
+    REQUIRED_FIELDS = ['project', 'name', 'start_datetime']
 
-class TaskComment(models.Model):
+
+class TaskComment(AbstractCreatedModel):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
-    text = models.TextField(blank=False, null=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    text = models.TextField()
 
     @property
     def created_date(self):
@@ -51,6 +52,8 @@ class TaskComment(models.Model):
     class Meta:
         verbose_name = 'task_comment'
         ordering = ['created_at']
+
+    REQUIRED_FIELDS = ['task', 'text']
 
 
 class TaskProgress(models.Model):
@@ -69,3 +72,5 @@ class TaskProgress(models.Model):
             self.task.is_completed = False
         self.task.save()
         super().save(*args, **kwargs)
+
+    REQUIRED_FIELDS = ['task']

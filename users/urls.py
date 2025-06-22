@@ -16,7 +16,9 @@ Including another URLconf
 """
 
 from django.urls import path
-from .views import UserSignupView, UserLoginView, UserProfileView, UserTasksView, UserProjectsView
+from .views import UserSignupView, UserLoginView, UserProfileView, UserTasksView, UserProjectsView, UserPasswordChange, \
+    UserPasswordChangeDone, UserPasswordResetView, UserPasswordResetDoneView, UserPasswordResetConfirmView, \
+    UserPasswordResetCompleteView
 from django.contrib.auth.views import LogoutView
 
 app_name = 'users'
@@ -29,6 +31,15 @@ urlpatterns = [
     path('profile/', UserProfileView.as_view(), name='profile'),
     path('projects/', UserProjectsView.as_view(), name='projects'),
     path('projects/<int:id>/tasks', UserTasksView.as_view(), name='tasks'),
-    path('logout/', LogoutView.as_view(next_page='users:login'), name='logout')
-
+    path('logout/', LogoutView.as_view(next_page='users:login'), name='logout'),
+    path('password-change/', UserPasswordChange.as_view(), name="password_change"),
+    path('password-change/done/', UserPasswordChangeDone.as_view(), name="password_change_done"),
+    path('password-reset/',
+         UserPasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done/',
+         UserPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('password-reset/<uidb64>/<token>/',
+         UserPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password-reset/complete/',
+         UserPasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]

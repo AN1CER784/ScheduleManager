@@ -1,11 +1,11 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCreationForm
-from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCreationForm, PasswordChangeForm, \
+    PasswordResetForm as PasswordResetFormCore
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 
 from common.validators import ValidateText
 from users.models import User
+from users.tasks import task_send_mail
 
 
 class LoginForm(AuthenticationForm):
@@ -20,9 +20,10 @@ class LoginForm(AuthenticationForm):
 class SignupForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2']
 
     username = forms.CharField()
+    email = forms.EmailField()
     password1 = forms.CharField()
     password2 = forms.CharField()
 
@@ -30,36 +31,37 @@ class SignupForm(UserCreationForm):
 class ProfileForm(UserChangeForm):
     class Meta:
         model = User
-        fields = ['image', 'username', 'password1', 'password2', 'description']
+        fields = ['image', 'username', 'email', 'description']
 
     image = forms.ImageField(required=False)
     username = forms.CharField()
-    password1 = forms.CharField(required=False)
-    password2 = forms.CharField(required=False)
-    description = forms.CharField(validators=[MinLengthValidator(5), MaxLengthValidator(300), ValidateText(field_name='description')], required=False)
+    email = forms.EmailField(disabled=True)
+    description = forms.CharField(
+        validators=[MinLengthValidator(5), MaxLengthValidator(300), ValidateText(field_name='description')],
+        required=False)
 
-    def clean(self):
-        cleaned_data = super().clean()
-        password1 = cleaned_data.get('password1')
-        password2 = cleaned_data.get('password2')
-        user = self.instance
 
-        if password1 == '' and password2:
-            self.add_error('password1',
-                           error=ValidationError(message='You must enter your current password to set a new one.'), )
+class UserPasswordChangeForm(PasswordChangeForm):
+    class Meta:
+        model = User
+        fields = ['old_password', 'new_password1', 'new_password2']
 
-        elif password2 and not user.check_password(password1):
-            self.add_error('password1', error=ValidationError(message='Your current password is incorrect.'), )
+    old_password = forms.CharField()
+    new_password1 = forms.CharField()
+    new_password2 = forms.CharField()
 
-        elif password1 and password2 == '':
-            self.add_error('password2', error=ValidationError(message='You must enter a new password to set.'), )
 
-        elif password1 and password2:
-            try:
-                validate_password(password2, user)
-            except ValidationError as e:
-                self.add_error('password2', error=e)
-
-        return cleaned_data
-
+class PasswordResetForm(PasswordResetFormCore):
+    def send_mail(
+            self,
+            subject_template_name,
+            email_template_name,
+            context,
+            from_email,
+            to_email,
+            html_email_template_name=None,
+    ):
+        user_id = context['user'].id
+        context.pop('user')
+        task_send_mail.delay(subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name, user_id)
 

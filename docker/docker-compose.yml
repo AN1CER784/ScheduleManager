@@ -5,9 +5,15 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=schedule_db
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=1111
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  redis:
+    image: redis:8.0-alpine3.21
+    restart: always
+    command: redis-server --save 120 1 --loglevel warning
+    volumes:
+      - ../cache:/data
   web:
     command: >
       /bin/bash -c "
@@ -22,17 +28,49 @@ services:
     ports:
       - "8000-8010:8000-8010"
     environment:
-      - POSTGRES_NAME=schedule_db
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=1111
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
     depends_on:
       - db
-  cache:
-    image: redis:8.0-alpine3.21
+      - redis
+      - celery
+  celery:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
     restart: always
-    command: redis-server --save 120 1 --loglevel warning
+    working_dir: /app
     volumes:
-      - ../cache:/data
+      - ..:/app
+    depends_on:
+      - redis
+    user: "nobody:nogroup"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    command: >
+      bash -lc "
+        celery -A ScheduleManager worker \
+          -l info &
+      
+        celery -A ScheduleManager beat \
+          -l info \
+          --scheduler django_celery_beat.schedulers:DatabaseScheduler &
+      
+        wait -n
+      "
+
 
 volumes:
   db_data:

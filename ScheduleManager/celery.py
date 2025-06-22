@@ -11,7 +11,7 @@ app = Celery(main='proj')
 TESTING = 'test' in sys.argv
 TESTING = TESTING or 'test_coverage' in sys.argv or 'unittest' in sys.modules
 CELERY = {
-    'broker_url': 'redis://localhost:6379/1',
+    'broker_url': 'redis://redis:6379/1',
     'task_always_eager': TESTING,
     'timezone': settings.TIME_ZONE,
     'result_extended': True,
