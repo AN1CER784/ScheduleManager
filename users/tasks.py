@@ -1,11 +1,12 @@
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm, logger
 from celery import shared_task
-
 from users.models import User
+from common.notifications import UserNotificationManger
+from users.notifications import UserSignUpNotificationBuilder
 
 
 @shared_task
-def task_send_mail(subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name, user_id):
+def reset_password_task_send_mail(subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name, user_id):
     context['user'] = User.objects.get(pk=user_id)
     PasswordResetForm().send_mail(subject_template_name,
         email_template_name,
@@ -13,3 +14,9 @@ def task_send_mail(subject_template_name, email_template_name, context, from_ema
         from_email,
         to_email,
         html_email_template_name)
+
+@shared_task
+def notify_user_about_sign_up(user_id):
+    user = User.objects.get(pk=user_id)
+    user_notification_manager = UserNotificationManger(user=user, builder=UserSignUpNotificationBuilder)
+    user_notification_manager.notify()

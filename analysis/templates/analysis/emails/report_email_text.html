@@ -1,0 +1,41 @@
+{% extends "emails/base_email_text.html" %}
+
+{% block content %}
+	Your {{ period }} Productivity Report
+	{% if period == 'Day' %}
+		You have overdue tasks:
+		{% for task in tasks %}
+			Your task {{ task.name }} on project {{ task.project.name }} is overdue.
+			Due date was on {{ task.due_datetime.date }}.
+		{% endfor %}
+	{% endif %}
+	{% with report.report as report %}
+			Overall Statistics:
+	- Completed: {{ report.overall.done_ratio|floatformat:2 }}%
+	- Overdue: {{ report.overall.late_ratio|floatformat:2 }}%
+	- In progress: {{ report.overall.in_progress_ratio|floatformat:2 }}
+	- Forecast: {{ report.forecast }}
+	{% if period == 'Week' %}
+		Daily Summary:
+		{% for d in report.daily %}
+			- {{ d.date }}:
+			Total tasks: {{ d.total }},
+
+			Completed: {% if d.done_pct is not None %}{{ d.done_pct|floatformat:1 }}%{% else %}-{% endif %},
+			Overdue: {% if d.late_pct is not None %}{{ d.late_pct|floatformat:1 }}%{% else %}-{% endif %}
+			In progress:
+			{% if d.in_progress_pct is not None %}{{ d.in_progress_pct|floatformat:1 }}%{% else %}-{% endif %}
+		{% endfor %}
+	{% endif %}
+
+
+	By Projects:
+	{% for name, stats in report.by_project.items %}
+		- {{ name }}: {{ stats.done_pct|floatformat:1 }}% completed, {{ stats.late_pct|floatformat:1 }}% overdue,
+		{{ stats.in_progress_pct|floatformat:1 }}% in progress
+	{% empty %}
+		- No project data available.
+	{% endfor %}
+	{% endwith %}
+
+{% endblock %}

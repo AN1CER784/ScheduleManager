@@ -10,7 +10,6 @@ from users.models import User
 class TaskModelTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='XXXXXXXX', password='XXXXXXXXXXXX')
-        self.client.login(username='XXXXXXXX', password='XXXXXXXXXXXX')
         self.project = Project.objects.create(name='Test Project', user=self.user)
         self.task = Task.objects.create(name='Title for the test task',
                                         description='Description for the test task',
@@ -22,7 +21,7 @@ class TaskModelTestCase(TestCase):
     def test_task_model(self):
         self.assertEqual(self.task.name, 'Title for the test task')
         self.assertEqual(self.task.description, 'Description for the test task')
-        self.assertEqual((self.task.due_datetime - self.task.start_datetime).days, 1)
+        self.assertEqual((self.task.due_datetime - self.task.start_datetime)._days, 1)
         self.assertEqual(self.task.project, self.project)
         self.assertEqual(self.task.progress.percentage, 5)
         self.assertEqual(self.task.is_completed, False)
@@ -43,7 +42,6 @@ class TaskModelTestCase(TestCase):
 class CommentModelTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='XXXXXXXX', password='XXXXXXXXXXXX')
-        self.client.login(username='XXXXXXXX', password='XXXXXXXXXXXX')
         self.project = Project.objects.create(name='Test Project', user=self.user)
         self.task = Task.objects.create(name='Title for the test task',
                                         description='Description for the test task',
@@ -58,3 +56,6 @@ class CommentModelTestCase(TestCase):
         self.assertEqual(self.comment.task, self.task)
         self.assertIsNotNone(self.comment.created_date)
         self.assertIsNotNone(self.comment.created_time)
+
+
+

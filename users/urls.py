@@ -21,6 +21,8 @@ from .views import UserSignupView, UserLoginView, UserProfileView, UserTasksView
     UserPasswordResetCompleteView
 from django.contrib.auth.views import LogoutView
 
+from .views.analysis_views import AnalysisView
+
 app_name = 'users'
 
 
@@ -30,6 +32,7 @@ urlpatterns = [
     path('login/', UserLoginView.as_view(), name='login'),
     path('profile/', UserProfileView.as_view(), name='profile'),
     path('projects/', UserProjectsView.as_view(), name='projects'),
+    path('summaries/', AnalysisView.as_view(), name='summaries'),
     path('projects/<int:id>/tasks', UserTasksView.as_view(), name='tasks'),
     path('logout/', LogoutView.as_view(next_page='users:login'), name='logout'),
     path('password-change/', UserPasswordChange.as_view(), name="password_change"),

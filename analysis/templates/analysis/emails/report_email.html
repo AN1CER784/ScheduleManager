@@ -1,0 +1,99 @@
+{% extends "emails/base_email.html" %}
+{% block content %}
+	<div style="font-family: Arial, sans-serif; color: #333;">
+		<h1 style="color: #2e7d32;">Your {{ period }} Productivity Report</h1>
+		{% if period == 'Day' %}
+			<div style="padding: 24px; color: #333333; line-height: 1.5;">
+				<p style="font-size: 16px; margin-bottom: 24px;">
+					You have overdue tasks
+				</p>
+
+				{% for task in tasks %}
+					<div style="
+          border: 1px solid #e0e0e0;
+          border-radius: 6px;
+          padding: 16px;
+          margin-bottom: 16px;
+      ">
+						<p style="margin: 0 0 8px 0; font-size: 14px;">
+							<strong>Your task:</strong>
+							<em>{{ task.name }}</em>
+						</p>
+						<p style="margin: 0 0 8px 0; font-size: 14px;">
+							<strong>Project:</strong>
+							<em>{{ task.project.name }}</em>
+						</p>
+						<p style="margin: 0 0 8px 0; font-size: 14px;">
+							<strong>Status:</strong>
+							<span style="color: #d9534f;"><strong>Overdue</strong></span>
+						</p>
+						<p style="margin: 0; font-size: 14px;">
+							<strong>Due date:</strong>
+							{{ task.due_datetime.date }}
+						</p>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	{% with report.report as report %}
+		<h2 style="color: #388e3c;">Overall Statistics</h2>
+		<p><strong>Completed:</strong> {{ report.overall.done_ratio|floatformat:2 }}%</p>
+		<p><strong>Overdue:</strong> {{ report.overall.late_ratio|floatformat:2 }}%</p>
+		<p><strong>In progress:</strong> {{ report.overall.in_progress_ratio|floatformat:2 }}%</p>
+		<p><strong>Forecast:</strong> <span style="color: #2e7d32;">{{ report.forecast }}</span></p>
+		{% if period == 'Week' %}
+			<h2 style="color: #388e3c;">Daily Summary</h2>
+			<table cellpadding="8" cellspacing="0" border="0" style="border-collapse: collapse; width: 100%;">
+				<tr style="background-color: #e8f5e9; color: #2e7d32;">
+					<th align="left">Date</th>
+					<th align="left">Total</th>
+					<th align="left">Completed %</th>
+					<th align="left">Overdue %</th>
+					<th align="left">In progress %</th>
+				</tr>
+				{% for d in report.daily %}
+					<tr style="border-bottom: 1px solid #ccc;">
+						<td>{{ d.date }}</td>
+						<td>{{ d.total }}</td>
+						<td>
+							{% if d.done_pct is not None %}
+								{{ d.done_pct|floatformat:1 }}%
+							{% else %}
+								—
+							{% endif %}
+						</td>
+						<td>
+							{% if d.late_pct is not None %}
+								{{ d.late_pct|floatformat:1 }}%
+							{% else %}
+								—
+							{% endif %}
+						</td>
+						<td>
+							{% if d.in_progress_pct is not None %}
+								{{ d.in_progress_pct|floatformat:1 }}%
+							{% else %}
+								—
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% endif %}
+		<h2 style="color: #388e3c;">By Projects</h2>
+		<ul>
+			{% for name, stats in report.by_project.items %}
+				<li>
+					<strong>{{ name }}</strong>:
+					{{ stats.done_pct|floatformat:1 }}% completed,
+					{{ stats.late_pct|floatformat:1 }}% overdue
+					{{ stats.in_progress_pct|floatformat:1 }}% in progress
+				</li>
+			{% empty %}
+				<li>No project data available.</li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% endwith %}
+
+{% endblock %}

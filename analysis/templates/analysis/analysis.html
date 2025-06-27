@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load analysis_tags %}
+
+
 {% block css %}
 	<link href="{% static 'deps/css/analysis.css' %}" rel="stylesheet">
 {% endblock %}
@@ -9,8 +10,8 @@
 		<div class="fs-3 fw-bold text-center text-success bg-light mb-3 shadow-sm p-3 rounded shadow">
 			Your analysis
 		</div>
-		{% include 'analysis/includes/analysis_accordion.html' with container_id="day-analysis-container" section_id="day_analysis" accordion_id="accordionDaySummaries" title="Day Analysis" prefix="day" summaries=day_summaries week_mode=False %}
-		{% include 'analysis/includes/analysis_accordion.html' with container_id="week-analysis-container" section_id="week_analysis" accordion_id="accordionWeekSummaries" title="Week Analysis" prefix="week" summaries=week_summaries week_mode=True %}
+		{% include 'analysis/includes/analysis_accordion.html' with container_id="day-analysis-container" section_id="day-analysis" accordion_id="accordionDaySummaries" title="Day Analysis" prefix="day" reports=day_reports week_mode=False %}
+		{% include 'analysis/includes/analysis_accordion.html' with container_id="week-analysis-container" section_id="week-analysis" accordion_id="accordionWeekSummaries" title="Week Analysis" prefix="week" reports=week_reports week_mode=True %}
 
 	{% else %}
 		<div class="container">

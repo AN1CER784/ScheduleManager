@@ -1,11 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCreationForm, PasswordChangeForm, \
     PasswordResetForm as PasswordResetFormCore
-from django.core.validators import MaxLengthValidator, MinLengthValidator
-
-from common.validators import ValidateText
+from django.core.validators import MaxLengthValidator, MinLengthValidator, RegexValidator
 from users.models import User
-from users.tasks import task_send_mail
+from users.tasks import reset_password_task_send_mail
 
 
 class LoginForm(AuthenticationForm):
@@ -37,7 +35,8 @@ class ProfileForm(UserChangeForm):
     username = forms.CharField()
     email = forms.EmailField(disabled=True)
     description = forms.CharField(
-        validators=[MinLengthValidator(5), MaxLengthValidator(300), ValidateText(field_name='description')],
+        validators=[MinLengthValidator(5), MaxLengthValidator(300), RegexValidator(r'^(?=.*[a-zA-Zа-яА-ЯёЁ]).{5,}$',
+                                                      'Only english and russian letters are allowed, minimum 5 symbols')],
         required=False)
 
 
@@ -63,5 +62,5 @@ class PasswordResetForm(PasswordResetFormCore):
     ):
         user_id = context['user'].id
         context.pop('user')
-        task_send_mail.delay(subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name, user_id)
+        reset_password_task_send_mail.delay(subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name, user_id)
 

@@ -20,30 +20,30 @@ class TaskCalendarBuilderTestCase(TestCase):
     def test_calendar_builder_with_tasks(self):
         project = Project.objects.create(name="Test Project")
         task1 = project.tasks.create(name='Test Task 1',
-                                     description='Description for the test task',
-                                     start_datetime=datetime.now() + timedelta(days=1),
-                                     due_datetime=datetime.now() + timedelta(days=3),
-                                     is_completed=False,
-                                     project=project)
+                                      description='Description for the test task',
+                                      start_datetime=datetime.now() + timedelta(days=1),
+                                      due_datetime=datetime.now() + timedelta(days=3),
+                                      is_completed=False,
+                                      project=project)
 
         task2 = project.tasks.create(name='Test Task 2',
-                                     description='Description for the test task',
-                                     start_datetime=datetime.now(),
-                                     due_datetime=datetime.now() + timedelta(days=21),
-                                     is_completed=False,
-                                     project=project)
+                                      description='Description for the test task',
+                                      start_datetime=datetime.now(),
+                                      due_datetime=datetime.now() + timedelta(days=21),
+                                      is_completed=False,
+                                      project=project)
         task3 = project.tasks.create(name='Test Task 3',
-                                     description='Description for the test task',
-                                     start_datetime=datetime.now(),
-                                     due_datetime=datetime.now() + timedelta(days=34),
-                                     is_completed=False,
-                                     project=project)
+                                      description='Description for the test task',
+                                      start_datetime=datetime.now(),
+                                      due_datetime=datetime.now() + timedelta(days=34),
+                                      is_completed=False,
+                                      project=project)
         task4 = project.tasks.create(name='Test Task 4',
-                                     description='Description for the test task',
-                                     start_datetime=datetime.now(),
-                                     due_datetime=datetime.now() + timedelta(days=60),
-                                     is_completed=False,
-                                     project=project)
+                                      description='Description for the test task',
+                                      start_datetime=datetime.now(),
+                                      due_datetime=datetime.now() + timedelta(days=60),
+                                      is_completed=False,
+                                      project=project)
         tasks = [task1, task2, task3, task4]
         task_calendar_builder = TaskCalendarBuilder(tasks)
         task_calendar_builder.build()

@@ -29,13 +29,7 @@
 				</div>
 
 			</div>
-			<div class="card my-2 shadow-sm add-task-card text-center text-success "
-			     style="border: 2px dashed #28a745; cursor: pointer;">
-				<button type="button" class="card-body py-2 border-0 bg-white w-100 p-0" data-bs-toggle="modal"
-				        data-bs-target="#staticBackdrop">
-					<span class="h5">+ Add task</span>
-				</button>
-			</div>
+			{% include 'includes/add_button.html' with button_target="staticBackdrop" button_name="+ Add task" %}
 
 
 			<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"

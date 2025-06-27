@@ -22,6 +22,20 @@ summary::before {
     left: 0.5rem;
     transition: transform .2s ease;
 }
+.toggle-icon {
+    transform: rotate(0deg);
+    transition: transform 0.3s;
+}
+
+.details-container[open] .toggle-icon {
+    transform: rotate(90deg);
+}
+
+
+
+.accordion-toggle::before{
+    display: none;
+}
 
 details[open] > summary::before {
     transform: rotate(90deg);

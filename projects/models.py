@@ -48,7 +48,7 @@ class ProjectQuerySet(models.QuerySet):
 class Project(AbstractCreatedModel):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='projects', blank=True, null=True)
     session_key = models.CharField(max_length=40, blank=True, null=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, blank=False, null=False)
 
     class Meta:
         verbose_name = 'project'
@@ -56,4 +56,3 @@ class Project(AbstractCreatedModel):
 
     objects = ProjectQuerySet.as_manager()
 
-    REQUIRED_FIELDS = ['name']

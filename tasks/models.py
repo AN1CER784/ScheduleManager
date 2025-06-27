@@ -15,9 +15,9 @@ class TaskQuerySet(models.QuerySet):
 
 
 class Task(AbstractCreatedModel):
-    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE, related_name='tasks')
-    name = models.CharField(max_length=100)
-    start_datetime = models.DateTimeField()
+    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE, related_name='tasks', blank=False, null=False)
+    name = models.CharField(max_length=100, blank=False, null=False)
+    start_datetime = models.DateTimeField(blank=False, null=False)
     due_datetime = models.DateTimeField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     is_completed = models.BooleanField(default=False)
@@ -34,12 +34,10 @@ class Task(AbstractCreatedModel):
 
     objects = TaskQuerySet.as_manager()
 
-    REQUIRED_FIELDS = ['project', 'name', 'start_datetime']
-
 
 class TaskComment(AbstractCreatedModel):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
-    text = models.TextField()
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments', blank=False, null=False)
+    text = models.TextField(blank=False, null=False)
 
     @property
     def created_date(self):
@@ -53,11 +51,10 @@ class TaskComment(AbstractCreatedModel):
         verbose_name = 'task_comment'
         ordering = ['created_at']
 
-    REQUIRED_FIELDS = ['task', 'text']
 
 
 class TaskProgress(models.Model):
-    task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='progress')
+    task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='progress', blank=False, null=False)
     percentage = models.PositiveIntegerField(default=5)
     updated_datetime = models.DateTimeField(auto_now=True)
 
@@ -67,10 +64,7 @@ class TaskProgress(models.Model):
 
     def save(self, *args, **kwargs):
         if self.percentage == 100:
-            self.task.is_completed = True
+            Task.objects.filter(id=self.task_id).update(is_completed=True)
         else:
-            self.task.is_completed = False
-        self.task.save()
+            Task.objects.filter(id=self.task_id).update(is_completed=False)
         super().save(*args, **kwargs)
-
-    REQUIRED_FIELDS = ['task']

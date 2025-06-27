@@ -37,7 +37,8 @@ class UserPasswordChangeDone(PasswordChangeDoneView):
 class UserPasswordResetView(PasswordResetView):
     template_name = 'users/password_reset_form.html'
     success_url = reverse_lazy('users:password_reset_done')
-    email_template_name = 'users/password_reset_email.html'
+    email_template_name = 'users/emails/password_reset_email_text.html'
+    html_email_template_name = 'users/emails/password_reset_email.html'
     form_class = PasswordResetForm
 
     def get_context_data(self, **kwargs):

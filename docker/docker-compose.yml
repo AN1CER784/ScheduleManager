@@ -35,7 +35,12 @@ services:
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
       - SECRET_KEY=${SECRET_KEY}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
     depends_on:
+      - db
+      - redis
+      - celery
+    links:
       - db
       - redis
       - celery
@@ -49,7 +54,6 @@ services:
       - ..:/app
     depends_on:
       - redis
-    user: "nobody:nogroup"
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -59,14 +63,12 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+
     command: >
       bash -lc "
-        celery -A ScheduleManager worker \
-          -l info &
+        celery -A ScheduleManager.celery worker --loglevel=debug &
       
-        celery -A ScheduleManager beat \
-          -l info \
-          --scheduler django_celery_beat.schedulers:DatabaseScheduler &
+        celery -A ScheduleManager.celery beat --loglevel=debug &
       
         wait -n
       "

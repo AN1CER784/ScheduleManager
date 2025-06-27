@@ -15,4 +15,3 @@ def get_keys(dictionaries):
         for key in dictionary:
             yield key
             break
-

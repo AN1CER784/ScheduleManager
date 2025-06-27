@@ -18,15 +18,8 @@
 		     style="display: none">
 			<p class="m-0">Add some projects here to see them in list</p>
 		</div>
-
-
-		<div class="card my-2 shadow-sm add-project-card text-center text-success"
-		     style="border: 2px dashed #28a745; cursor: pointer;">
-			<button type="button" class="card-body py-2 border-0 bg-transparent w-100 p-0" data-bs-toggle="modal"
-			        data-bs-target="#addProjectModal">
-				<span class="h5">+ Add project</span>
-			</button>
-			<div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel"
+	{% include 'includes/add_button.html' with button_target="addProjectModal" button_name="+ Add project" %}
+	<div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel"
 			     aria-hidden="true">
 				<div class="modal-dialog modal-dialog-centered">
 					<div class="modal-content shadow-lg border-0 rounded-4 bg-white">
@@ -57,7 +50,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
 	</div>
 {% endblock %}
 
