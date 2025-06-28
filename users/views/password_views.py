@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView, PasswordResetView, \
     PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 from users.forms import UserPasswordChangeForm, PasswordResetForm
 
@@ -13,15 +14,15 @@ class UserPasswordChange(PasswordChangeView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Password change'
+        context['title'] = _('Password change')
         return context
 
     def form_valid(self, form):
-        messages.success(self.request, 'Password changed successfully')
+        messages.success(self.request, _('Password changed successfully'))
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.warning(self.request, 'Password change error')
+        messages.warning(self.request, _('Password change error'))
         return super().form_invalid(form)
 
 
@@ -30,7 +31,7 @@ class UserPasswordChangeDone(PasswordChangeDoneView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Password change done'
+        context['title'] = _('Password change done')
         return context
 
 
@@ -43,15 +44,15 @@ class UserPasswordResetView(PasswordResetView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Password reset'
+        context['title'] = _('Password reset')
         return context
 
     def form_valid(self, form):
-        messages.success(self.request, 'Password reset email sent successfully')
+        messages.success(self.request, _('Password reset email sent successfully'))
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.warning(self.request, 'Password reset error')
+        messages.warning(self.request, _('Password reset error'))
         return super().form_invalid(form)
 
 
@@ -60,8 +61,9 @@ class UserPasswordResetDoneView(PasswordResetDoneView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Check your email'
+        context['title'] = _('Check your email')
         return context
+
 
 class UserPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = 'users/password_reset_confirm.html'
@@ -69,22 +71,22 @@ class UserPasswordResetConfirmView(PasswordResetConfirmView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Password reset confirm'
+        context['title'] = _('Password reset confirm')
         return context
 
     def form_valid(self, form):
-        messages.success(self.request, 'Password changed successfully')
+        messages.success(self.request, _('Password changed successfully'))
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.warning(self.request, 'Password change error')
+        messages.warning(self.request, _('Password change error'))
         return super().form_invalid(form)
+
 
 class UserPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'users/password_reset_complete.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Password reset complete'
+        context['title'] = _('Password reset complete')
         return context
-

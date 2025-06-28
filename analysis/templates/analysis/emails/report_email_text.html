@@ -1,29 +1,30 @@
 {% extends "emails/base_email_text.html" %}
+{% load i18n %}
 
 {% block content %}
-	Your {{ period }} Productivity Report
+	{% trans 'Your' %} {{ period }} {% trans 'Productivity Report' %}
 	{% if period == 'Day' %}
-		You have overdue tasks:
+		{% trans 'You have overdue tasks' %}
 		{% for task in tasks %}
-			Your task {{ task.name }} on project {{ task.project.name }} is overdue.
-			Due date was on {{ task.due_datetime.date }}.
+			{% trans 'Your task' %} {{ task.name }} {% trans 'on project' %} {{ task.project.name }} {% trans 'is overdue' %}.
+			{% trans 'Due date was on' %} {{ task.due_datetime.date }}.
 		{% endfor %}
 	{% endif %}
 	{% with report.report as report %}
-			Overall Statistics:
-	- Completed: {{ report.overall.done_ratio|floatformat:2 }}%
-	- Overdue: {{ report.overall.late_ratio|floatformat:2 }}%
-	- In progress: {{ report.overall.in_progress_ratio|floatformat:2 }}
-	- Forecast: {{ report.forecast }}
+			{% trans 'Overall Statistics:' %}
+	- {% trans 'Completed:' %} {{ report.overall.done_ratio|floatformat:2 }}%
+	- {% trans 'Overdue:' %} {{ report.overall.late_ratio|floatformat:2 }}%
+	- {% trans 'In progress:' %} {{ report.overall.in_progress_ratio|floatformat:2 }}
+	- {% trans 'Forecast:' %} {{ report.forecast }}
 	{% if period == 'Week' %}
 		Daily Summary:
 		{% for d in report.daily %}
 			- {{ d.date }}:
-			Total tasks: {{ d.total }},
+			{% trans 'Total tasks:' %} {{ d.total }},
 
-			Completed: {% if d.done_pct is not None %}{{ d.done_pct|floatformat:1 }}%{% else %}-{% endif %},
-			Overdue: {% if d.late_pct is not None %}{{ d.late_pct|floatformat:1 }}%{% else %}-{% endif %}
-			In progress:
+			{% trans 'Completed:' %} {% if d.done_pct is not None %}{{ d.done_pct|floatformat:1 }}%{% else %}-{% endif %},
+			{% trans 'Overdue:' %} {% if d.late_pct is not None %}{{ d.late_pct|floatformat:1 }}%{% else %}-{% endif %}
+			{% trans 'In progress:' %}
 			{% if d.in_progress_pct is not None %}{{ d.in_progress_pct|floatformat:1 }}%{% else %}-{% endif %}
 		{% endfor %}
 	{% endif %}
@@ -31,8 +32,8 @@
 
 	By Projects:
 	{% for name, stats in report.by_project.items %}
-		- {{ name }}: {{ stats.done_pct|floatformat:1 }}% completed, {{ stats.late_pct|floatformat:1 }}% overdue,
-		{{ stats.in_progress_pct|floatformat:1 }}% in progress
+		- {{ name }}: {{ stats.done_pct|floatformat:1 }}% {% trans 'completed,' %} {{ stats.late_pct|floatformat:1 }}% {% trans 'overdue,' %}
+		{{ stats.in_progress_pct|floatformat:1 }}% {% trans 'in progress' %}
 	{% empty %}
 		- No project data available.
 	{% endfor %}

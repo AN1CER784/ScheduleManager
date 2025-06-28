@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load i18n %}
 
 {% block css %}
 	<link href="{% static 'deps/css/analysis.css' %}" rel="stylesheet">
@@ -8,23 +8,23 @@
 {% block content %}
 	{% if user.is_authenticated %}
 		<div class="fs-3 fw-bold text-center text-success bg-light mb-3 shadow-sm p-3 rounded shadow">
-			Your analysis
+			{% trans "Your analysis" %}
 		</div>
-		{% include 'analysis/includes/analysis_accordion.html' with container_id="day-analysis-container" section_id="day-analysis" accordion_id="accordionDaySummaries" title="Day Analysis" prefix="day" reports=day_reports week_mode=False %}
-		{% include 'analysis/includes/analysis_accordion.html' with container_id="week-analysis-container" section_id="week-analysis" accordion_id="accordionWeekSummaries" title="Week Analysis" prefix="week" reports=week_reports week_mode=True %}
-
+		{% trans "Day Analysis" as day_title %}
+		{% trans "Week Analysis" as week_title %}
+		{% include 'analysis/includes/analysis_accordion.html' with container_id="day-analysis-container" section_id="day-analysis" accordion_id="accordionDaySummaries" title=day_title prefix="day" reports=day_reports week_mode=False %}
+		{% include 'analysis/includes/analysis_accordion.html' with container_id="week-analysis-container" section_id="week-analysis" accordion_id="accordionWeekSummaries" title=week_title prefix="week" reports=week_reports week_mode=True %}
 	{% else %}
 		<div class="container">
 			<div class="alert bg-white border border-success text-success shadow-sm rounded p-4 d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 p-3">
 				<div class="d-flex align-items-start gap-3 p-2">
 					<img src="/static/deps/icons/robot.svg" alt="AI Icon" width="32" height="32">
 					<div>
-						<h5 class="mb-1 fw-bold">ScheduleManager Analysis</h5>
-						<p class="mb-0">To receive intelligent insights and analysis of your completed tasks, please log
-							in to your account.</p>
+						<h5 class="mb-1 fw-bold">{% trans 'ScheduleManager Analysis' %}</h5>
+						<p class="mb-0">{% trans 'To receive intelligent insights and analysis of your completed tasks, please log in to your account.' %}</p>
 					</div>
 				</div>
-				<a href="{% url 'users:login' %}" class="btn btn-success mt-3 mt-md-0">Log in</a>
+				<a href="{% url 'users:login' %}" class="btn btn-success mt-3 mt-md-0">{% trans 'Log in' %}</a>
 			</div>
 		</div>
 

@@ -1,4 +1,6 @@
 {% extends 'emails/base_email.html' %}
+{% load i18n %}
+
 {% block content %}
 <div style="
     padding: 24px;
@@ -15,10 +17,10 @@
       font-weight: bold;
       margin: 0 0 20px;
   ">
-    Hi, <i>{{ user.username }}</i>!
+    {% trans 'Hi' %}, <i>{{ user.username }}</i>!
   </p>
   <p style="margin: 0; font-size: 18px;">
-    We're excited to have you on board.
+    {% trans "We're excited to have you on board" %}.
   </p>
 </div>
 {% endblock %}

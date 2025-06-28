@@ -1,14 +1,10 @@
 from django.http import JsonResponse
-
 from django.views import View
-
+from django.utils.translation import gettext_lazy as _
+from common.mixins import JsonFormMixin
 from projects.mixins import ProjectMixin
 from tasks.forms import TaskCreateForm, TaskCompleteForm, TaskIncompleteForm, TaskUpdateForm
 from tasks.mixins import TasksMixin
-from common.mixins import JsonFormMixin
-
-
-
 
 
 class AddTaskView(JsonFormMixin, ProjectMixin, TasksMixin, View):
@@ -17,14 +13,15 @@ class AddTaskView(JsonFormMixin, ProjectMixin, TasksMixin, View):
 
     def form_valid(self, form):
         task = form.save(commit=False)
-        task.project = self.get_project(user_id=self.request.user.id, project_id=self.kwargs.get(self.slug_url_kwarg), session_key=self.request.session.session_key)
+        task.project = self.get_project(user_id=self.request.user.id, project_id=self.kwargs.get(self.slug_url_kwarg),
+                                        session_key=self.request.session.session_key)
         task.save()
         item_html = self.render_task(task=task, request=self.request, project=task.project)
-        return JsonResponse(self.response(message='Task was successfully added', item_html=item_html, success=True))
+        return JsonResponse(self.response(message=_('Task was successfully added'), item_html=item_html, success=True))
 
     def form_invalid(self, form):
         item_html = self.render_errors(form=form, request=self.request)
-        return JsonResponse(self.response('Task was not added', item_html, False))
+        return JsonResponse(self.response(_('Task was not added'), item_html, False))
 
 
 class DeleteTaskView(TasksMixin, View):
@@ -32,7 +29,7 @@ class DeleteTaskView(TasksMixin, View):
         task = self.get_task(request)
         item_html = self.render_task(task=task, request=request, project=task.project)
         task.delete()
-        return JsonResponse(self.response(message='Task was deleted', item_html=item_html, success=True))
+        return JsonResponse(self.response(message=_('Task was deleted'), item_html=item_html, success=True))
 
 
 class CompleteTaskView(TasksMixin, View):
@@ -41,7 +38,7 @@ class CompleteTaskView(TasksMixin, View):
         form = TaskCompleteForm(request.POST, instance=task)
         form.save()
         item_html = self.render_task(task=task, task_type='Done', request=request, project=task.project)
-        return JsonResponse(self.response(message='Task was successfully completed', item_html=item_html, success=True))
+        return JsonResponse(self.response(message=_('Task was successfully completed'), item_html=item_html, success=True))
 
 
 class IncompleteTaskView(TasksMixin, View):
@@ -50,7 +47,8 @@ class IncompleteTaskView(TasksMixin, View):
         form = TaskIncompleteForm(request.POST, instance=task)
         form.save()
         item_html = self.render_task(task=task, request=request, project=task.project)
-        return JsonResponse(self.response(message='Task was successfully incompleted', item_html=item_html, success=True))
+        return JsonResponse(
+            self.response(message=_('Task was successfully incompleted'), item_html=item_html, success=True))
 
 
 class TaskUpdateProgressView(TasksMixin, View):
@@ -59,7 +57,9 @@ class TaskUpdateProgressView(TasksMixin, View):
         task.progress.percentage = int(request.POST.get('complete_percentage'))
         task.progress.save()
         item_html = self.render_task(task=task, request=request, project=task.project)
-        return JsonResponse(self.response(message='Task progress was successfully updated', item_html=item_html, success=True))
+        return JsonResponse(
+            self.response(message=_('Task progress was successfully updated'), item_html=item_html, success=True))
+
 
 class TaskUpdateInfoView(TasksMixin, JsonFormMixin, View):
     form_class = TaskUpdateForm
@@ -74,8 +74,8 @@ class TaskUpdateInfoView(TasksMixin, JsonFormMixin, View):
         task = form.save()
         task_type = 'Done' if task.is_completed else "InProgress"
         item_html = self.render_task(task=task, request=self.request, project=task.project, task_type=task_type)
-        return JsonResponse(self.response(message='Task was successfully updated', item_html=item_html, success=True))
+        return JsonResponse(self.response(message=_('Task was successfully updated'), item_html=item_html, success=True))
 
     def form_invalid(self, form):
         item_html = self.render_errors(form=form, request=self.request)
-        return JsonResponse(self.response(message='Task was not updated', item_html=item_html, success=False))
+        return JsonResponse(self.response(message=_('Task was not updated'), item_html=item_html, success=False))

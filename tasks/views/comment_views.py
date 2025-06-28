@@ -1,11 +1,10 @@
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.views import View
-
+from django.utils.translation import gettext_lazy as _
+from common.mixins import JsonFormMixin
 from tasks.forms import TaskCommentForm
 from tasks.mixins import TasksMixin
-from common.mixins import JsonFormMixin
-
 
 
 class TaskAddCommentView(JsonFormMixin, TasksMixin, View):
@@ -21,12 +20,13 @@ class TaskAddCommentView(JsonFormMixin, TasksMixin, View):
             'comment_date': comment.created_date
         }, request=self.request)
         return JsonResponse(
-            self.response(message='Comment was successfully added', item_html=item_html, success=True, divider_html=divider_html,
+            self.response(message=_('Comment was successfully added'), item_html=item_html, success=True,
+                          divider_html=divider_html,
                           comment_date=comment.created_date))
 
     def form_invalid(self, form):
         item_html = self.render_errors(form=form, request=self.request)
-        return JsonResponse(self.response(message='Comment was not added', item_html=item_html, success=False))
+        return JsonResponse(self.response(message=_('Comment was not added'), item_html=item_html, success=False))
 
 
 class TaskDeleteCommentView(TasksMixin, View):
@@ -34,7 +34,7 @@ class TaskDeleteCommentView(TasksMixin, View):
         comment = self.get_comment(request)
         item_html = self.render_comment(comment=comment, request=request, project=comment.task.project)
         comment.delete()
-        return JsonResponse(self.response(message='Comment was deleted', item_html=item_html, success=True))
+        return JsonResponse(self.response(message=_('Comment was deleted'), item_html=item_html, success=True))
 
 
 class TaskEditCommentView(JsonFormMixin, TasksMixin, View):
@@ -48,8 +48,8 @@ class TaskEditCommentView(JsonFormMixin, TasksMixin, View):
     def form_valid(self, form):
         comment = form.save()
         item_html = self.render_comment(comment=comment, request=self.request, project=comment.task.project)
-        return JsonResponse(self.response(message='Comment was successfully edited', item_html=item_html, success=True))
+        return JsonResponse(self.response(message=_('Comment was successfully edited'), item_html=item_html, success=True))
 
     def form_invalid(self, form):
         item_html = self.render_errors(form=form, request=self.request)
-        return JsonResponse(self.response(message='Comment was not edited', item_html=item_html, success=False))
+        return JsonResponse(self.response(message=_('Comment was not edited'), item_html=item_html, success=False))

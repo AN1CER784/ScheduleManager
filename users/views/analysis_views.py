@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView
-
+from django.utils.translation import gettext_lazy as _
 from analysis.models import AnalysisReport
 from common.mixins import CacheMixin
 
@@ -9,7 +9,7 @@ class AnalysisView(CacheMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Analysis'
+        context['title'] = _('Analysis')
         if self.request.user.is_authenticated:
             query = AnalysisReport.objects.get_reports_by_period(periods=[1, 7], user=self.request.user)
             reports = query

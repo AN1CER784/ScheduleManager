@@ -49,7 +49,7 @@
 					     style="width: {{ project.percent_complete }}%;"></div>
 				</div>
 				<small class="text-muted"
-				       style="font-size: 0.75rem;">{{ project.percent_complete|truncatechars:5 }}%</small>
+				       style="font-size: 0.75rem;">{{ project.percent_complete }}%</small>
 			</div>
 			<div class="d-flex flex-row gap-2">
 				<form action="{% url 'projects:edit_proj' %}" method="post" class="m-0 p-0">

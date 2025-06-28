@@ -1,0 +1,840 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-28 12:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: ScheduleManager/settings.py:139
+msgid "English"
+msgstr "Английский"
+
+#: ScheduleManager/settings.py:140
+msgid "Russian"
+msgstr "Русский"
+
+#: analysis/forms.py:17
+msgid "Select date"
+msgstr "Выбрать дату"
+
+#: analysis/forms.py:31
+msgid "A summary already exists for the selected period and date."
+msgstr "Для выбранного периода и даты уже существует отчет."
+
+#: analysis/forms.py:40
+msgid "No tasks found for the selected period."
+msgstr "Для выбранного периода задачи не найдены."
+
+#: analysis/notifications.py:34
+msgid "Week analysis report"
+msgstr "Отчет за неделю"
+
+#: analysis/notifications.py:35
+msgid "Week"
+msgstr "Неделя"
+
+#: analysis/notifications.py:39
+msgid "Day analysis report"
+msgstr "Отчет за день"
+
+#: analysis/notifications.py:40
+msgid "Day"
+msgstr "День"
+
+#: analysis/templates/analysis/analysis.html:11
+msgid "Your analysis"
+msgstr "Ваш анализ"
+
+#: analysis/templates/analysis/analysis.html:13
+msgid "Day Analysis"
+msgstr "Анализ за день"
+
+#: analysis/templates/analysis/analysis.html:14
+msgid "Week Analysis"
+msgstr "Анализ за неделю"
+
+#: analysis/templates/analysis/analysis.html:23
+msgid "ScheduleManager Analysis"
+msgstr "Анализ ScheduleManager"
+
+#: analysis/templates/analysis/analysis.html:24
+msgid ""
+"To receive intelligent insights and analysis of your completed tasks, please "
+"log in to your account."
+msgstr ""
+"Чтобы получить интеллектуальные выводы и анализ выполненных задач, "
+"пожалуйста, войдите в свой аккаунт."
+
+#: analysis/templates/analysis/analysis.html:27
+msgid "Log in"
+msgstr "Войти"
+
+#: analysis/templates/analysis/emails/report_email.html:6
+#: analysis/templates/analysis/emails/report_email_text.html:5
+msgid "Your"
+msgstr "Ваш"
+
+#: analysis/templates/analysis/emails/report_email.html:6
+#: analysis/templates/analysis/emails/report_email_text.html:5
+msgid "Productivity Report"
+msgstr "Отчет о продуктивности"
+
+#: analysis/templates/analysis/emails/report_email.html:10
+#: analysis/templates/analysis/emails/report_email_text.html:7
+msgid "You have overdue tasks"
+msgstr "У вас есть просроченные задачи"
+
+#: analysis/templates/analysis/emails/report_email.html:21
+#: analysis/templates/analysis/emails/report_email_text.html:9
+msgid "Your task"
+msgstr "Ваша задача"
+
+#: analysis/templates/analysis/emails/report_email.html:25
+#: analysis/templates/analysis/includes/analysis_accordion.html:133
+#: schedule/templates/schedule/calendar.html:70
+msgid "Project"
+msgstr "Проект"
+
+#: analysis/templates/analysis/emails/report_email.html:29
+msgid "Status"
+msgstr "Статус"
+
+#: analysis/templates/analysis/emails/report_email.html:30
+#: analysis/templates/analysis/emails/report_email.html:43
+#: analysis/templates/analysis/emails/report_email.html:53
+#: analysis/templates/analysis/includes/analysis_accordion.html:94
+#: analysis/templates/analysis/includes/analysis_accordion.html:135
+msgid "Overdue"
+msgstr "Просрочено"
+
+#: analysis/templates/analysis/emails/report_email.html:33
+#: tasks/templates/tasks/tasks.html:69
+msgid "Due date"
+msgstr "Срок выполнения"
+
+#: analysis/templates/analysis/emails/report_email.html:41
+#: analysis/templates/analysis/includes/analysis_accordion.html:65
+msgid "Overall Statistics"
+msgstr "Общая статистика"
+
+#: analysis/templates/analysis/emails/report_email.html:42
+#: analysis/templates/analysis/emails/report_email.html:52
+#: analysis/templates/analysis/includes/analysis_accordion.html:93
+#: analysis/templates/analysis/includes/analysis_accordion.html:134
+#: tasks/templates/tasks/includes/task_item.html:132
+msgid "Completed"
+msgstr "Завершено"
+
+#: analysis/templates/analysis/emails/report_email.html:44
+#: analysis/templates/analysis/emails/report_email.html:54
+#: analysis/templates/analysis/includes/analysis_accordion.html:95
+#: analysis/templates/analysis/includes/analysis_accordion.html:136
+msgid "In progress"
+msgstr "В процессе"
+
+#: analysis/templates/analysis/emails/report_email.html:45
+msgid "Forecast"
+msgstr "Прогноз"
+
+#: analysis/templates/analysis/emails/report_email.html:47
+#: analysis/templates/analysis/includes/analysis_accordion.html:87
+msgid "Daily Summary"
+msgstr "Ежедневный отчет"
+
+#: analysis/templates/analysis/emails/report_email.html:50
+#: analysis/templates/analysis/includes/analysis_accordion.html:91
+msgid "Date"
+msgstr "Дата"
+
+#: analysis/templates/analysis/emails/report_email.html:51
+#: analysis/templates/analysis/includes/analysis_accordion.html:92
+msgid "Total"
+msgstr "Всего"
+
+#: analysis/templates/analysis/emails/report_email.html:85
+#: analysis/templates/analysis/includes/analysis_accordion.html:129
+msgid "By Projects"
+msgstr "По проектам"
+
+#: analysis/templates/analysis/emails/report_email.html:90
+#: analysis/templates/analysis/emails/report_email_text.html:35
+msgid "completed,"
+msgstr "завершено,"
+
+#: analysis/templates/analysis/emails/report_email.html:91
+#: analysis/templates/analysis/emails/report_email_text.html:35
+msgid "overdue,"
+msgstr "просрочено,"
+
+#: analysis/templates/analysis/emails/report_email.html:92
+#: analysis/templates/analysis/emails/report_email_text.html:36
+msgid "in progress"
+msgstr "в процессе"
+
+#: analysis/templates/analysis/emails/report_email.html:95
+#: analysis/templates/analysis/includes/analysis_accordion.html:149
+msgid "No project data available."
+msgstr "Данные по проектам отсутствуют."
+
+#: analysis/templates/analysis/emails/report_email_text.html:9
+msgid "on project"
+msgstr "по проекту"
+
+#: analysis/templates/analysis/emails/report_email_text.html:9
+msgid "is overdue"
+msgstr "просрочена"
+
+#: analysis/templates/analysis/emails/report_email_text.html:10
+msgid "Due date was on"
+msgstr "Срок выполнения был"
+
+#: analysis/templates/analysis/emails/report_email_text.html:14
+msgid "Overall Statistics:"
+msgstr "Общая статистика:"
+
+#: analysis/templates/analysis/emails/report_email_text.html:15
+#: analysis/templates/analysis/emails/report_email_text.html:25
+#: analysis/templates/analysis/includes/analysis_accordion.html:69
+msgid "Completed:"
+msgstr "Завершено:"
+
+#: analysis/templates/analysis/emails/report_email_text.html:16
+#: analysis/templates/analysis/emails/report_email_text.html:26
+#: analysis/templates/analysis/includes/analysis_accordion.html:73
+msgid "Overdue:"
+msgstr "Просрочено:"
+
+#: analysis/templates/analysis/emails/report_email_text.html:17
+#: analysis/templates/analysis/emails/report_email_text.html:27
+#: analysis/templates/analysis/includes/analysis_accordion.html:77
+msgid "In progress:"
+msgstr "В процессе:"
+
+#: analysis/templates/analysis/emails/report_email_text.html:18
+#: analysis/templates/analysis/includes/analysis_accordion.html:81
+msgid "Forecast:"
+msgstr "Прогноз:"
+
+#: analysis/templates/analysis/emails/report_email_text.html:23
+msgid "Total tasks:"
+msgstr "Всего задач:"
+
+#: analysis/templates/analysis/includes/analysis_accordion.html:27
+#: analysis/templates/analysis/includes/analysis_accordion.html:46
+msgid "Summary for"
+msgstr "Отчет за"
+
+#: analysis/templates/analysis/includes/analysis_accordion.html:28
+#: analysis/templates/analysis/includes/analysis_accordion.html:47
+msgid "week"
+msgstr "неделя"
+
+#: analysis/templates/analysis/includes/analysis_accordion.html:30
+#: analysis/templates/analysis/includes/analysis_accordion.html:49
+msgid "day"
+msgstr "день"
+
+#: analysis/templates/analysis/includes/analysis_accordion.html:173
+msgid "Add new summary be generation them here to see"
+msgstr ""
+"Добавьте новый отчет, сгенерировав его здесь, чтобы увидеть его содержимое"
+
+#: analysis/templates/analysis/includes/analysis_accordion.html:179
+msgid "Generate new week summary"
+msgstr "Сгенерировать недельный отчет"
+
+#: analysis/templates/analysis/includes/analysis_accordion.html:182
+msgid "Generate new day summary"
+msgstr "Сгенерировать дневной отчет"
+
+#: analysis/templates/analysis/includes/analysis_accordion.html:190
+msgid "Add Summary"
+msgstr "Добавить отчет"
+
+#: analysis/templates/analysis/includes/analysis_accordion.html:201
+msgid "Select Week"
+msgstr "Выбрать неделю"
+
+#: analysis/templates/analysis/includes/analysis_accordion.html:206
+msgid "Select Day"
+msgstr "Выбрать день"
+
+#: analysis/templates/analysis/includes/analysis_accordion.html:212
+msgid "Generate Summary"
+msgstr "Сгенерировать отчет"
+
+#: analysis/views.py:33
+msgid "Your summary will be generated soon"
+msgstr "Ваш отчет будет сгенерирован в ближайшее время"
+
+#: analysis/views.py:38
+msgid "Your summary could not be generated"
+msgstr "Не удалось сгенерировать ваш отчет"
+
+#: analysis/views.py:46
+msgid "Summary was deleted"
+msgstr "Отчет был удален"
+
+#: common/validators.py:33 common/validators.py:47
+#, python-format
+msgid "%(field)s must be within %(days)s days"
+msgstr "%(field)s должно быть в пределах %(days)s дней"
+
+#: common/validators.py:38
+#, python-format
+msgid "%(field)s must be in the future"
+msgstr "%(field)s должно быть в будущем"
+
+#: common/validators.py:43
+#, python-format
+msgid "%(field)s must be in the past"
+msgstr "%(field)s должно быть в прошлом"
+
+#: main/templates/main/index.html:15
+msgid "Let's Go"
+msgstr "Поехали"
+
+#: main/views.py:13
+msgid "Home page"
+msgstr "Главная страница"
+
+#: main/views.py:23
+msgid "About page"
+msgstr "О нас"
+
+#: projects/forms.py:14 tasks/forms.py:36 tasks/forms.py:40 tasks/forms.py:85
+#: tasks/forms.py:89 tasks/forms.py:133 users/forms.py:41
+msgid "Only english and russian letters are allowed, minimum 5 symbols"
+msgstr "Разрешены только английские и русские буквы, минимум 5 символов"
+
+#: projects/models.py:16
+msgid "No term"
+msgstr "Нет срока"
+
+#: projects/models.py:20 projects/models.py:25
+msgid "Start "
+msgstr "Начало "
+
+#: projects/models.py:27
+msgid " To "
+msgstr " До "
+
+#: projects/templates/projects/projects.html:10 templates/base.html:57
+#: users/views/project_views.py:33
+msgid "Projects"
+msgstr "Проекты"
+
+#: projects/templates/projects/projects.html:21
+msgid "Add some projects here to see them in list"
+msgstr "Добавьте проекты здесь, чтобы они отображались в списке"
+
+#: projects/templates/projects/projects.html:23
+msgid "+ Add project"
+msgstr "+ Добавить проект"
+
+#: projects/templates/projects/projects.html:34
+msgid "Add New Project"
+msgstr "Добавить новый проект"
+
+#: projects/templates/projects/projects.html:41
+msgid "Project name"
+msgstr "Название проекта"
+
+#: projects/templates/projects/projects.html:49
+#: tasks/templates/tasks/tasks.html:101
+msgid "Cancel"
+msgstr "Отмена"
+
+#: projects/templates/projects/projects.html:51
+msgid "Create"
+msgstr "Создать"
+
+#: schedule/templates/schedule/calendar.html:13
+msgid "Your schedule"
+msgstr "Расписание"
+
+#: schedule/templates/schedule/calendar.html:28
+msgid "Mon"
+msgstr "Пн"
+
+#: schedule/templates/schedule/calendar.html:29
+msgid "Tue"
+msgstr "Вт"
+
+#: schedule/templates/schedule/calendar.html:30
+msgid "Weв"
+msgstr "Ср"
+
+#: schedule/templates/schedule/calendar.html:31
+msgid "Thu"
+msgstr "Чт"
+
+#: schedule/templates/schedule/calendar.html:32
+msgid "Fri"
+msgstr "Пт"
+
+#: schedule/templates/schedule/calendar.html:33
+msgid "Sat"
+msgstr "Сб"
+
+#: schedule/templates/schedule/calendar.html:34
+msgid "Sun"
+msgstr "Вс"
+
+#: schedule/templates/schedule/calendar.html:49
+msgid "Tasks on"
+msgstr "Задачи на"
+
+#: schedule/templates/schedule/calendar.html:65
+msgid "Task"
+msgstr "Задача"
+
+#: schedule/templates/schedule/calendar.html:66
+#: tasks/templates/tasks/includes/task_item.html:92
+msgid "Start"
+msgstr "Начало"
+
+#: schedule/templates/schedule/calendar.html:67
+#: tasks/templates/tasks/includes/task_item.html:113
+msgid "Due"
+msgstr "Окончание"
+
+#: schedule/views.py:32
+msgid "Calendar"
+msgstr "Календарь"
+
+#: tasks/forms.py:20
+msgid "Due date and time must be after start date and time"
+msgstr "Дата и время окончания должны быть позже даты и времени начала"
+
+#: tasks/forms.py:29
+msgid "Write start date"
+msgstr "Укажите дату начала"
+
+#: tasks/forms.py:30
+msgid "Write start time"
+msgstr "Укажите время начала"
+
+#: tasks/forms.py:31
+msgid "Write due date"
+msgstr "Укажите дату окончания"
+
+#: tasks/forms.py:32
+msgid "Write due time"
+msgstr "Укажите время окончания"
+
+#: tasks/forms.py:33 tasks/forms.py:82
+msgid "Write task title"
+msgstr "Введите название задачи"
+
+#: tasks/forms.py:37 tasks/forms.py:86
+msgid "Write description"
+msgstr "Введите описание"
+
+#: tasks/forms.py:77
+msgid "Write start date and time"
+msgstr "Укажите дату и время начала"
+
+#: tasks/forms.py:79
+msgid "Write due date and time"
+msgstr "Укажите дату и время окончания"
+
+#: tasks/templates/tasks/includes/comment_item.html:58
+msgid "Delete"
+msgstr "Удалить"
+
+#: tasks/templates/tasks/includes/comment_item.html:65
+msgid "Edit"
+msgstr "Редактировать"
+
+#: tasks/templates/tasks/includes/task_item.html:111
+msgid "Not specified"
+msgstr "Не указано"
+
+#: tasks/templates/tasks/includes/task_item.html:139
+#: tasks/templates/tasks/tasks.html:93
+msgid "Description"
+msgstr "Описание"
+
+#: tasks/templates/tasks/includes/task_item.html:140
+msgid "No description"
+msgstr "Нет описания"
+
+#: tasks/templates/tasks/includes/task_item.html:160
+msgid "Task Progress"
+msgstr "Прогресс задачи"
+
+#: tasks/templates/tasks/includes/task_item.html:201
+msgid "Add comment"
+msgstr "Добавить комментарий"
+
+#: tasks/templates/tasks/tasks.html:12
+msgid "Tasks"
+msgstr "Задачи"
+
+#: tasks/templates/tasks/tasks.html:30
+msgid "Add some tasks here to see them in list"
+msgstr "Добавьте задачи здесь, чтобы они отображались в списке"
+
+#: tasks/templates/tasks/tasks.html:34
+msgid "+ Add task"
+msgstr "+ Добавить задачу"
+
+#: tasks/templates/tasks/tasks.html:44
+msgid "New Task"
+msgstr "Новая задача"
+
+#: tasks/templates/tasks/tasks.html:57
+msgid "Start date"
+msgstr "Дата начала"
+
+#: tasks/templates/tasks/tasks.html:62
+msgid "Start time"
+msgstr "Время начала"
+
+#: tasks/templates/tasks/tasks.html:73
+msgid "Due time"
+msgstr "Время окончания"
+
+#: tasks/templates/tasks/tasks.html:82
+msgid "Add due date & time"
+msgstr "Добавить дату и время окончания"
+
+#: tasks/templates/tasks/tasks.html:88
+msgid "Task title"
+msgstr "Название задачи"
+
+#: tasks/templates/tasks/tasks.html:90
+msgid "e.g. Finish project proposal"
+msgstr "например, Завершить проектное предложение"
+
+#: tasks/templates/tasks/tasks.html:95
+msgid "Task details..."
+msgstr "Детали задачи..."
+
+#: tasks/templates/tasks/tasks.html:103
+msgid "Save"
+msgstr "Сохранить"
+
+#: tasks/templates/tasks/tasks.html:127
+msgid "There is no completed task"
+msgstr "Завершенных задач нет"
+
+#: tasks/views/comment_views.py:23
+msgid "Comment was successfully added"
+msgstr "Комментарий успешно добавлен"
+
+#: tasks/views/comment_views.py:29
+msgid "Comment was not added"
+msgstr "Комментарий не добавлен"
+
+#: tasks/views/comment_views.py:37
+msgid "Comment was deleted"
+msgstr "Комментарий удален"
+
+#: tasks/views/comment_views.py:51
+msgid "Comment was successfully edited"
+msgstr "Комментарий успешно отредактирован"
+
+#: tasks/views/comment_views.py:55
+msgid "Comment was not edited"
+msgstr "Комментарий не отредактирован"
+
+#: tasks/views/task_views.py:20
+msgid "Task was successfully added"
+msgstr "Задача успешно добавлена"
+
+#: tasks/views/task_views.py:24
+msgid "Task was not added"
+msgstr "Задача не добавлена"
+
+#: tasks/views/task_views.py:32
+msgid "Task was deleted"
+msgstr "Задача удалена"
+
+#: tasks/views/task_views.py:41
+msgid "Task was successfully completed"
+msgstr "Задача успешно завершена"
+
+#: tasks/views/task_views.py:51
+msgid "Task was successfully incompleted"
+msgstr "Задача помечена как незавершенная"
+
+#: tasks/views/task_views.py:61
+msgid "Task progress was successfully updated"
+msgstr "Прогресс задачи успешно обновлен"
+
+#: tasks/views/task_views.py:77
+msgid "Task was successfully updated"
+msgstr "Задача успешно обновлена"
+
+#: tasks/views/task_views.py:81
+msgid "Task was not updated"
+msgstr "Задача не обновлена"
+
+#: templates/base.html:49 users/views/project_views.py:17
+msgid "Schedule"
+msgstr "Расписание"
+
+#: templates/base.html:65 users/views/analysis_views.py:12
+msgid "Analysis"
+msgstr "Анализ"
+
+#: templates/base.html:75 users/templates/users/password_change_done.html:8
+#: users/templates/users/profile.html:8 users/views/user_views.py:76
+msgid "Profile"
+msgstr "Профиль"
+
+#: templates/base.html:85
+msgid "Logout"
+msgstr "Выйти"
+
+#: templates/base.html:95 users/views/user_views.py:19
+msgid "Login"
+msgstr "Войти"
+
+#: templates/base.html:103
+msgid "About"
+msgstr "О нас"
+
+#: templates/emails/base_email.html:7
+msgid "Notification"
+msgstr "Уведомление"
+
+#: templates/emails/base_email.html:57 templates/emails/base_email_text.html:5
+msgid "Thanks for using our site!"
+msgstr "Спасибо за использование нашего сервиса!"
+
+#: templates/emails/base_email.html:58 templates/emails/base_email_text.html:6
+msgid "The Team of ScheduleManager"
+msgstr "Команда ScheduleManager"
+
+#: users/notifications.py:10
+msgid "Welcome to ScheduleManager"
+msgstr "Добро пожаловать в ScheduleManager"
+
+#: users/templates/users/emails/password_reset_email.html:16
+msgid "You"
+msgstr "Вы"
+
+#: users/templates/users/emails/password_reset_email.html:19
+#: users/templates/users/emails/password_reset_email_text.html:6
+msgid "Please go to the following page and choose a new password"
+msgstr "Перейдите по следующей ссылке и выберите новый пароль"
+
+#: users/templates/users/emails/password_reset_email.html:36
+#: users/templates/users/emails/password_reset_email_text.html:10
+msgid "Your username, in case you’ve forgotten"
+msgstr "Ваше имя пользователя, на случай если вы забыли"
+
+#: users/templates/users/emails/password_reset_email_text.html:5
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at"
+msgstr ""
+"Вы получаете это письмо, потому что запросили сброс пароля для вашей учетной "
+"записи на"
+
+#: users/templates/users/emails/user_register_email.html:20
+#: users/templates/users/emails/user_register_email_text.html:5
+msgid "Hi"
+msgstr "Привет"
+
+#: users/templates/users/emails/user_register_email.html:23
+msgid "We're excited to have you on board"
+msgstr "Рады видеть вас в числе наших пользователей"
+
+#: users/templates/users/emails/user_register_email_text.html:6
+msgid "Welcome to our platform! We're excited to have you on board"
+msgstr "Добро пожаловать на нашу платформу! Мы рады, что вы с нами"
+
+#: users/templates/users/login.html:14
+msgid "Username or email"
+msgstr "Имя пользователя или email"
+
+#: users/templates/users/login.html:29 users/templates/users/signup.html:38
+msgid "Password"
+msgstr "Пароль"
+
+#: users/templates/users/login.html:45
+msgid "Forgot password"
+msgstr "Забыли пароль"
+
+#: users/templates/users/login.html:46
+msgid "Sign up"
+msgstr "Регистрация"
+
+#: users/templates/users/password_change_done.html:7
+msgid "Password changed"
+msgstr "Пароль изменен"
+
+#: users/templates/users/password_change_done.html:8
+msgid "You can go back to"
+msgstr "Вы можете вернуться к"
+
+#: users/templates/users/password_change_form.html:8
+#: users/templates/users/profile.html:77
+msgid "Change password"
+msgstr "Изменить пароль"
+
+#: users/templates/users/password_change_form.html:17
+msgid "Current password"
+msgstr "Текущий пароль"
+
+#: users/templates/users/password_change_form.html:21
+#: users/templates/users/password_reset_confirm.html:15
+msgid "New password"
+msgstr "Новый пароль"
+
+#: users/templates/users/password_change_form.html:25
+#: users/templates/users/password_reset_confirm.html:22
+msgid "Confirm new password"
+msgstr "Подтвердите новый пароль"
+
+#: users/templates/users/password_change_form.html:28
+msgid "Update password"
+msgstr "Обновить пароль"
+
+#: users/templates/users/password_reset_complete.html:7
+msgid "Password reset successful"
+msgstr "Сброс пароля выполнен"
+
+#: users/templates/users/password_reset_complete.html:8
+msgid "Your password has been set. You may now"
+msgstr "Ваш пароль установлен. Теперь вы можете"
+
+#: users/templates/users/password_reset_complete.html:8
+msgid "log in"
+msgstr "войти"
+
+#: users/templates/users/password_reset_confirm.html:8
+msgid "Set a new password"
+msgstr "Установить новый пароль"
+
+#: users/templates/users/password_reset_confirm.html:28
+msgid "Reset password"
+msgstr "Сбросить пароль"
+
+#: users/templates/users/password_reset_confirm.html:31
+msgid "This link is invalid or has expired."
+msgstr "Эта ссылка недействительна или истекла."
+
+#: users/templates/users/password_reset_done.html:7
+msgid "Check your inbox"
+msgstr "Проверьте почту"
+
+#: users/templates/users/password_reset_done.html:8
+msgid ""
+"If an account exists with the provided email, a password reset link has been "
+"sent."
+msgstr ""
+"Если аккаунт с указанным email существует, ссылка для сброса пароля была "
+"отправлена."
+
+#: users/templates/users/password_reset_form.html:8
+msgid "Reset your password"
+msgstr "Сбросьте пароль"
+
+#: users/templates/users/password_reset_form.html:17
+msgid "Send reset link"
+msgstr "Отправить ссылку для сброса"
+
+#: users/templates/users/profile.html:28 users/templates/users/signup.html:13
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: users/templates/users/profile.html:60
+msgid "Your main purpose of using our service"
+msgstr "Ваша основная цель использования нашего сервиса"
+
+#: users/templates/users/profile.html:71 users/templates/users/signup.html:64
+msgid "Submit"
+msgstr "Отправить"
+
+#: users/templates/users/signup.html:47
+msgid "Confirm your password"
+msgstr "Подтвердите пароль"
+
+#: users/templates/users/signup.html:59
+msgid "Agree to terms and conditions"
+msgstr "Принять условия использования"
+
+#: users/views/password_views.py:17
+msgid "Password change"
+msgstr "Изменение пароля"
+
+#: users/views/password_views.py:21 users/views/password_views.py:78
+msgid "Password changed successfully"
+msgstr "Пароль успешно изменен"
+
+#: users/views/password_views.py:25 users/views/password_views.py:82
+msgid "Password change error"
+msgstr "Ошибка при изменении пароля"
+
+#: users/views/password_views.py:34
+msgid "Password change done"
+msgstr "Изменение пароля завершено"
+
+#: users/views/password_views.py:47
+msgid "Password reset"
+msgstr "Сброс пароля"
+
+#: users/views/password_views.py:51
+msgid "Password reset email sent successfully"
+msgstr "Ссылка для сброса пароля успешно отправлена"
+
+#: users/views/password_views.py:55
+msgid "Password reset error"
+msgstr "Ошибка сброса пароля"
+
+#: users/views/password_views.py:64
+msgid "Check your email"
+msgstr "Проверьте почту"
+
+#: users/views/password_views.py:74
+msgid "Password reset confirm"
+msgstr "Подтвердите сброс пароля"
+
+#: users/views/password_views.py:91
+msgid "Password reset complete"
+msgstr "Сброс пароля завершен"
+
+#: users/views/user_views.py:27
+#, python-format
+msgid "%(username)s, You have successfully logged in"
+msgstr "%(username)s, вы успешно вошли в систему"
+
+#: users/views/user_views.py:47
+msgid "Signup"
+msgstr "Регистрация"
+
+#: users/views/user_views.py:57
+#, python-format
+msgid "%(username)s, You have successfully registered and logged in"
+msgstr "%(username)s, вы успешно зарегистрировались и вошли в систему"
+
+#: users/views/user_views.py:83
+msgid "Data updated successfully"
+msgstr "Данные успешно обновлены"
+
+#: users/views/user_views.py:87
+msgid "Data update error"
+msgstr "Ошибка обновления данных"
+
+#~ msgid "sk"
+#~ msgstr "sk"

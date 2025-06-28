@@ -1,29 +1,30 @@
 from django.db import models
-from django.db.models import Count, Q, F, Case, When, Value, FloatField, ExpressionWrapper, Min, Max, CharField
+from django.db.models import Count, Q, F, Case, When, Value, ExpressionWrapper, Min, Max, CharField, \
+    IntegerField
 from django.db.models.functions import Cast, Concat
-
+from django.utils.translation import gettext as _
 from common.models import AbstractCreatedModel
 
 
 class ProjectQuerySet(models.QuerySet):
     def get_projects_periods(self):
         projects = self.annotate(
-            earliest=Min('tasks__start_datetime'),
-            latest=Max('tasks__due_datetime')
+            earliest=Min('tasks__start_datetime__date'),
+            latest=Max('tasks__due_datetime__date')
         ).annotate(
             term=Case(
-                When(earliest__isnull=True, then=Value("No term")),
+                When(earliest__isnull=True, then=Value(_("No term"))),
                 When(
                     latest__isnull=True,
                     then=Concat(
-                        Value("Start "),
+                        Value(_("Start "), output_field=CharField()),
                         Cast('earliest', CharField())
                     )
                 ),
                 default=Concat(
-                    Value("Start "),
+                    Value(_("Start "),  output_field=CharField()),
                     Cast('earliest', CharField()), 
-                    Value(" To "),
+                    Value(_(" To "),  output_field=CharField()),
                     Cast('latest', CharField())
                 ),
                 output_field=CharField()
@@ -38,8 +39,8 @@ class ProjectQuerySet(models.QuerySet):
         ).annotate(
             percent_complete=Case(
                 When(total=0, then=Value(0)),
-                default=ExpressionWrapper(F('completed') * 100.0 / F('total'), output_field=FloatField()),
-                output_field=FloatField(),
+                default=ExpressionWrapper(F('completed') * 100.0 / F('total'), output_field=IntegerField()),
+                output_field=IntegerField(),
             )
         )
         return projects

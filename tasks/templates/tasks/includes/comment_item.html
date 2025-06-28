@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n %}
+
 <div class="comment-item d-flex mb-4">
 	<div class="text-nowrap me-3 small align-content-center">{{ comment.created_time }}</div>
 	<div class="bg-light border border-success-subtle rounded p-2 w-100 shadow-sm position-relative">
@@ -53,14 +55,14 @@
 				      class="delete-comment-form dropdown-item m-0 p-0">
 					{% csrf_token %}
 					<button type="submit" class="dropdown-item">
-						Delete
+						{% trans 'Delete' %}
 						<input type="hidden" name="comment_id" value="{{ comment.id }}">
 					</button>
 				</form>
 			</li>
 			<li>
 				<button type="button" class="dropdown-item edit-comment-btn">
-					Edit
+					{% trans 'Edit' %}
 					<input type="hidden" name="comment_id" value="{{ comment.id }}">
 				</button>
 			</li>

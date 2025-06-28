@@ -1,5 +1,7 @@
 {% extends 'emails/base_email_text.html' %}
+{% load i18n %}
+
 {% block content %}
-	Hi, {{ user.username }},
-	Welcome to our platform! We're excited to have you on board.
+	{% trans "Hi" %}, {{ user.username }},
+	{% trans "Welcome to our platform! We're excited to have you on board" %}.
 {% endblock %}

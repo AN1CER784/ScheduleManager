@@ -1,9 +1,9 @@
-from django.views import View
 from django.http import JsonResponse
+from django.views import View
+
 from common.mixins import JsonFormMixin
 from projects.forms import AddProjectForm
 from projects.mixins import ProjectMixin
-
 
 
 class AddProjectView(JsonFormMixin, ProjectMixin, View):
@@ -26,10 +26,10 @@ class AddProjectView(JsonFormMixin, ProjectMixin, View):
         return JsonResponse(self.response('Error creating project', item_html, False))
 
 
-
 class DeleteProjectView(ProjectMixin, View):
     def post(self, request, *args, **kwargs):
-        project = self.get_project(user_id=request.user.id, project_id=request.POST.get('project_id'), session_key=self.request.session.session_key)
+        project = self.get_project(user_id=request.user.id, project_id=request.POST.get('project_id'),
+                                   session_key=self.request.session.session_key)
         item_html = self.render_project(request=request, project=project)
         project.delete()
         return JsonResponse(self.response('Project was successfully deleted', item_html, True))
@@ -40,7 +40,9 @@ class UpdateProjectView(ProjectMixin, JsonFormMixin, View):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.get_project(user_id=self.request.user.id, project_id=self.request.POST.get('project_id'), session_key=self.request.session.session_key)
+        kwargs['instance'] = self.get_project(user_id=self.request.user.id,
+                                              project_id=self.request.POST.get('project_id'),
+                                              session_key=self.request.session.session_key)
         return kwargs
 
     def form_valid(self, form):

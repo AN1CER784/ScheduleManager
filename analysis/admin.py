@@ -1,4 +1,5 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
 
 from analysis.models import AnalysisReport, AnalysisSummary, AnalysisPrompt
 
@@ -6,6 +7,7 @@ from analysis.models import AnalysisReport, AnalysisSummary, AnalysisPrompt
 class AnalysisSummaryInline(admin.TabularInline):
     model = AnalysisSummary
     fields = ('summary',)
+
 
 @admin.register(AnalysisReport)
 class AnalysisReportAdmin(admin.ModelAdmin):
@@ -17,7 +19,7 @@ class AnalysisReportAdmin(admin.ModelAdmin):
 
 
 @admin.register(AnalysisPrompt)
-class AnalysisPromptAdmin(admin.ModelAdmin):
+class AnalysisPromptAdmin(TranslationAdmin):
     list_display = ('period', 'prompt')
     list_editable = ('prompt',)
     list_filter = ('period',)

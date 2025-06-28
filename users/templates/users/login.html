@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 
@@ -10,7 +11,7 @@
 		<form action="{% url 'users:login' %}" method="post" class="row justify-content-center gx-5 gy-4 py-4">
 			{% csrf_token %}
 			<div class="col-12 col-md-10 mx-auto">
-				<label for="id_username" class="form-label">Username or email</label>
+				<label for="id_username" class="form-label">{% trans 'Username or email' %}</label>
 				<div class="input-group">
 					<input
 							value="{% if form.username.value %}{{ form.username.value }}{% endif %}"
@@ -18,18 +19,20 @@
 							class="form-control"
 							id="id_username"
 							name="username"
+							placeholder="testmail@mail.com"
 							required>
 				</div>
 			</div>
 
 
 			<div class="col-12 col-md-10 mx-auto">
-				<label for="id_password1" class="form-label">Password</label>
+				<label for="id_password1" class="form-label">{% trans 'Password' %}</label>
 				<input
 						type="password"
 						id="id_password1"
 						name="password"
 						class="form-control"
+						placeholder="12345678"
 						required>
 
 			</div>
@@ -39,9 +42,8 @@
 				</button>
 			</div>
 			<div class="col-12 text-center">
-				<a class="text-success" href="{% url 'users:password_reset' %}">Forgot
-					password</a> | <a class="text-success"
-				                      href="{% url 'users:signup' %}">Sign up</a>
+				<a class="text-success" href="{% url 'users:password_reset' %}">{% trans 'Forgot password' %}</a> | <a class="text-success"
+				                      href="{% url 'users:signup' %}">{% trans 'Sign up' %}</a>
 			</div>
 
 

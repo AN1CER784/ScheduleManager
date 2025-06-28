@@ -1,5 +1,6 @@
 from django import forms
 from django.core.validators import MaxLengthValidator, MinLengthValidator, RegexValidator
+from django.utils.translation import gettext_lazy as _
 
 from common.validators import ValidateDate
 from tasks.models import Task, TaskComment
@@ -16,7 +17,7 @@ class BaseTaskForm(forms.ModelForm):
                 else:
                     fields = ['due_datetime']
                 for field in fields:
-                    self.add_error(field, 'Due date and time must be after start date and time')
+                    self.add_error(field, _('Due date and time must be after start date and time'))
         return cleaned_data
 
 
@@ -25,18 +26,18 @@ class TaskCreateForm(BaseTaskForm):
         model = Task
         fields = ['start_date', 'start_time', 'due_date', 'due_time', 'name', 'description']
 
-    start_date = forms.DateField(label='Write start date', )
-    start_time = forms.TimeField(label='Write start time', )
-    due_date = forms.DateField(label='Write due date', required=False)
-    due_time = forms.TimeField(label='Write due time', required=False)
-    name = forms.CharField(label='Write task title',
+    start_date = forms.DateField(label=_('Write start date'), )
+    start_time = forms.TimeField(label=_('Write start time'), )
+    due_date = forms.DateField(label=_('Write due date'), required=False)
+    due_time = forms.TimeField(label=_('Write due time'), required=False)
+    name = forms.CharField(label=_('Write task title'),
                            validators=[MinLengthValidator(5), MaxLengthValidator(100),
                                        RegexValidator(r'^(?=.*[a-zA-Zа-яА-ЯёЁ]).{5,}$',
-                                                      'Only english and russian letters are allowed, minimum 5 symbols')])
-    description = forms.CharField(label='Write description', required=False,
+                                                      _('Only english and russian letters are allowed, minimum 5 symbols'))])
+    description = forms.CharField(label=_('Write description'), required=False,
                                   validators=[MinLengthValidator(5), MaxLengthValidator(300),
                                               RegexValidator(r'^(?=.*[a-zA-Zа-яА-ЯёЁ]).{5,}$',
-                                                             'Only english and russian letters are allowed, minimum 5 symbols')])
+                                                             _('Only english and russian letters are allowed, minimum 5 symbols'))])
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -73,19 +74,19 @@ class TaskUpdateForm(BaseTaskForm):
         model = Task
         fields = ['start_datetime', 'due_datetime', 'name', 'description']
 
-    start_datetime = forms.DateTimeField(label='Write start date and time', input_formats=['%Y-%m-%d %H:%M:%S%z'],
+    start_datetime = forms.DateTimeField(label=_('Write start date and time'), input_formats=['%Y-%m-%d %H:%M:%S%z'],
                                          validators=[ValidateDate(field_names=["start_datetime"], days=60)])
-    due_datetime = forms.DateTimeField(label='Write due date and time', required=False,
+    due_datetime = forms.DateTimeField(label=_('Write due date and time'), required=False,
                                        input_formats=['%Y-%m-%d %H:%M:%S%z'],
                                        validators=[ValidateDate(field_names=["due_datetime"], days=60)])
-    name = forms.CharField(label='Write task title',
+    name = forms.CharField(label=_('Write task title'),
                            validators=[MinLengthValidator(5), MaxLengthValidator(100),
                                        RegexValidator(r'^(?=.*[a-zA-Zа-яА-ЯёЁ]).{5,}$',
-                                                      'Only english and russian letters are allowed, minimum 5 symbols')])
-    description = forms.CharField(label='Write description', required=False,
+                                                      _('Only english and russian letters are allowed, minimum 5 symbols'))])
+    description = forms.CharField(label=_('Write description'), required=False,
                                   validators=[MinLengthValidator(5), MaxLengthValidator(300),
                                               RegexValidator(r'^(?=.*[a-zA-Zа-яА-ЯёЁ]).{5,}$',
-                                                             'Only english and russian letters are allowed, minimum 5 symbols')])
+                                                             _('Only english and russian letters are allowed, minimum 5 symbols'))])
 
     def clean(self, start_datetime=None, due_datetime=None, update=False):
         cleaned_data = super().clean()
@@ -127,5 +128,6 @@ class TaskCommentForm(forms.ModelForm):
         fields = ['task_id', 'text']
 
     task_id = forms.IntegerField(required=False)
-    text = forms.CharField(label='comment', validators=[MinLengthValidator(5), MaxLengthValidator(300), RegexValidator(r'^(?=.*[a-zA-Zа-яА-ЯёЁ]).{5,}$',
-                                                      'Only english and russian letters are allowed, minimum 5 symbols')])
+    text = forms.CharField(label='comment', validators=[MinLengthValidator(5), MaxLengthValidator(300),
+                                                        RegexValidator(r'^(?=.*[a-zA-Zа-яА-ЯёЁ]).{5,}$',
+                                                                       _('Only english and russian letters are allowed, minimum 5 symbols'))])

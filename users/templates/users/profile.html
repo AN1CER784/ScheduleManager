@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 
 	<div class="fs-3 fw-bold text-center text-success mb-3 shadow-sm p-3 bg-light rounded">
-		Profile
+		{% trans 'Profile' %}
 	</div>
 	<div class="container bg-light rounded p-3">
 		<form method="post" action="{% url 'users:profile' %}" class="row justify-content-center gx-5 gy-4 py-4"
@@ -24,7 +25,7 @@
 				{% endif %}
 			</div>
 			<div class="col-md-7 mx-auto">
-				<label for="id_username" class="form-label">Username</label>
+				<label for="id_username" class="form-label">{% trans 'Username' %}</label>
 				<div class="input-group">
 					<input
 							type="text"
@@ -56,7 +57,7 @@
 				{% endif %}
 			</div>
 			<div class="col-md-7 mx-auto">
-				<label for="id_description" class="form-label">Your main purpose of using our service</label>
+				<label for="id_description" class="form-label">{% trans 'Your main purpose of using our service' %}</label>
 				<input type="text" id="id_description" name="description"
 				       value="{% if form.description.value %}{{ form.description.value }}{% endif %}"
 				       class="form-control">
@@ -67,13 +68,13 @@
 
 			<div class="col-12 text-center">
 				<button class="btn btn-success px-4 fw-bold rounded-pill" type="submit">
-					Submit
+					{% trans 'Submit' %}
 				</button>
 			</div>
 
 			<div class="text-center mt-3">
 				<a href="{% url 'users:password_change' %}" class="btn btn-outline-success px-4 fw-bold rounded-pill">
-					Change password
+					{% trans 'Change password' %}
 				</a>
 			</div>
 		</form>

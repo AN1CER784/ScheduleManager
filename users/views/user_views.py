@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, UpdateView
 
 from users.forms import LoginForm, ProfileForm, SignupForm
@@ -15,7 +16,7 @@ class UserLoginView(LoginView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Login'
+        context['title'] = _('Login')
         return context
 
     def form_valid(self, form):
@@ -23,7 +24,7 @@ class UserLoginView(LoginView):
         user = form.get_user()
         if user:
             auth.login(self.request, user)
-            messages.success(self.request, f'{user.username}, You have successfully logged in')
+            messages.success(self.request, _('%(username)s, You have successfully logged in') % {'username': user.username})
             update_projects_user(session_key, user)
             return HttpResponseRedirect(self.get_success_url())
 
@@ -43,15 +44,18 @@ class UserSignupView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Signup'
+        context['title'] = _('Signup')
         return context
 
     def form_valid(self, form):
         session_key = self.request.session.session_key
         form.save()
-        user = auth.authenticate(self.request, username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
+        user = auth.authenticate(self.request, username=form.cleaned_data['username'],
+                                 password=form.cleaned_data['password1'])
         auth.login(self.request, user)
-        messages.success(self.request, f'{user.username}, You have successfully registered and logged in')
+        messages.success(self.request,
+                         _('%(username)s, You have successfully registered and logged in') % {'username': user.username}
+                         )
         update_projects_user(session_key, user)
         return HttpResponseRedirect(self.get_success_url())
 
@@ -69,16 +73,16 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Profile'
+        context['title'] = _('Profile')
         return context
 
     def get_object(self, queryset=None):
         return self.request.user
 
     def form_valid(self, form):
-        messages.success(self.request, 'Data updated successfully')
+        messages.success(self.request, _('Data updated successfully'))
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.warning(self.request, 'Data update error')
+        messages.warning(self.request, _('Data update error'))
         return super().form_invalid(form)

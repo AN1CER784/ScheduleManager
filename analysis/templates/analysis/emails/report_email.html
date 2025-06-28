@@ -1,11 +1,13 @@
 {% extends "emails/base_email.html" %}
+{% load i18n %}
+
 {% block content %}
 	<div style="font-family: Arial, sans-serif; color: #333;">
-		<h1 style="color: #2e7d32;">Your {{ period }} Productivity Report</h1>
+		<h1 style="color: #2e7d32;">{% trans 'Your' %} {{ period }} {% trans 'Productivity Report' %}</h1>
 		{% if period == 'Day' %}
 			<div style="padding: 24px; color: #333333; line-height: 1.5;">
 				<p style="font-size: 16px; margin-bottom: 24px;">
-					You have overdue tasks
+					{% trans 'You have overdue tasks' %}
 				</p>
 
 				{% for task in tasks %}
@@ -16,19 +18,19 @@
           margin-bottom: 16px;
       ">
 						<p style="margin: 0 0 8px 0; font-size: 14px;">
-							<strong>Your task:</strong>
+							<strong>{% trans 'Your task' %}:</strong>
 							<em>{{ task.name }}</em>
 						</p>
 						<p style="margin: 0 0 8px 0; font-size: 14px;">
-							<strong>Project:</strong>
+							<strong>{% trans 'Project' %}:</strong>
 							<em>{{ task.project.name }}</em>
 						</p>
 						<p style="margin: 0 0 8px 0; font-size: 14px;">
-							<strong>Status:</strong>
-							<span style="color: #d9534f;"><strong>Overdue</strong></span>
+							<strong>{% trans 'Status' %}:</strong>
+							<span style="color: #d9534f;"><strong>{% trans 'Overdue' %}</strong></span>
 						</p>
 						<p style="margin: 0; font-size: 14px;">
-							<strong>Due date:</strong>
+							<strong>{% trans 'Due date' %}:</strong>
 							{{ task.due_datetime.date }}
 						</p>
 					</div>
@@ -36,20 +38,20 @@
 			</div>
 		{% endif %}
 	{% with report.report as report %}
-		<h2 style="color: #388e3c;">Overall Statistics</h2>
-		<p><strong>Completed:</strong> {{ report.overall.done_ratio|floatformat:2 }}%</p>
-		<p><strong>Overdue:</strong> {{ report.overall.late_ratio|floatformat:2 }}%</p>
-		<p><strong>In progress:</strong> {{ report.overall.in_progress_ratio|floatformat:2 }}%</p>
-		<p><strong>Forecast:</strong> <span style="color: #2e7d32;">{{ report.forecast }}</span></p>
+		<h2 style="color: #388e3c;">{% trans 'Overall Statistics' %}</h2>
+		<p><strong>{% trans 'Completed' %}:</strong> {{ report.overall.done_ratio|floatformat:2 }}%</p>
+		<p><strong>{% trans 'Overdue' %}:</strong> {{ report.overall.late_ratio|floatformat:2 }}%</p>
+		<p><strong>{% trans 'In progress' %}:</strong> {{ report.overall.in_progress_ratio|floatformat:2 }}%</p>
+		<p><strong>{% trans 'Forecast' %}:</strong> <span style="color: #2e7d32;">{{ report.forecast }}</span></p>
 		{% if period == 'Week' %}
-			<h2 style="color: #388e3c;">Daily Summary</h2>
+			<h2 style="color: #388e3c;">{% trans 'Daily Summary' %}</h2>
 			<table cellpadding="8" cellspacing="0" border="0" style="border-collapse: collapse; width: 100%;">
 				<tr style="background-color: #e8f5e9; color: #2e7d32;">
-					<th align="left">Date</th>
-					<th align="left">Total</th>
-					<th align="left">Completed %</th>
-					<th align="left">Overdue %</th>
-					<th align="left">In progress %</th>
+					<th align="left">{% trans 'Date' %}</th>
+					<th align="left">{% trans 'Total' %}</th>
+					<th align="left">{% trans 'Completed' %} %</th>
+					<th align="left">{% trans 'Overdue' %} %</th>
+					<th align="left">{% trans 'In progress' %} %</th>
 				</tr>
 				{% for d in report.daily %}
 					<tr style="border-bottom: 1px solid #ccc;">
@@ -80,17 +82,17 @@
 				{% endfor %}
 			</table>
 		{% endif %}
-		<h2 style="color: #388e3c;">By Projects</h2>
+		<h2 style="color: #388e3c;">{% trans 'By Projects' %}</h2>
 		<ul>
 			{% for name, stats in report.by_project.items %}
 				<li>
 					<strong>{{ name }}</strong>:
-					{{ stats.done_pct|floatformat:1 }}% completed,
-					{{ stats.late_pct|floatformat:1 }}% overdue
-					{{ stats.in_progress_pct|floatformat:1 }}% in progress
+					{{ stats.done_pct|floatformat:1 }}% {% trans 'completed,' %}
+					{{ stats.late_pct|floatformat:1 }}% {% trans 'overdue,' %}
+					{{ stats.in_progress_pct|floatformat:1 }}% {% trans 'in progress' %}
 				</li>
 			{% empty %}
-				<li>No project data available.</li>
+				<li>{% trans 'No project data available.' %}</li>
 			{% endfor %}
 		</ul>
 	</div>

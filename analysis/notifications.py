@@ -1,6 +1,6 @@
 from django.template.loader import render_to_string
 from django.utils import timezone
-
+from django.utils.translation import gettext_lazy as _
 from analysis.utils import get_or_create_report
 from tasks.models import Task
 
@@ -31,13 +31,13 @@ class BaseNotificationBuilder:
 
 
 class WeekReportNotificationBuilder(BaseNotificationBuilder):
-    subject = 'Week analysis report'
-    period = 'Week'
+    subject = _('Week analysis report')
+    period = _('Week')
 
 
 class DayTaskNotificationBuilder(BaseNotificationBuilder):
-    subject = 'Day analysis report'
-    period = 'Day'
+    subject = _('Day analysis report')
+    period = _('Day')
 
 
 

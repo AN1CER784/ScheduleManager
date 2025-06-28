@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n %}
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -44,7 +46,7 @@
 						   href="{% url 'schedule:calendar' %}">
 							<img src="{% static 'deps/icons/calendar-range.svg' %}"
 							     alt="Projects" width="20" height="20" class="img-green-dim">
-							Schedule
+							{% trans 'Schedule' %}
 						</a>
 					</li>
 					<li class="nav-item">
@@ -52,7 +54,7 @@
 						   href="{% url 'users:projects' %}">
 							<img src="{% static 'deps/icons/list-ul.svg' %}"
 							     alt="Projects" width="20" height="20" class="img-green-dim">
-							Projects
+							{% trans 'Projects' %}
 						</a>
 					</li>
 					<li class="nav-item">
@@ -60,7 +62,7 @@
 						   href="{% url 'users:summaries' %}">
 							<img src="{% static 'deps/icons/list-columns-reverse.svg' %}"
 							     alt="Analysis" width="20" height="20" class="img-green-dim">
-							Analysis
+							{% trans 'Analysis' %}
 						</a>
 					</li>
 
@@ -70,7 +72,7 @@
 							   href="{% url 'users:profile' %}">
 								<img src="{% static 'deps/icons/person-circle.svg' %}"
 								     alt="Profile" width="20" height="20" class="img-green-dim">
-								Profile
+								{% trans 'Profile' %}
 							</a>
 						</li>
 						<li class="nav-item">
@@ -80,7 +82,7 @@
 								>
 									<img src="{% static 'deps/icons/arrow-left-square.svg' %}"
 									     alt="Logout" width="20" height="20" class="img-green-dim">
-									Logout
+									{% trans 'Logout' %}
 								</button>
 							</form>
 						</li>
@@ -90,7 +92,7 @@
 							   href="{% url 'users:login' %}">
 								<img src="{% static 'deps/icons/arrow-right-square.svg' %}"
 								     alt="Login" width="20" height="20" class="img-green-dim">
-								Login
+								{% trans 'Login' %}
 							</a>
 						</li>
 					{% endif %}
@@ -98,7 +100,7 @@
 						<a class="nav-link text-success d-flex align-items-center gap-2" href="{% url 'main:about' %}">
 							<img src="{% static 'deps/icons/file-text.svg' %}"
 							     alt="About" width="20" height="20" class="img-green-dim">
-							About
+							{% trans 'About' %}
 						</a>
 					</li>
 

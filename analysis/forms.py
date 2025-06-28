@@ -1,5 +1,7 @@
 from django import forms
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
+
 from common.validators import ValidateDate
 from tasks.models import Task
 from .models import AnalysisReport
@@ -12,7 +14,8 @@ class GenerationForm(forms.Form):
         fields = ['start_date', 'end_date', 'period', 'username']
 
     username = forms.CharField()
-    start_date = forms.DateTimeField(label='Select date', validators=[ValidateDate(field_names=["start_date"], days=120, future=False)])
+    start_date = forms.DateTimeField(label=_('Select date'),
+                                     validators=[ValidateDate(field_names=["start_date"], days=120, future=False)])
     end_date = forms.DateTimeField()
     period = forms.TypedChoiceField(choices=PERIOD_CHOICES, coerce=int)
 
@@ -25,7 +28,7 @@ class GenerationForm(forms.Form):
             report = AnalysisReport.objects.filter(start_date=start_date, end_date=end_date, period=period).first()
             summary = report.summary if report else None
             if summary:
-                self.add_error("start_date","A summary already exists for the selected period and date.")
+                self.add_error("start_date", _("A summary already exists for the selected period and date."))
             tasks = Task.objects.filter(project__user=self.request.user).select_related('project').filter(
                 Q(start_datetime__date__range=[
                     start_date,
@@ -34,7 +37,7 @@ class GenerationForm(forms.Form):
                     start_date,
                     end_date]))
             if not tasks:
-                self.add_error("start_date","No tasks found for the selected period.")
+                self.add_error("start_date", _("No tasks found for the selected period."))
             cleaned_data['tasks'] = tasks
 
         return cleaned_data
@@ -50,4 +53,5 @@ class GenerationForm(forms.Form):
         end_date = self.cleaned_data.get('end_date').date()
         tasks = self.cleaned_data.get('tasks')
         tasks_ids = list(tasks.values_list('id', flat=True))
-        make_summary.delay(username=username, start_date=start_date, end_date=end_date, tasks_ids=tasks_ids, period=period)
+        make_summary.delay(username=username, start_date=start_date, end_date=end_date, tasks_ids=tasks_ids,
+                           period=period)

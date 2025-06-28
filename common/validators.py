@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class ValidateDate:
@@ -28,20 +29,22 @@ class ValidateDate:
     def _validate_future_or_none(self, value):
         if not (self.min_date <= value <= self.max_date):
             for field_name in self.field_names:
-                self.errors.append(f"{field_name} must be within {self.days} days")
+                self.errors.append(
+                    _('%(field)s must be within %(days)s days') % {'field': field_name, 'days': self.days})
 
     def _validate_future(self, value, now):
         if value < now:
             for field_name in self.field_names:
-                self.errors.append(f"{field_name} must be in the future")
+                self.errors.append(_('%(field)s must be in the future') % {'field': field_name})
 
     def _validate_past(self, value, now):
         if value > now:
             for field_name in self.field_names:
-                self.errors.append(f"{field_name} must be in the past")
+                self.errors.append(_('%(field)s must be in the past') % {'field': field_name})
         if value < self.min_date:
             for field_name in self.field_names:
-                self.errors.append(f"{field_name} must be within {self.days} days")
+                self.errors.append(
+                    _('%(field)s must be within %(days)s days') % {'field': field_name, 'days': self.days})
 
     def _add_errors(self):
         for error, field_name in zip(self.errors, self.field_names):
@@ -49,4 +52,3 @@ class ValidateDate:
                 self.form.add_error(field_name, error)
             else:
                 raise ValidationError(error)
-

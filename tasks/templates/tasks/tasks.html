@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
+
 {% block css %}
 	<link rel="stylesheet" href="{% static 'deps/css/tasks.css' %}">
 {% endblock %}
@@ -7,7 +9,7 @@
 
 
 	<div class="fs-3 fw-bold text-center text-success mb-3 shadow-sm p-3 bg-light rounded">
-		{{ project.name }} Tasks
+		{{ project.name }} {% trans 'Tasks' %}
 	</div>
 	{% with project.tasks.split_pending_done as all_tasks %}
 		<div id="pending-tasks-container">
@@ -25,11 +27,12 @@
 				<div id="no-tasks-placeholder"
 				     class="container bg-light p-3 rounded shadow text-secondary fs-5 justify-content-center align-items-center text-center"
 				     style="display: none">
-					<p class="m-0">Add some tasks here to see them in list</p>
+					<p class="m-0">{% trans 'Add some tasks here to see them in list' %}</p>
 				</div>
 
 			</div>
-			{% include 'includes/add_button.html' with button_target="staticBackdrop" button_name="+ Add task" %}
+			{% trans "+ Add task" as button_name %}
+			{% include 'includes/add_button.html' with button_target="staticBackdrop" button_name=button_name %}
 
 
 			<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -38,7 +41,7 @@
 					<div class="modal-content shadow-lg border-0 rounded-4" style="background-color: #f8f9fa;">
 						<div class="modal-header bg-success text-white rounded-top-4">
 							<h5 class="modal-title d-flex align-items-center gap-2" id="staticBackdropLabel">
-								<i class="bi bi-journal-plus"></i> New Task
+								<i class="bi bi-journal-plus"></i> {% trans 'New Task' %}
 							</h5>
 							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
 							        aria-label="Close"></button>
@@ -51,23 +54,23 @@
 							<div class="modal-body py-3">
 								<div class="row g-3">
 									<div class="col-md-6">
-										<label for="id_start_date" class="form-label">Start date</label>
+										<label for="id_start_date" class="form-label">{% trans 'Start date' %}</label>
 										<input type="date" class="form-control" id="id_start_date" name="start_date"
 										       required>
 									</div>
 									<div class="col-md-6">
-										<label for="id_start_time" class="form-label">Start time</label>
+										<label for="id_start_time" class="form-label">{% trans 'Start time' %}</label>
 										<input type="time" class="form-control" id="id_start_time" name="start_time"
 										       required>
 									</div>
 								</div>
 								<div class="row g-3 my-1" id="due-fields">
 									<div class="col-md-6">
-										<label for="id_due_date" class="form-label">Due date</label>
+										<label for="id_due_date" class="form-label">{% trans 'Due date' %}</label>
 										<input type="date" class="form-control" id="id_due_date" name="due_date">
 									</div>
 									<div class="col-md-6">
-										<label for="id_due_time" class="form-label">Due time</label>
+										<label for="id_due_time" class="form-label">{% trans 'Due time' %}</label>
 										<input type="time" class="form-control" id="id_due_time" name="due_time">
 									</div>
 								</div>
@@ -76,28 +79,28 @@
 								<input class="form-check-input" type="checkbox" id="enable_due_fields"
 								       style="cursor: pointer;">
 								<label class="form-check-label fw-semibold text-secondary" for="enable_due_fields">
-									Add due date & time
+									{% trans 'Add due date & time' %}
 								</label>
 							</div>
 							<hr class="my-3">
 							<div class="row justify-content-center">
 								<div class="mb-3 col-md-11">
-									<label for="id_name" class="form-label">Task title</label>
+									<label for="id_name" class="form-label">{% trans 'Task title' %}</label>
 									<input type="text" class="form-control" id="id_name" name="name"
-									       placeholder="e.g. Finish project proposal" required>
+									       placeholder="{% trans "e.g. Finish project proposal" %}" required>
 								</div>
 								<div class="mb-3 col-md-11">
-									<label for="id_description" class="form-label">Description</label>
+									<label for="id_description" class="form-label">{% trans 'Description' %}</label>
 									<input class="form-control" id="id_description" name="description"
-									       placeholder="Task details...">
+									       placeholder="{% trans "Task details..." %}">
 								</div>
 							</div>
 
 							<input type="hidden" name="pproject_id" value="{{ project.id }}">
 							<div class="modal-footer bg-light border-top rounded-bottom-4">
-								<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel
+								<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% trans 'Cancel' %}
 								</button>
-								<button type="submit" class="btn btn-success px-4">Save</button>
+								<button type="submit" class="btn btn-success px-4">{% trans 'Save' %}</button>
 							</div>
 						</form>
 					</div>
@@ -121,7 +124,7 @@
 				<div id="no-completed-tasks-placeholder"
 				     class="container bg-light p-3 rounded shadow text-secondary fs-5 justify-content-center align-items-center text-center"
 				     style="display: none">
-					<p class="m-0">There is no completed task</p>
+					<p class="m-0">{% trans 'There is no completed task' %}</p>
 				</div>
 			</div>
 		</div>

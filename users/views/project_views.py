@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, DetailView
 
 from projects.mixins import ProjectMixin
@@ -13,7 +14,7 @@ class UserTasksView(ProjectMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Schedule'
+        context['title'] = _('Schedule')
         return context
 
     def get_object(self, queryset=None):
@@ -29,7 +30,7 @@ class UserProjectsView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Projects'
+        context['title'] = _('Projects')
         return context
 
     def get_queryset(self):

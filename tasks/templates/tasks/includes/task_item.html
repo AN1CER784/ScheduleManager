@@ -1,5 +1,6 @@
 {% load task_tags %}
 {% load static %}
+{% load i18n %}
 
 <div class="accordion-item rounded bg-light shadow-sm mb-1" id="task-{{ type }}{{ task.id }}">
 	<div class="accordion-header d-flex justify-content-between align-items-center
@@ -88,7 +89,7 @@
 							<p class="editable-field">
 								<img src="{% static "deps/icons/person-walking.svg" %}" alt="Start Icon" width="16"
 							     height="16">
-								<strong>Start:</strong> {{ task.start_datetime }}</p>
+								<strong>{% trans 'Start' %}:</strong> {{ task.start_datetime }}</p>
 							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form start-datetime" method="post">
 								{% csrf_token %}
 																<input type="hidden" name="task_id" value="{{ task.id }}">
@@ -107,7 +108,9 @@
 							<p class="editable-field">
 								<img src="{% static "deps/icons/calendar3-event.svg" %}" alt="Due Icon" width="16"
 							     height="16">
-								<strong>Due:</strong> {{ task.due_datetime|default:"Not specified" }}</p>
+								{% trans "Not specified" as no_due_datetime %}
+
+								<strong>{% trans 'Due' %}:</strong> {{ task.due_datetime|default_if_none:no_due_datetime|default:no_due_datetime }}</p>
 							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form due-datetime" method="post">
 								{% csrf_token %}
 								<input type="hidden" name="task_id" value="{{ task.id }}">
@@ -126,15 +129,16 @@
 							<p class="mb-3">
 								<img src="{% static "deps/icons/check2-circle.svg" %}" alt="Completed Icon" width="16"
 								     height="16">
-								<strong>Completed:</strong> {{ task.progress.updated_datetime }}
+								<strong>{% trans 'Completed' %}:</strong> {{ task.progress.updated_datetime }}
 							</p>
 						{% endif %}
 						<div class="field-wrapper" data-field="desc" data-id="{{ task.id }}">
 							<div class="form_errors"></div>
 							<p class="editable-field">
 								<img src="{% static "deps/icons/file-text.svg" %}" alt="Description Icon" width="16"
-							     height="16"> <strong>Description:</strong>
-								{{ task.description|default:"No description" }}</p>
+							     height="16"> <strong>{% trans "Description" %}:</strong>
+								{% trans "No description" as no_description %}
+								{{ task.description|default_if_none:no_description|default:no_description }}</p>
 							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form description" method="post">
 								{% csrf_token %}
 								<input type="hidden" name="task_id" value="{{ task.id }}">
@@ -153,8 +157,8 @@
 						<div class="col-md-8 mx-auto">
 							<div class="p-3 rounded text-center m-3">
 								<label for="status-range{{ task.id }}"
-								       class="form-label fw-semibold text-black fw-5">Task
-									Progress</label>
+								       class="form-label fw-semibold text-black fw-5">{% trans 'Task Progress' %}
+								</label>
 								<div class="progress-container">
 									<div class="progress">
 										<div id="progress-bar{{ task.id }}"
@@ -194,7 +198,7 @@
 							<input
 									id="chat-input{{ task.id }}"
 									class="form-control rounded-pill ps-4 pe-5"
-									placeholder="Add comment..." name="text"
+									placeholder="{% trans "Add comment" %}..." name="text"
 							>
 							<button
 									id="send-btn{{ task.id }}"
