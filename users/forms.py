@@ -25,7 +25,7 @@ class SignupForm(UserCreationForm):
     username = forms.CharField()
     email = forms.EmailField()
     password1 = forms.CharField()
-    password2 = forms.CharField()
+    password2 = forms.CharField(min_length=8)
 
 
 class ProfileForm(UserChangeForm):
@@ -49,7 +49,7 @@ class UserPasswordChangeForm(PasswordChangeForm):
 
     old_password = forms.CharField()
     new_password1 = forms.CharField()
-    new_password2 = forms.CharField()
+    new_password2 = forms.CharField(label=_("New password"), min_length=8)
 
 
 class PasswordResetForm(PasswordResetFormCore):

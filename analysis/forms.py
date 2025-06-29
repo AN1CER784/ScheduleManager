@@ -25,7 +25,7 @@ class GenerationForm(forms.Form):
         end_date = cleaned_data.get('end_date')
         period = cleaned_data.get('period')
         if start_date and end_date:
-            report = AnalysisReport.objects.filter(start_date=start_date, end_date=end_date, period=period).first()
+            report = AnalysisReport.objects.filter(user=self.request.user, start_date=start_date, end_date=end_date, period=period).first()
             summary = report.summary if report else None
             if summary:
                 self.add_error("start_date", _("A summary already exists for the selected period and date."))

@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 
 
 class ValidateDate:
@@ -10,10 +10,10 @@ class ValidateDate:
         self.min_date = timezone.now() - timezone.timedelta(days=days)
         self.max_date = timezone.now() + timezone.timedelta(days=days)
         self.future = future
-        self.errors = []
         self.form = form
 
     def __call__(self, value):
+        self.error = None
         now = timezone.now()
         if value is None:
             return
@@ -29,26 +29,27 @@ class ValidateDate:
     def _validate_future_or_none(self, value):
         if not (self.min_date <= value <= self.max_date):
             for field_name in self.field_names:
-                self.errors.append(
-                    _('%(field)s must be within %(days)s days') % {'field': field_name, 'days': self.days})
+                self.error = (_('%(field)s must be within %(days)s days') % {'field': field_name, 'days': self.days})
 
     def _validate_future(self, value, now):
         if value < now:
             for field_name in self.field_names:
-                self.errors.append(_('%(field)s must be in the future') % {'field': field_name})
+                self.error = (_('%(field)s must be in the future') % {'field': field_name})
 
     def _validate_past(self, value, now):
         if value > now:
             for field_name in self.field_names:
-                self.errors.append(_('%(field)s must be in the past') % {'field': field_name})
+                self.error = (_('%(field)s must be in the past') % {'field': field_name})
         if value < self.min_date:
             for field_name in self.field_names:
-                self.errors.append(
-                    _('%(field)s must be within %(days)s days') % {'field': field_name, 'days': self.days})
+                self.error = (_('%(field)s must be within %(days)s days') % {'field': field_name, 'days': self.days})
 
     def _add_errors(self):
-        for error, field_name in zip(self.errors, self.field_names):
-            if self.form:
-                self.form.add_error(field_name, error)
-            else:
-                raise ValidationError(error)
+        if not self.error:
+            return
+        if self.form:
+            for field_name in self.field_names:
+                self.form.add_error(field_name, self.error)
+        else:
+            raise ValidationError(self.error)
+

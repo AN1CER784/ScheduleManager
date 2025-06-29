@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
+from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, UpdateView
 
@@ -24,7 +25,8 @@ class UserLoginView(LoginView):
         user = form.get_user()
         if user:
             auth.login(self.request, user)
-            messages.success(self.request, _('%(username)s, You have successfully logged in') % {'username': user.username})
+            messages.success(self.request,
+                             _('%(username)s, You have successfully logged in') % {'username': user.username})
             update_projects_user(session_key, user)
             return HttpResponseRedirect(self.get_success_url())
 

@@ -21,8 +21,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         user, start_date, end_date, tasks, period = self.get_arguments(**options)
+
         prompt = AnalysisPrompt.objects.get(period=period)
-        analysis_generator = SummaryGenerator(tasks=tasks, prompt=prompt.prompt)
+        print("""getting all attributes""")
+        print(prompt.__dict__)
+        prompt_by_language = getattr(prompt, f'prompt_{user.language}')
+        print(prompt_by_language)
+        analysis_generator = SummaryGenerator(tasks=tasks, prompt=prompt_by_language)
         generated_summary = analysis_generator.generate_summary()
         # generated_summary = "Summary for {} tasks".format(len(tasks))
         report = get_or_create_report(user=user, period=period, start_date=start_date, end_date=end_date)

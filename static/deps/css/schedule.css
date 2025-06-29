@@ -35,3 +35,16 @@
   .bg-lightgray {
     background-color: #f1f3f5;
   }
+
+@media (max-width: 576px) {
+  .card-body.p-5 {
+    overflow-x: auto;
+  }
+
+  .card-body.p-5 .row {
+    display: flex;
+    flex-wrap: nowrap;
+    min-width: 560px;
+    margin: 0;
+  }
+}

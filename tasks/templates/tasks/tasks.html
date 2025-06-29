@@ -15,7 +15,7 @@
 		<div id="pending-tasks-container">
 			<h4 class="accordion-toggle d-flex justify-content-between align-items-center bg-light text-success p-3 rounded shadow-sm"
 			    data-target="#pending-content" role="button">
-				In progress
+				{% trans "In progress" %}
 				<img src="{% static 'deps/icons/chevron-down.svg' %}" class="toggle-icon">
 			</h4>
 			<div id="pending-content" class="accordion-section">
@@ -111,7 +111,7 @@
 		<div id="done-tasks-container">
 			<h4 class="accordion-toggle d-flex justify-content-between align-items-center bg-light text-success p-3 rounded shadow-sm"
 			    data-target="#done-content" role="button">
-				Done
+				{% trans "Done" %}
 				<img src="{% static 'deps/icons/chevron-down.svg' %}" class="toggle-icon">
 			</h4>
 

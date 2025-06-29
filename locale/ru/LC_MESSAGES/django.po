@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-28 12:52+0000\n"
+"POT-Creation-Date: 2025-06-29 11:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,11 +20,11 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: ScheduleManager/settings.py:139
+#: ScheduleManager/settings.py:137
 msgid "English"
 msgstr "Английский"
 
-#: ScheduleManager/settings.py:140
+#: ScheduleManager/settings.py:138
 msgid "Russian"
 msgstr "Русский"
 
@@ -144,6 +144,7 @@ msgstr "Завершено"
 #: analysis/templates/analysis/emails/report_email.html:54
 #: analysis/templates/analysis/includes/analysis_accordion.html:95
 #: analysis/templates/analysis/includes/analysis_accordion.html:136
+#: tasks/templates/tasks/tasks.html:18
 msgid "In progress"
 msgstr "В процессе"
 
@@ -290,17 +291,17 @@ msgstr "Не удалось сгенерировать ваш отчет"
 msgid "Summary was deleted"
 msgstr "Отчет был удален"
 
-#: common/validators.py:33 common/validators.py:47
+#: common/validators.py:32 common/validators.py:45
 #, python-format
 msgid "%(field)s must be within %(days)s days"
 msgstr "%(field)s должно быть в пределах %(days)s дней"
 
-#: common/validators.py:38
+#: common/validators.py:37
 #, python-format
 msgid "%(field)s must be in the future"
 msgstr "%(field)s должно быть в будущем"
 
-#: common/validators.py:43
+#: common/validators.py:42
 #, python-format
 msgid "%(field)s must be in the past"
 msgstr "%(field)s должно быть в прошлом"
@@ -354,6 +355,10 @@ msgstr "Добавить новый проект"
 #: projects/templates/projects/projects.html:41
 msgid "Project name"
 msgstr "Название проекта"
+
+#: projects/templates/projects/projects.html:43
+msgid "e.g. Website redesign"
+msgstr "Проект по созданию чего-то"
 
 #: projects/templates/projects/projects.html:49
 #: tasks/templates/tasks/tasks.html:101
@@ -531,6 +536,10 @@ msgstr "Детали задачи..."
 msgid "Save"
 msgstr "Сохранить"
 
+#: tasks/templates/tasks/tasks.html:114
+msgid "Done"
+msgstr "Выполненные"
+
 #: tasks/templates/tasks/tasks.html:127
 msgid "There is no completed task"
 msgstr "Завершенных задач нет"
@@ -596,7 +605,7 @@ msgid "Analysis"
 msgstr "Анализ"
 
 #: templates/base.html:75 users/templates/users/password_change_done.html:8
-#: users/templates/users/profile.html:8 users/views/user_views.py:76
+#: users/templates/users/profile.html:8 users/views/user_views.py:78
 msgid "Profile"
 msgstr "Профиль"
 
@@ -604,7 +613,7 @@ msgstr "Профиль"
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:95 users/views/user_views.py:19
+#: templates/base.html:95 users/views/user_views.py:20
 msgid "Login"
 msgstr "Войти"
 
@@ -623,6 +632,11 @@ msgstr "Спасибо за использование нашего сервис
 #: templates/emails/base_email.html:58 templates/emails/base_email_text.html:6
 msgid "The Team of ScheduleManager"
 msgstr "Команда ScheduleManager"
+
+#: users/forms.py:52 users/templates/users/password_change_form.html:25
+#: users/templates/users/password_reset_confirm.html:15
+msgid "New password"
+msgstr "Новый пароль"
 
 #: users/notifications.py:10
 msgid "Welcome to ScheduleManager"
@@ -667,7 +681,7 @@ msgstr "Добро пожаловать на нашу платформу! Мы �
 msgid "Username or email"
 msgstr "Имя пользователя или email"
 
-#: users/templates/users/login.html:29 users/templates/users/signup.html:38
+#: users/templates/users/login.html:29 users/templates/users/signup.html:39
 msgid "Password"
 msgstr "Пароль"
 
@@ -692,21 +706,16 @@ msgstr "Вы можете вернуться к"
 msgid "Change password"
 msgstr "Изменить пароль"
 
-#: users/templates/users/password_change_form.html:17
+#: users/templates/users/password_change_form.html:21
 msgid "Current password"
 msgstr "Текущий пароль"
 
-#: users/templates/users/password_change_form.html:21
-#: users/templates/users/password_reset_confirm.html:15
-msgid "New password"
-msgstr "Новый пароль"
-
-#: users/templates/users/password_change_form.html:25
+#: users/templates/users/password_change_form.html:29
 #: users/templates/users/password_reset_confirm.html:22
 msgid "Confirm new password"
 msgstr "Подтвердите новый пароль"
 
-#: users/templates/users/password_change_form.html:28
+#: users/templates/users/password_change_form.html:32
 msgid "Update password"
 msgstr "Обновить пароль"
 
@@ -754,7 +763,7 @@ msgstr "Сбросьте пароль"
 msgid "Send reset link"
 msgstr "Отправить ссылку для сброса"
 
-#: users/templates/users/profile.html:28 users/templates/users/signup.html:13
+#: users/templates/users/profile.html:28 users/templates/users/signup.html:14
 msgid "Username"
 msgstr "Имя пользователя"
 
@@ -762,15 +771,15 @@ msgstr "Имя пользователя"
 msgid "Your main purpose of using our service"
 msgstr "Ваша основная цель использования нашего сервиса"
 
-#: users/templates/users/profile.html:71 users/templates/users/signup.html:64
+#: users/templates/users/profile.html:71 users/templates/users/signup.html:65
 msgid "Submit"
 msgstr "Отправить"
 
-#: users/templates/users/signup.html:47
+#: users/templates/users/signup.html:48
 msgid "Confirm your password"
 msgstr "Подтвердите пароль"
 
-#: users/templates/users/signup.html:59
+#: users/templates/users/signup.html:60
 msgid "Agree to terms and conditions"
 msgstr "Принять условия использования"
 
@@ -814,27 +823,24 @@ msgstr "Подтвердите сброс пароля"
 msgid "Password reset complete"
 msgstr "Сброс пароля завершен"
 
-#: users/views/user_views.py:27
+#: users/views/user_views.py:29
 #, python-format
 msgid "%(username)s, You have successfully logged in"
 msgstr "%(username)s, вы успешно вошли в систему"
 
-#: users/views/user_views.py:47
+#: users/views/user_views.py:49
 msgid "Signup"
 msgstr "Регистрация"
 
-#: users/views/user_views.py:57
+#: users/views/user_views.py:59
 #, python-format
 msgid "%(username)s, You have successfully registered and logged in"
 msgstr "%(username)s, вы успешно зарегистрировались и вошли в систему"
 
-#: users/views/user_views.py:83
+#: users/views/user_views.py:85
 msgid "Data updated successfully"
 msgstr "Данные успешно обновлены"
 
-#: users/views/user_views.py:87
+#: users/views/user_views.py:89
 msgid "Data update error"
 msgstr "Ошибка обновления данных"
-
-#~ msgid "sk"
-#~ msgstr "sk"
