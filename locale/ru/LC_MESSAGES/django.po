@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-29 11:29+0000\n"
+"POT-Creation-Date: 2025-06-29 12:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,6 +55,22 @@ msgstr "Отчет за день"
 #: analysis/notifications.py:40
 msgid "Day"
 msgstr "День"
+
+#: analysis/services/productivity_matrix.py:148
+msgid "Your productivity is excellent, keep it up"
+msgstr "Ваша продуктивность великолепна, продолжайте в том же духе"
+
+#: analysis/services/productivity_matrix.py:150
+msgid "Your productivity is good, keep it up"
+msgstr "У вас хорошая, продолжайте в том же духе"
+
+#: analysis/services/productivity_matrix.py:152
+msgid "Your productivity is low, you should pay attention"
+msgstr "У вас низкая продуктивность, обратите внимание"
+
+#: analysis/services/productivity_matrix.py:153
+msgid "Your productivity is not bad, but you can do better"
+msgstr "У вас неплохая продуктивность, но вы можете лучше"
 
 #: analysis/templates/analysis/analysis.html:11
 msgid "Your analysis"
@@ -643,8 +659,13 @@ msgid "Welcome to ScheduleManager"
 msgstr "Добро пожаловать в ScheduleManager"
 
 #: users/templates/users/emails/password_reset_email.html:16
-msgid "You"
-msgstr "Вы"
+#: users/templates/users/emails/password_reset_email_text.html:5
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at"
+msgstr ""
+"Вы получаете это письмо, потому что запросили сброс пароля для вашей учетной "
+"записи на"
 
 #: users/templates/users/emails/password_reset_email.html:19
 #: users/templates/users/emails/password_reset_email_text.html:6
@@ -655,14 +676,6 @@ msgstr "Перейдите по следующей ссылке и выбери�
 #: users/templates/users/emails/password_reset_email_text.html:10
 msgid "Your username, in case you’ve forgotten"
 msgstr "Ваше имя пользователя, на случай если вы забыли"
-
-#: users/templates/users/emails/password_reset_email_text.html:5
-msgid ""
-"You're receiving this email because you requested a password reset for your "
-"user account at"
-msgstr ""
-"Вы получаете это письмо, потому что запросили сброс пароля для вашей учетной "
-"записи на"
 
 #: users/templates/users/emails/user_register_email.html:20
 #: users/templates/users/emails/user_register_email_text.html:5
@@ -844,3 +857,6 @@ msgstr "Данные успешно обновлены"
 #: users/views/user_views.py:89
 msgid "Data update error"
 msgstr "Ошибка обновления данных"
+
+#~ msgid "You"
+#~ msgstr "Вы"

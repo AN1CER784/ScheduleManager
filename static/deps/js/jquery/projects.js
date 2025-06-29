@@ -21,6 +21,7 @@ $(document).ready(function () {
                 let containerSelector;
                 containerSelector = '#projectsContainer';
                 $(containerSelector).prepend($newItem);
+                form.trigger('reset');
                 toggleNoProjectsPlaceholder();
                 showMessage(response.message, true);
             },

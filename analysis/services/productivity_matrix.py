@@ -1,7 +1,7 @@
 import numpy as np
 from datetime import timedelta
 from django.utils import timezone
-
+from django.utils.translation import gettext_lazy as _
 from tasks.models import Task
 
 
@@ -145,9 +145,9 @@ class TaskAutomatonReport:
     @staticmethod
     def _forecast(done, late):
         if done > 0.75:
-            return "Your productivity is excellent, keep it up"
+            return _("Your productivity is excellent, keep it up")
         elif done > 0.5:
-            return "Your productivity is good, keep it up"
+            return _("Your productivity is good, keep it up")
         elif late > 0.5:
-            return "Your productivity is low, you should pay attention"
-        return "Your productivity is not bad, but you can do better"
+            return _("Your productivity is low, you should pay attention")
+        return _("Your productivity is not bad, but you can do better")
