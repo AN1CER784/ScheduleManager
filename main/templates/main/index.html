@@ -8,7 +8,7 @@
 
 {% block content %}
 	<div class="bg-light border shadow-sm rounded p-5 text-center">
-			{{ content|safe }}
+			{{ content.content|safe }}
 		<a href="
 				{% if not user.is_authenticated %}{% url 'users:login' %}{% else %}{% url 'users:profile' %}{% endif %}"
 		   class="btn btn-success btn-lg px-5">
