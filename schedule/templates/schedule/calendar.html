@@ -9,9 +9,9 @@
 {% endblock %}
 
 {% block content %}
-			<div class="fs-3 fw-bold text-center text-success bg-light mb-3 shadow-sm p-3 rounded shadow">
-			{% trans "Your schedule" %}
-		</div>
+	<div class="fs-3 fw-bold text-center text-success bg-light mb-3 shadow-sm p-3 rounded shadow">
+		{% trans "Your schedule" %}
+	</div>
 	<div class="my-2">
 		<div class="card shadow-sm rounded-3">
 
@@ -39,44 +39,52 @@
 					{% for week in page %}
 						<div class="row text-center mb-2">
 							{% for day in week %}
-								{% if month_tasks|get_item:day  %}
-									<div class="col calendar-day{% if month_tasks|get_item:day|get_day_type %} calendar-deadline{% else %} calendar-start{% endif %}">
-										<button class="border-0 bg-transparent toggle-tasks-list">{{ day.day }}</button>
-									</div>
-									<div class="tasks-list container mt-4" style="display: none">
-										<div class="row align-items-center mb-3">
-											<div class="col-11">
-												<h4 class="text-success">{% trans 'Tasks on' %} {{ day }}</h4>
-											</div>
-											<div class="col-1">
-												<button type="button"
-												        class="btn border-0 bg-transparent p-1 close-task-btn"
-												        title="Close">
-													<img src="{% static 'deps/icons/x-lg.svg' %}" alt="Close" width="25"
-													     height="25">
-												</button>
-											</div>
+								{% if day.month == month_datetime.month %}
+									{% if month_tasks|get_item:day %}
+										<div class="col calendar-day{% if month_tasks|get_item:day|get_day_type %} calendar-deadline{% else %} calendar-start{% endif %}">
+											<button class="border-0 bg-transparent toggle-tasks-list">{{ day.day }}</button>
 										</div>
-
-										{% for task in month_tasks|get_item:day|get_keys %}
-											<a href="{% url 'users:tasks' task.project.id %}#task-{{ task.id }}"
-											   class="text-decoration-none">
-												<div class="task-list">
-													<div class="fw-semibold text-black fs-5">{% trans 'Task' %}: {{ task.name }}</div>
-													<div class="fw-medium text-muted">{% trans 'Start' %}:
-														{{ task.start_datetime }}{% if task.due_datetime %} - {% trans 'Due' %}:
-															{{ task.due_datetime }}{% endif %}</div>
-													<div class="fw-lighter text-muted">
-														{% trans 'Project' %}: {{ task.project.name }}</div>
-
+										<div class="tasks-list container mt-4" style="display: none">
+											<div class="row align-items-center mb-3">
+												<div class="col-11">
+													<h4 class="text-success">{% trans 'Tasks on' %} {{ day }}</h4>
 												</div>
-											</a>
-										{% endfor %}
-									</div>
+												<div class="col-1">
+													<button type="button"
+													        class="btn border-0 bg-transparent p-1 close-task-btn"
+													        title="Close">
+														<img src="{% static 'deps/icons/x-lg.svg' %}" alt="Close"
+														     width="25"
+														     height="25">
+													</button>
+												</div>
+											</div>
+
+											{% for task in month_tasks|get_item:day|get_keys %}
+												<a href="{% url 'users:tasks' task.project.id %}#task-{{ task.id }}"
+												   class="text-decoration-none">
+													<div class="task-list">
+														<div class="fw-semibold text-black fs-5">{% trans 'Task' %}: {{ task.name }}</div>
+														<div class="fw-medium text-muted">{% trans 'Start' %}:
+															{{ task.start_datetime }}{% if task.due_datetime %} -
+																{% trans 'Due' %}:
+																{{ task.due_datetime }}{% endif %}</div>
+														<div class="fw-lighter text-muted">
+															{% trans 'Project' %}: {{ task.project.name }}</div>
+
+													</div>
+												</a>
+											{% endfor %}
+										</div>
+									{% else %}
+										<div class="col calendar-day">
+											{{ day.day }}
+										</div>
+									{% endif %}
 								{% else %}
 									<div class="col calendar-day">
-										{% if day.month == month_datetime.month %}{{ day.day }}{% endif %}
-									</div>
+
+										</div>
 								{% endif %}
 							{% endfor %}
 						</div>

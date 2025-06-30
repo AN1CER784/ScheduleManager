@@ -7,13 +7,13 @@ class ValidateDate:
     def __init__(self, field_names=None, days=60, future=None, form=None):
         self.field_names = field_names if isinstance(field_names, list) else ['Date']
         self.days = days
-        self.min_date = timezone.now() - timezone.timedelta(days=days)
-        self.max_date = timezone.now() + timezone.timedelta(days=days)
         self.future = future
         self.form = form
 
     def __call__(self, value):
         self.error = None
+        self.min_date = timezone.now() - timezone.timedelta(days=self.days)
+        self.max_date = timezone.now() + timezone.timedelta(days=self.days)
         now = timezone.now()
         if value is None:
             return
