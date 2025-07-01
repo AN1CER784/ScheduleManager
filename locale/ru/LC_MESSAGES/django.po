@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-29 12:35+0000\n"
+"POT-Creation-Date: 2025-07-01 10:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,100 +110,109 @@ msgstr "Ваш"
 msgid "Productivity Report"
 msgstr "Отчет о продуктивности"
 
-#: analysis/templates/analysis/emails/report_email.html:10
+#: analysis/templates/analysis/emails/report_email.html:6
+#: analysis/templates/analysis/emails/report_email_text.html:5
+msgid "for"
+msgstr "за"
+
+#: analysis/templates/analysis/emails/report_email.html:12
 #: analysis/templates/analysis/emails/report_email_text.html:7
 msgid "You have overdue tasks"
 msgstr "У вас есть просроченные задачи"
 
-#: analysis/templates/analysis/emails/report_email.html:21
+#: analysis/templates/analysis/emails/report_email.html:14
+msgid "You don't have overdue tasks"
+msgstr "У вас нет просроченных задач"
+
+#: analysis/templates/analysis/emails/report_email.html:28
 #: analysis/templates/analysis/emails/report_email_text.html:9
 msgid "Your task"
 msgstr "Ваша задача"
 
-#: analysis/templates/analysis/emails/report_email.html:25
+#: analysis/templates/analysis/emails/report_email.html:32
 #: analysis/templates/analysis/includes/analysis_accordion.html:133
-#: schedule/templates/schedule/calendar.html:70
+#: schedule/templates/schedule/calendar.html:73
 msgid "Project"
 msgstr "Проект"
 
-#: analysis/templates/analysis/emails/report_email.html:29
+#: analysis/templates/analysis/emails/report_email.html:36
 msgid "Status"
 msgstr "Статус"
 
-#: analysis/templates/analysis/emails/report_email.html:30
-#: analysis/templates/analysis/emails/report_email.html:43
-#: analysis/templates/analysis/emails/report_email.html:53
+#: analysis/templates/analysis/emails/report_email.html:37
+#: analysis/templates/analysis/emails/report_email.html:50
+#: analysis/templates/analysis/emails/report_email.html:60
 #: analysis/templates/analysis/includes/analysis_accordion.html:94
 #: analysis/templates/analysis/includes/analysis_accordion.html:135
 msgid "Overdue"
 msgstr "Просрочено"
 
-#: analysis/templates/analysis/emails/report_email.html:33
+#: analysis/templates/analysis/emails/report_email.html:40
 #: tasks/templates/tasks/tasks.html:69
 msgid "Due date"
 msgstr "Срок выполнения"
 
-#: analysis/templates/analysis/emails/report_email.html:41
+#: analysis/templates/analysis/emails/report_email.html:48
 #: analysis/templates/analysis/includes/analysis_accordion.html:65
 msgid "Overall Statistics"
 msgstr "Общая статистика"
 
-#: analysis/templates/analysis/emails/report_email.html:42
-#: analysis/templates/analysis/emails/report_email.html:52
+#: analysis/templates/analysis/emails/report_email.html:49
+#: analysis/templates/analysis/emails/report_email.html:59
 #: analysis/templates/analysis/includes/analysis_accordion.html:93
 #: analysis/templates/analysis/includes/analysis_accordion.html:134
 #: tasks/templates/tasks/includes/task_item.html:132
 msgid "Completed"
 msgstr "Завершено"
 
-#: analysis/templates/analysis/emails/report_email.html:44
-#: analysis/templates/analysis/emails/report_email.html:54
+#: analysis/templates/analysis/emails/report_email.html:51
+#: analysis/templates/analysis/emails/report_email.html:61
 #: analysis/templates/analysis/includes/analysis_accordion.html:95
 #: analysis/templates/analysis/includes/analysis_accordion.html:136
 #: tasks/templates/tasks/tasks.html:18
 msgid "In progress"
 msgstr "В процессе"
 
-#: analysis/templates/analysis/emails/report_email.html:45
+#: analysis/templates/analysis/emails/report_email.html:52
 msgid "Forecast"
 msgstr "Прогноз"
 
-#: analysis/templates/analysis/emails/report_email.html:47
+#: analysis/templates/analysis/emails/report_email.html:54
 #: analysis/templates/analysis/includes/analysis_accordion.html:87
 msgid "Daily Summary"
 msgstr "Ежедневный отчет"
 
-#: analysis/templates/analysis/emails/report_email.html:50
+#: analysis/templates/analysis/emails/report_email.html:57
 #: analysis/templates/analysis/includes/analysis_accordion.html:91
 msgid "Date"
 msgstr "Дата"
 
-#: analysis/templates/analysis/emails/report_email.html:51
+#: analysis/templates/analysis/emails/report_email.html:58
 #: analysis/templates/analysis/includes/analysis_accordion.html:92
 msgid "Total"
 msgstr "Всего"
 
-#: analysis/templates/analysis/emails/report_email.html:85
+#: analysis/templates/analysis/emails/report_email.html:92
 #: analysis/templates/analysis/includes/analysis_accordion.html:129
 msgid "By Projects"
 msgstr "По проектам"
 
-#: analysis/templates/analysis/emails/report_email.html:90
+#: analysis/templates/analysis/emails/report_email.html:97
 #: analysis/templates/analysis/emails/report_email_text.html:35
 msgid "completed,"
 msgstr "завершено,"
 
-#: analysis/templates/analysis/emails/report_email.html:91
+#: analysis/templates/analysis/emails/report_email.html:98
 #: analysis/templates/analysis/emails/report_email_text.html:35
 msgid "overdue,"
 msgstr "просрочено,"
 
-#: analysis/templates/analysis/emails/report_email.html:92
+#: analysis/templates/analysis/emails/report_email.html:99
 #: analysis/templates/analysis/emails/report_email_text.html:36
 msgid "in progress"
 msgstr "в процессе"
 
-#: analysis/templates/analysis/emails/report_email.html:95
+#: analysis/templates/analysis/emails/report_email.html:102
 #: analysis/templates/analysis/includes/analysis_accordion.html:149
 msgid "No project data available."
 msgstr "Данные по проектам отсутствуют."
@@ -326,11 +335,11 @@ msgstr "%(field)s должно быть в прошлом"
 msgid "Let's Go"
 msgstr "Поехали"
 
-#: main/views.py:13
+#: main/views.py:14
 msgid "Home page"
 msgstr "Главная страница"
 
-#: main/views.py:23
+#: main/views.py:25
 msgid "About page"
 msgstr "О нас"
 
@@ -385,6 +394,26 @@ msgstr "Отмена"
 msgid "Create"
 msgstr "Создать"
 
+#: projects/views.py:22
+msgid "Project was successfully created"
+msgstr "Проект был успешно создан"
+
+#: projects/views.py:26
+msgid "Error creating project"
+msgstr "Ошибка при создании проекта"
+
+#: projects/views.py:35
+msgid "Project was successfully deleted"
+msgstr "Проект был успешно удален"
+
+#: projects/views.py:51
+msgid "Project was successfully edited"
+msgstr "Проект был успешно отредактирован"
+
+#: projects/views.py:55
+msgid "Project was not edited"
+msgstr "Комментарий не отредактирован"
+
 #: schedule/templates/schedule/calendar.html:13
 msgid "Your schedule"
 msgstr "Расписание"
@@ -417,20 +446,20 @@ msgstr "Сб"
 msgid "Sun"
 msgstr "Вс"
 
-#: schedule/templates/schedule/calendar.html:49
+#: schedule/templates/schedule/calendar.html:50
 msgid "Tasks on"
 msgstr "Задачи на"
 
-#: schedule/templates/schedule/calendar.html:65
+#: schedule/templates/schedule/calendar.html:67
 msgid "Task"
 msgstr "Задача"
 
-#: schedule/templates/schedule/calendar.html:66
+#: schedule/templates/schedule/calendar.html:68
 #: tasks/templates/tasks/includes/task_item.html:92
 msgid "Start"
 msgstr "Начало"
 
-#: schedule/templates/schedule/calendar.html:67
+#: schedule/templates/schedule/calendar.html:70
 #: tasks/templates/tasks/includes/task_item.html:113
 msgid "Due"
 msgstr "Окончание"
@@ -616,7 +645,7 @@ msgstr "Задача не обновлена"
 msgid "Schedule"
 msgstr "Расписание"
 
-#: templates/base.html:65 users/views/analysis_views.py:12
+#: templates/base.html:65 users/views/analysis_views.py:13
 msgid "Analysis"
 msgstr "Анализ"
 
@@ -672,6 +701,11 @@ msgstr ""
 msgid "Please go to the following page and choose a new password"
 msgstr "Перейдите по следующей ссылке и выберите новый пароль"
 
+#: users/templates/users/emails/password_reset_email.html:32
+#: users/templates/users/password_reset_form.html:8
+msgid "Reset your password"
+msgstr "Сбросить пароль"
+
 #: users/templates/users/emails/password_reset_email.html:36
 #: users/templates/users/emails/password_reset_email_text.html:10
 msgid "Your username, in case you’ve forgotten"
@@ -690,6 +724,10 @@ msgstr "Рады видеть вас в числе наших пользоват
 msgid "Welcome to our platform! We're excited to have you on board"
 msgstr "Добро пожаловать на нашу платформу! Мы рады, что вы с нами"
 
+#: users/templates/users/login.html:8
+msgid "Authorization"
+msgstr "Авторизация"
+
 #: users/templates/users/login.html:14
 msgid "Username or email"
 msgstr "Имя пользователя или email"
@@ -698,11 +736,15 @@ msgstr "Имя пользователя или email"
 msgid "Password"
 msgstr "Пароль"
 
+#: users/templates/users/login.html:41
+msgid "Sign in"
+msgstr "Вход"
+
 #: users/templates/users/login.html:45
 msgid "Forgot password"
 msgstr "Забыли пароль"
 
-#: users/templates/users/login.html:46
+#: users/templates/users/login.html:46 users/templates/users/signup.html:7
 msgid "Sign up"
 msgstr "Регистрация"
 
@@ -767,10 +809,6 @@ msgid ""
 msgstr ""
 "Если аккаунт с указанным email существует, ссылка для сброса пароля была "
 "отправлена."
-
-#: users/templates/users/password_reset_form.html:8
-msgid "Reset your password"
-msgstr "Сбросьте пароль"
 
 #: users/templates/users/password_reset_form.html:17
 msgid "Send reset link"

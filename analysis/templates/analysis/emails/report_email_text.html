@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-	{% trans 'Your' %} {{ period }} {% trans 'Productivity Report' %}
+	{% trans 'Your' %} {% trans 'Productivity Report' %} {% trans "for" %} {{ period }}
 	{% if period == 'Day' %}
 		{% trans 'You have overdue tasks' %}
 		{% for task in tasks %}

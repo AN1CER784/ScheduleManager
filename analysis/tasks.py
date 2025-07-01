@@ -1,3 +1,5 @@
+import logging
+
 from celery import shared_task
 from django.utils import translation
 
@@ -5,6 +7,8 @@ from analysis.notifications import WeekReportNotificationBuilder, DayTaskNotific
 from common.notifications import UserNotificationManger
 from users.models import User
 from .management.commands.make_summary import Command
+
+logger = logging.getLogger(__name__)
 
 
 @shared_task
@@ -23,8 +27,10 @@ def make_day_report():
 
 
 def make_report(builder, fetcher=None):
-    users = User.objects.all()
-    for user in users:
+    for user in User.objects.iterator():
         with translation.override(user.language):
             user_notification_manager = UserNotificationManger(user=user, builder=builder, fetcher=fetcher)
-            user_notification_manager.notify()
+            try:
+                user_notification_manager.notify()
+            except Exception as e:
+                logger.exception(f"Failed to notify user {user.id}: {e}")

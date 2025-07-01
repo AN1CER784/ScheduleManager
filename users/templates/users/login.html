@@ -5,7 +5,7 @@
 {% block content %}
 
 	<div class="fs-3 fw-bold text-center text-success mb-2 shadow-sm p-3 bg-light rounded shadow">
-		Authorization
+		{% trans "Authorization" %}
 	</div>
 	<div class="container bg-light p-5 rounded shadow ">
 		<form action="{% url 'users:login' %}" method="post" class="row justify-content-center gx-5 gy-4 py-4">
@@ -38,7 +38,7 @@
 			</div>
 			<div class="col-12 text-center">
 				<button class="btn btn-success px-4 fw-bold" type="submit">
-					Sign in
+					{% trans "Sign in" %}
 				</button>
 			</div>
 			<div class="col-12 text-center">

@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views import View
-
+from django.utils.translation import gettext_lazy as _
 from common.mixins import JsonFormMixin
 from projects.forms import AddProjectForm
 from projects.mixins import ProjectMixin
@@ -19,11 +19,11 @@ class AddProjectView(JsonFormMixin, ProjectMixin, View):
             project.session_key = self.request.session.session_key
         project.save()
         item_html = self.render_project(request=self.request, project=project)
-        return JsonResponse(self.response('Project was successfully created', item_html, True))
+        return JsonResponse(self.response(_('Project was successfully created'), item_html, True))
 
     def form_invalid(self, form):
         item_html = self.render_errors(form=form, request=self.request)
-        return JsonResponse(self.response('Error creating project', item_html, False))
+        return JsonResponse(self.response(_('Error creating project'), item_html, False))
 
 
 class DeleteProjectView(ProjectMixin, View):
@@ -32,7 +32,7 @@ class DeleteProjectView(ProjectMixin, View):
                                    session_key=self.request.session.session_key)
         item_html = self.render_project(request=request, project=project)
         project.delete()
-        return JsonResponse(self.response('Project was successfully deleted', item_html, True))
+        return JsonResponse(self.response(_('Project was successfully deleted'), item_html, True))
 
 
 class UpdateProjectView(ProjectMixin, JsonFormMixin, View):
@@ -48,8 +48,8 @@ class UpdateProjectView(ProjectMixin, JsonFormMixin, View):
     def form_valid(self, form):
         project = form.save()
         item_html = self.render_project(request=self.request, project=project)
-        return JsonResponse(self.response('Project was successfully edited', item_html, True))
+        return JsonResponse(self.response(_('Project was successfully edited'), item_html, True))
 
     def form_invalid(self, form):
         item_html = self.render_errors(form=form, request=self.request)
-        return JsonResponse(self.response('Project was not edited', item_html, False))
+        return JsonResponse(self.response(_('Project was not edited'), item_html, False))

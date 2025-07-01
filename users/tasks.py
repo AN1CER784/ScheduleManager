@@ -24,4 +24,6 @@ def reset_password_task_send_mail(subject_template_name, email_template_name, co
 def notify_user_about_sign_up(user_id):
     user = User.objects.get(pk=user_id)
     user_notification_manager = UserNotificationManger(user=user, builder=UserSignUpNotificationBuilder)
-    user_notification_manager.notify()
+    with translation.override(user.language):
+        user_notification_manager.notify()
+
