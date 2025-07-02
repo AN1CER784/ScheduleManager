@@ -3,12 +3,12 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 
 from analysis.models import AnalysisReport
-from common.mixins import JsonFormMixin, CommonFormMixin
+from common.mixins import JsonFormMixin, CommonFormMixin, RequestFormKwargsMixin
 from .forms import GenerationForm
 from .utils import get_date_range_from_week
 
 
-class GenerateSummaryView(JsonFormMixin, CommonFormMixin, View):
+class GenerateSummaryView(JsonFormMixin, RequestFormKwargsMixin, CommonFormMixin, View):
     def post(self, request, *args, **kwargs):
         period = int(request.POST.get('period'))
         if period == 7:
@@ -16,16 +16,11 @@ class GenerateSummaryView(JsonFormMixin, CommonFormMixin, View):
         else:
             start_date, end_date = (request.POST.get('date') for _ in range(2))
         form = GenerationForm(
-            data={'username': request.user.username, 'start_date': start_date, 'end_date': end_date, 'period': period},
+            data={'user_id': request.user.id, 'start_date': start_date, 'end_date': end_date, 'period': period},
             request=request)
         if form.is_valid():
             return self.form_valid(form)
         return self.form_invalid(form)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
 
     def form_valid(self, form):
         form.save()

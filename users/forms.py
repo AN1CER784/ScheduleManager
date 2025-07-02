@@ -27,6 +27,17 @@ class SignupForm(UserCreationForm):
     password1 = forms.CharField()
     password2 = forms.CharField(min_length=8)
 
+    def __init__(self, *args, request=None, **kwargs):
+        self.request = request
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.language = self.request.LANGUAGE_CODE
+        if commit:
+            user.save()
+        return user
+
 
 class ProfileForm(UserChangeForm):
     class Meta:

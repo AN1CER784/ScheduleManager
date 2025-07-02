@@ -3,10 +3,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
-from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, UpdateView
 
+from common.mixins import RequestFormKwargsMixin
 from users.forms import LoginForm, ProfileForm, SignupForm
 from users.utils import update_projects_user
 
@@ -40,7 +40,7 @@ class UserLoginView(LoginView):
         return reverse_lazy('users:profile')
 
 
-class UserSignupView(CreateView):
+class UserSignupView(RequestFormKwargsMixin, CreateView):
     form_class = SignupForm
     template_name = 'users/signup.html'
 
