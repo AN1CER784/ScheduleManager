@@ -7,12 +7,13 @@ PERIOD_CHOICES = [
     (7, 'Weekly'),
 ]
 
+
 class AnalysisReportQuerySet(models.QuerySet):
     def get_reports_by_period(self, periods, user):
         reports = self.filter(user=user)
         dict_periods = {}
         for period in periods:
-            reports_by_period = [report for report in reports if report.period == period and hasattr(report, 'summary')]
+            reports_by_period = [report for report in reports if report.period == period and bool(getattr(getattr(report, 'summary', None), 'summary', None))]
             dict_periods[period] = reports_by_period
         return dict_periods
 
@@ -26,15 +27,15 @@ class AnalysisReport(models.Model):
 
     objects = AnalysisReportQuerySet.as_manager()
 
-
     class Meta:
         verbose_name = 'report'
         ordering = ['start_date', "end_date"]
 
 
 class AnalysisSummary(models.Model):
-    report = models.OneToOneField(AnalysisReport, on_delete=models.CASCADE, related_name='summary', blank=False, null=False)
-    summary = models.TextField(blank=False, null=False)
+    report = models.OneToOneField(AnalysisReport, on_delete=models.CASCADE, related_name='summary', blank=False,
+                                  null=False)
+    summary = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'summary'

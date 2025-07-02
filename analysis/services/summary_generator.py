@@ -18,7 +18,7 @@ class SummaryGenerator:
                 "name": task.name,
                 "description": task.description if task.description else 'No description',
                 "comments": '\n'.join(task.comments.values_list('text', flat=True)) if task.comments.values_list('text',
-                                                                                                             flat=True) else 'No comments',
+                                                                                                                 flat=True) else 'No comments',
                 "start_datetime": task.start_datetime,
                 "due_datetime": task.due_datetime,
                 "complete_percentage": task.progress.percentage,
@@ -26,12 +26,12 @@ class SummaryGenerator:
                 "status": task.is_completed,
             }
             self._request_text += (f"Task: {structured_task['name']}\n"
-                                  f"Description: {structured_task['description']}\n"
-                                  f"Status: {structured_task['status']}\nComplete percentage: {structured_task['complete_percentage']}\n"
-                                  f"Start date and time:  {structured_task['start_datetime']}\n"
-                                  f"Due date and time: {structured_task['due_datetime']}\n"
-                                  f"Updated date and time: {structured_task['progress_updated']}\n"
-                                  f"Comments: {structured_task['comments']}\n\n")
+                                   f"Description: {structured_task['description']}\n"
+                                   f"Status: {structured_task['status']}\nComplete percentage: {structured_task['complete_percentage']}\n"
+                                   f"Start date and time:  {structured_task['start_datetime']}\n"
+                                   f"Due date and time: {structured_task['due_datetime']}\n"
+                                   f"Updated date and time: {structured_task['progress_updated']}\n"
+                                   f"Comments: {structured_task['comments']}\n\n")
 
     def generate_summary(self):
         client = Client()
@@ -43,8 +43,8 @@ class SummaryGenerator:
             try:
                 response = client.chat.completions.create(
                     model=model,
-                    messages=[{"role": "assistant", "content": self._prompt}],
-                    web_search=False
+                    messages=[{"role": "user", "content": self._prompt}],
+                    web_search=False,
                 )
                 logger.info(f"Model: {model}")
                 message = response.choices[0].message.content
@@ -52,5 +52,5 @@ class SummaryGenerator:
                     message = message.split("</think>")[1]
                 return message
             except Exception as e:
-                logger.warning(f"Error with model {model}")
+                logger.warning(f"Error with model {model}, error: {e}")
                 continue

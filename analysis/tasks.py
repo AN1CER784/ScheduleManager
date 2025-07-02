@@ -5,15 +5,28 @@ from django.utils import translation
 
 from analysis.notifications import WeekReportNotificationBuilder, DayTaskNotificationBuilder, DayTaskNotificationFetcher
 from common.notifications import UserNotificationManger
+from tasks.models import Task
 from users.models import User
-from .management.commands.make_summary import Command
+from .models import AnalysisPrompt, AnalysisSummary
+from .services.summary_generator import SummaryGenerator
 
 logger = logging.getLogger(__name__)
 
 
 @shared_task
-def make_summary(username, start_date, end_date, tasks_ids, period):
-    Command().handle(username=username, start_date=start_date, end_date=end_date, tasks_ids=tasks_ids, period=period)
+def make_summary(user_id, report_id, tasks_ids, period):
+    user = User.objects.get(id=user_id)
+    with translation.override(user.language):
+        prompt = AnalysisPrompt.objects.get(period=period)
+        tasks = Task.objects.filter(id__in=tasks_ids)
+        if not tasks.exists():
+            return
+        analysis_generator = SummaryGenerator(tasks=tasks, prompt=prompt.prompt)
+        logger.info(f"Summary for report {report_id} generated")
+        summary_text = analysis_generator.generate_summary()
+        AnalysisSummary.objects.filter(report_id=report_id).update(
+            summary=summary_text
+        )
 
 
 @shared_task
