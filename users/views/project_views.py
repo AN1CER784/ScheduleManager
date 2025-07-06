@@ -2,6 +2,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, DetailView
 
+from common.mixins import SessionMixin
 from projects.mixins import ProjectMixin
 from projects.models import Project
 
@@ -23,7 +24,7 @@ class UserTasksView(ProjectMixin, DetailView):
         return project
 
 
-class UserProjectsView(ListView):
+class UserProjectsView(SessionMixin ,ListView):
     template_name = 'projects/projects.html'
     success_url = reverse_lazy('users:projects')
     context_object_name = 'projects'
@@ -34,11 +35,6 @@ class UserProjectsView(ListView):
         return context
 
     def get_queryset(self):
-        if self.request.user.is_authenticated:
-            projects = Project.objects.filter(user=self.request.user)
-        else:
-            if not self.request.session.session_key:
-                self.request.session.create()
-            projects = Project.objects.filter(session_key=self.request.session.session_key)
+        projects = self.get_owner_filter(model=Project)
         projects = projects.prefetch_related('tasks').get_projects_percent_complete().get_projects_periods()
         return projects

@@ -2,9 +2,12 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.views import View
 from django.utils.translation import gettext_lazy as _
+
+from common.common_services import delete_object
 from common.mixins import JsonFormMixin
 from tasks.forms import TaskCommentForm
 from tasks.mixins import TasksMixin
+from tasks.task_update_service import add_comment
 
 
 class TaskAddCommentView(JsonFormMixin, TasksMixin, View):
@@ -13,8 +16,7 @@ class TaskAddCommentView(JsonFormMixin, TasksMixin, View):
     def form_valid(self, form):
         task = self.get_task(self.request)
         comment = form.save(commit=False)
-        comment.task = task
-        comment.save()
+        add_comment(task=task, comment=comment)
         item_html = self.render_comment(comment=comment, request=self.request, project=task.project)
         divider_html = render_to_string(template_name='tasks/includes/comment_divider.html', context={
             'comment_date': comment.created_date
@@ -33,7 +35,7 @@ class TaskDeleteCommentView(TasksMixin, View):
     def post(self, request, *args, **kwargs):
         comment = self.get_comment(request)
         item_html = self.render_comment(comment=comment, request=request, project=comment.task.project)
-        comment.delete()
+        delete_object(model_object=comment)
         return JsonResponse(self.response(message=_('Comment was deleted'), item_html=item_html, success=True))
 
 

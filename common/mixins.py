@@ -9,6 +9,7 @@ class RequestFormKwargsMixin:
         kwargs['request'] = self.request
         return kwargs
 
+
 class CacheMixin:
     def find_cache(self, query, cache_name, cache_time):
         data = cache.get(cache_name)
@@ -41,3 +42,33 @@ class CommonFormMixin:
     def render_errors(self, request, form, project=None):
         return render_to_string(template_name='includes/form_errors.html', context={'form': form, 'project': project},
                                 request=request)
+
+
+class SessionMixin:
+    def get_session_key(self):
+        if not self.request.session.session_key:
+            self.request.session.save()
+        return self.request.session.session_key
+
+    def assign_owner(self, instance):
+        if self.request.user.is_authenticated:
+            instance.user = self.request.user
+        else:
+            instance.session_key = self.get_session_key()
+        instance.save()
+        return instance
+
+    def get_owner_filter(self, model, via=None):
+        if self.request.user.is_authenticated:
+            field = 'user'
+            value = self.request.user
+        else:
+            field = 'session_key'
+            value = self.get_session_key()
+
+        if via:
+            lookup = f"{via}__{field}"
+        else:
+            lookup = field
+
+        return model.objects.filter(**{lookup: value})

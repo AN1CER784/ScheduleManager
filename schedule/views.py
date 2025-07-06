@@ -3,11 +3,12 @@
 from django.views.generic import ListView
 from django.utils.translation import gettext_lazy as _
 
+from common.mixins import SessionMixin
 from tasks.models import Task
 from .calendar_builder_service import TaskCalendarBuilder
 
 
-class ScheduleCalendarView(ListView):
+class ScheduleCalendarView(SessionMixin, ListView):
     template_name = 'schedule/calendar.html'
     paginate_by = 1
 
@@ -19,10 +20,10 @@ class ScheduleCalendarView(ListView):
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
-        if request.user.is_authenticated:
-            self.user_tasks = Task.objects.filter(project__user=request.user).select_related('project')
-        else:
-            self.user_tasks = Task.objects.filter(project__session_key=request.session.session_key).select_related('project')
+        self.user_tasks = (
+            self.get_owner_filter(Task, via='project')
+            .select_related('project')
+        )
         builder = TaskCalendarBuilder(self.user_tasks)
         builder.build()
         self.months_list, self.month_index = builder.get_months_list, builder.get_current_index
