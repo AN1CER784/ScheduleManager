@@ -96,32 +96,6 @@ class TaskUpdateForm(BaseTaskForm):
         return cleaned_data
 
 
-class TaskCompleteForm(forms.ModelForm):
-    class Meta:
-        model = Task
-        fields = []
-
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        instance.progress.percentage = 100
-        if commit:
-            instance.progress.save()
-        return instance
-
-
-class TaskIncompleteForm(forms.ModelForm):
-    class Meta:
-        model = Task
-        fields = []
-
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        instance.progress.percentage = 5
-        if commit:
-            instance.progress.save()
-        return instance
-
-
 class TaskCommentForm(forms.ModelForm):
     class Meta:
         model = TaskComment

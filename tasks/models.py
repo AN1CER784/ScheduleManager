@@ -15,18 +15,13 @@ class TaskQuerySet(models.QuerySet):
 
 
 class Task(AbstractCreatedModel):
-    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE, related_name='tasks', blank=False, null=False)
+    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE, related_name='tasks', blank=False,
+                                null=False)
     name = models.CharField(max_length=100, blank=False, null=False)
     start_datetime = models.DateTimeField(blank=False, null=False)
     due_datetime = models.DateTimeField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     is_completed = models.BooleanField(default=False)
-
-    def save(self, *args, **kwargs):
-        task_id = self.id
-        super().save(*args, **kwargs)
-        if task_id is None:
-            TaskProgress.objects.create(task=self)
 
     class Meta:
         verbose_name = 'task'
@@ -52,7 +47,6 @@ class TaskComment(AbstractCreatedModel):
         ordering = ['created_at']
 
 
-
 class TaskProgress(models.Model):
     task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='progress', blank=False, null=False)
     percentage = models.PositiveIntegerField(default=5)
@@ -61,10 +55,3 @@ class TaskProgress(models.Model):
     class Meta:
         verbose_name = 'task_progress'
         ordering = ['updated_datetime']
-
-    def save(self, *args, **kwargs):
-        if self.percentage == 100:
-            Task.objects.filter(id=self.task_id).update(is_completed=True)
-        else:
-            Task.objects.filter(id=self.task_id).update(is_completed=False)
-        super().save(*args, **kwargs)

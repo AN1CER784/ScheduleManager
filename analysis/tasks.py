@@ -24,6 +24,10 @@ def make_summary(user_id, report_id, tasks_ids, period):
         analysis_generator = SummaryGenerator(tasks=tasks, prompt=prompt.prompt)
         logger.info(f"Summary for report {report_id} generated")
         summary_text = analysis_generator.generate_summary()
+        if summary_text is None:
+            logger.error(f"Failed to generate summary for report {report_id}")
+            AnalysisSummary.objects.filter(report_id=report_id).delete()
+            return
         AnalysisSummary.objects.filter(report_id=report_id).update(
             summary=summary_text
         )
@@ -46,4 +50,4 @@ def make_report(builder, fetcher=None):
             try:
                 user_notification_manager.notify()
             except Exception as e:
-                logger.exception(f"Failed to notify user {user.id}: {e}")
+                logger.exception(f"Failed to send user report {user.id} - {user.email}: {e}")

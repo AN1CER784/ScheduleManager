@@ -1,3 +1,5 @@
+import logging
+
 from celery import shared_task
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils import translation
@@ -6,6 +8,7 @@ from common.notifications import UserNotificationManger
 from users.models import User
 from users.notifications import UserSignUpNotificationBuilder
 
+logger = logging.getLogger(__name__)
 
 @shared_task
 def reset_password_task_send_mail(subject_template_name, email_template_name, context, from_email, to_email,
@@ -25,5 +28,9 @@ def notify_user_about_sign_up(user_id):
     user = User.objects.get(pk=user_id)
     user_notification_manager = UserNotificationManger(user=user, builder=UserSignUpNotificationBuilder)
     with translation.override(user.language):
-        user_notification_manager.notify()
+        try:
+            user_notification_manager.notify()
+        except Exception as e:
+            logger.exception(f"Failed to notify user about registration {user.id} - {user.email}: {e}")
+
 
