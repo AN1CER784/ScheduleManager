@@ -4,6 +4,7 @@ from django.test import TestCase
 
 from projects.models import Project
 from tasks.models import Task
+from tasks.task_update_service import start_progress, end_progress
 from users.models import User
 
 
@@ -19,6 +20,7 @@ class TaskModelTestCase(TestCase):
                                         project=self.project)
 
     def test_task_model(self):
+        start_progress(self.task.progress)
         self.assertEqual(self.task.name, 'Title for the test task')
         self.assertEqual(self.task.description, 'Description for the test task')
         self.assertEqual((self.task.due_datetime - self.task.start_datetime)._days, 1)
@@ -27,13 +29,13 @@ class TaskModelTestCase(TestCase):
         self.assertEqual(self.task.is_completed, False)
 
     def test_complete_task(self):
-        self.task.progress.percentage = 100
+        end_progress(self.task.progress)
         self.task.progress.save()
         self.assertEqual(self.task.is_completed, True)
 
     def test_incomplete_task(self):
         self.test_complete_task()
-        self.task.progress.percentage = 5
+        start_progress(self.task.progress)
         self.task.progress.save()
         self.assertEqual(self.task.progress.percentage, 5)
         self.assertEqual(self.task.is_completed, False)

@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from unittest.mock import MagicMock
+
 
 from django.test import TestCase
 
@@ -37,9 +37,7 @@ class GenerationFormTestCase(TestCase):
             'period': 1,
             'username': 'XXXXXXXX',
         }
-        self.request = MagicMock
-        self.request.user = user
-        form = GenerationForm(data=form_data, request=self.request)
+        form = GenerationForm(data=form_data, user=user)
         self.assertTrue(form.is_valid())
 
     def test_invalid_generation_form(self):
@@ -51,7 +49,5 @@ class GenerationFormTestCase(TestCase):
             'period': 1,
             'username': 'XXXXXXXX',
         }
-        self.request = MagicMock
-        self.request.user = user
-        form = GenerationForm(data=form_data, request=self.request)
+        form = GenerationForm(data=form_data, user=user)
         self.assertFalse(form.is_valid())

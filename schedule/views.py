@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from django.utils.translation import gettext_lazy as _
 
 from tasks.models import Task
-from .utils import TaskCalendarBuilder
+from .calendar_builder_service import TaskCalendarBuilder
 
 
 class ScheduleCalendarView(ListView):

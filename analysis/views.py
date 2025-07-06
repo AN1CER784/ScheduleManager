@@ -17,7 +17,7 @@ class GenerateSummaryView(JsonFormMixin, RequestFormKwargsMixin, CommonFormMixin
             start_date, end_date = (request.POST.get('date') for _ in range(2))
         form = GenerationForm(
             data={'user_id': request.user.id, 'start_date': start_date, 'end_date': end_date, 'period': period},
-            request=request)
+            user=request.user)
         if form.is_valid():
             return self.form_valid(form)
         return self.form_invalid(form)

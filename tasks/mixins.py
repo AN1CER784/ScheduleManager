@@ -12,7 +12,7 @@ class TasksMixin(CommonFormMixin):
         return render_to_string(template_name='tasks/includes/comment_item.html', context={'comment': comment, 'project': project}, request=request)
 
     def get_task(self, request):
-        return Task.objects.get(id=request.POST.get('task_id'))
+        return Task.objects.filter(id=request.POST.get('task_id')).select_related('progress').first()
 
     def get_comment(self, request):
         return TaskComment.objects.get(id=request.POST.get('comment_id'))
