@@ -7,7 +7,7 @@ from users.models import User
 
 class UserSignUpNotificationBuilder:
     @classmethod
-    def build(cls, user: User):
+    def build(cls, user: User) -> tuple[str, str, list, str]:
         with translation.override(user.language):
             subject = _('Welcome to ScheduleManager')
             recipient_list = [user.email]

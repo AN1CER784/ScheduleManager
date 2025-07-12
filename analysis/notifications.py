@@ -17,7 +17,7 @@ class BaseNotificationBuilder:
     subject = None
 
     @classmethod
-    def build(cls, user: User, tasks: QuerySet[Task] | None = None):
+    def build(cls, user: User, tasks: QuerySet[Task] | None = None) -> tuple[str, str, list, str]:
         recipient_list = [user.email]
         days: Literal[1, 7] = 7 if cls.period == 'Week' else 1
         report = get_or_create_report(user=user, period=days)
