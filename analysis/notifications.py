@@ -1,8 +1,13 @@
+from typing import Literal
+
+from django.db.models import QuerySet
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
 from analysis.utils import get_or_create_report
 from tasks.models import Task
+from users.models import User
 
 
 class BaseNotificationBuilder:
@@ -12,9 +17,9 @@ class BaseNotificationBuilder:
     subject = None
 
     @classmethod
-    def build(cls, user, tasks=None):
+    def build(cls, user: User, tasks: QuerySet[Task] | None = None):
         recipient_list = [user.email]
-        days = 7 if cls.period == 'Week' else 1
+        days: Literal[1, 7] = 7 if cls.period == 'Week' else 1
         report = get_or_create_report(user=user, period=days)
         context = {
             'report': report,
@@ -40,10 +45,9 @@ class DayTaskNotificationBuilder(BaseNotificationBuilder):
     period = _('Day')
 
 
-
 class DayTaskNotificationFetcher:
-    @staticmethod
-    def fetch(user):
+    @classmethod
+    def fetch(cls, user: User):
         return (
             Task.objects
             .filter(project__user=user, is_completed=False, due_datetime__lt=timezone.now())

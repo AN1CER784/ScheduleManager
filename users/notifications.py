@@ -2,10 +2,12 @@ from django.template.loader import render_to_string
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 
+from users.models import User
+
 
 class UserSignUpNotificationBuilder:
-    @staticmethod
-    def build(user):
+    @classmethod
+    def build(cls, user: User):
         with translation.override(user.language):
             subject = _('Welcome to ScheduleManager')
             recipient_list = [user.email]

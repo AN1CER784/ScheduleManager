@@ -1,17 +1,21 @@
+from typing import NamedTuple
+
 from django.db import models
 
 from common.models import AbstractCreatedModel
 
 
+class TaskByCompletion(NamedTuple):
+    pending: list['Task']
+    done: list['Task']
+
+
 class TaskQuerySet(models.QuerySet):
-    def split_pending_done(self):
+    def split_pending_done(self) -> TaskByCompletion:
         tasks = self.all().select_related("progress").prefetch_related("comments")
         pending = [t for t in tasks if not t.is_completed]
         done = [t for t in tasks if t.is_completed]
-        return {
-            "pending": pending,
-            "done": done
-        }
+        return TaskByCompletion(pending=pending, done=done)
 
 
 class Task(AbstractCreatedModel):

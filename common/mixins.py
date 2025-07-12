@@ -1,17 +1,40 @@
+from typing import Protocol, Any
+
+from typing import Union
 from django.core.cache import cache
+from django.db.models import Model, QuerySet
+from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.views.generic.edit import FormMixin
 
+from projects.models import Project
 
-class RequestFormKwargsMixin:
-    def get_form_kwargs(self):
+
+class HasRequest(Protocol):
+    request: HttpRequest
+
+
+class SessionProtocol(HasRequest):
+    def get_session_key(self) -> str:
+        ...
+
+    def assign_owner(self, instance: Model):
+        ...
+
+    def get_owner_filter(self, model: Model, via: bool = None):
+        ...
+
+
+class RequestFormKwargsMixin(FormMixin):
+    def get_form_kwargs(self: HasRequest) -> dict:
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
 
 
 class CacheMixin:
-    def find_cache(self, query, cache_name, cache_time):
+    @staticmethod
+    def find_cache(query: Union[QuerySet, Model], cache_name: str, cache_time: int) -> QuerySet:
         data = cache.get(cache_name)
         if not data:
             data = query
@@ -34,23 +57,25 @@ class JsonFormMixin(FormMixin):
 
 
 class CommonFormMixin:
-    def response(self, message, item_html, success, **extra):
+    @staticmethod
+    def response(message: str, item_html: str, success: bool, **extra: Any) -> dict:
         base = {'success': success, 'message': message, 'item_html': item_html}
         base.update(extra)
         return base
 
-    def render_errors(self, request, form, project=None):
+    @staticmethod
+    def render_errors(request, form, project: Project | None = None):
         return render_to_string(template_name='includes/form_errors.html', context={'form': form, 'project': project},
                                 request=request)
 
 
 class SessionMixin:
-    def get_session_key(self):
+    def get_session_key(self: SessionProtocol):
         if not self.request.session.session_key:
             self.request.session.save()
         return self.request.session.session_key
 
-    def assign_owner(self, instance):
+    def assign_owner(self: SessionProtocol, instance: Model) -> Model:
         if self.request.user.is_authenticated:
             instance.user = self.request.user
         else:
@@ -58,7 +83,7 @@ class SessionMixin:
         instance.save()
         return instance
 
-    def get_owner_filter(self, model, via=None):
+    def get_owner_filter(self: SessionProtocol, model: Model, via: bool = None):
         if self.request.user.is_authenticated:
             field = 'user'
             value = self.request.user

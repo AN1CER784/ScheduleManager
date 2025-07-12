@@ -38,7 +38,7 @@ class DeleteTaskView(TasksMixin, View):
 class CompleteTaskView(TasksMixin, View):
     def post(self, request, *args, **kwargs):
         task = self.get_task(request)
-        update_progress(progress=task.progress, percentage=100)
+        update_progress(progress=task.progress, percentage=False)
         item_html = self.render_task(task=task, task_type='Done', request=request, project=task.project)
         return JsonResponse(
             self.response(message=_('Task was successfully completed'), item_html=item_html, success=True))
