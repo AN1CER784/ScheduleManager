@@ -1,13 +1,16 @@
 from django.template.loader import render_to_string
+
 from common.mixins import CommonFormMixin
-from projects.models import Project
+from projects.models import Project, ProjectQuerySet
 
 
 class ProjectMixin(CommonFormMixin):
-    def render_project(self, request, project):
+    @staticmethod
+    def render_project(request, project: Project) -> str:
         return render_to_string('projects/includes/project_item.html', context={'project': project}, request=request)
 
-    def get_project(self, project_id, user_id=None, session_key=None):
+    @staticmethod
+    def get_project(project_id: int, user_id: int | None = None, session_key: str | None = None) -> ProjectQuerySet:
         if user_id is None:
             queryset = Project.objects.filter(session_key=session_key)
         else:

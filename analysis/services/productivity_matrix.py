@@ -1,12 +1,71 @@
-import numpy as np
+import datetime
 from datetime import timedelta
+from typing import Literal, TypedDict, Optional
+
+import numpy as np
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from numpy.typing import NDArray
+
 from tasks.models import Task
+from users.models import User
+
+
+class StreakDict(TypedDict):
+    done_days: int
+    late_days: int
+
+
+class TrendMetrics(TypedDict):
+    daily_done_pct: list[float]
+    moving_avg_3d: list[float]
+    streak: StreakDict
+
+
+class ProjectBreakdownRecord(TypedDict):
+    total: int
+    done: int
+    late: int
+    in_progress: int
+    done_pct: Optional[float]
+    late_pct: Optional[float]
+    in_progress_pct: Optional[float]
+
+
+class DailyMetric(TypedDict):
+    date: str
+    total: int
+    done: int
+    late: int
+    in_progress: int
+    done_pct: Optional[float]
+    late_pct: Optional[float]
+    in_progress_pct: Optional[float]
+
+
+class OverallMetrics(TypedDict):
+    done_ratio: float
+    late_ratio: float
+    in_progress_ratio: float
+
+
+class OverallReport(TypedDict):
+    overall: OverallMetrics
+    forecast: str
+
+
+class WeekReport(OverallReport):
+    daily: list[DailyMetric]
+    trend: TrendMetrics
+    by_project: dict[str, ProjectBreakdownRecord]
+
+
+class DayReport(OverallReport):
+    by_project: dict[str, ProjectBreakdownRecord]
 
 
 class TaskAutomatonReport:
-    def __init__(self, user, period, start_date, end_date):
+    def __init__(self, user: User, period: Literal[1, 7], start_date: datetime.date, end_date: datetime.date):
         self._user = user
         self._tasks = Task.objects.filter(project__user=self._user).select_related('project')
         self._start_date = start_date
@@ -14,7 +73,7 @@ class TaskAutomatonReport:
         self._period = period
         self._state_labels = {0: 'EMPTY', 1: 'IN_PROGRESS', 2: 'DONE', 3: 'LATE'}
 
-    def _build_matrix(self):
+    def _build_matrix(self) -> NDArray[np.integer]:
         matrix = []
         for day_offset in range(self._period):
             day = self._start_date + timedelta(days=day_offset)
@@ -41,11 +100,11 @@ class TaskAutomatonReport:
         return np.array([r + [0] * (max_len - len(r)) for r in matrix])
 
     @staticmethod
-    def _filter_empty(matrix):
+    def _filter_empty(matrix: NDArray[np.integer]) -> NDArray[np.integer]:
         """Вернёт одномерный массив всех ячеек ≠ EMPTY."""
         return matrix[matrix != 0]
 
-    def _daily_metrics(self):
+    def _daily_metrics(self) -> list[DailyMetric]:
         report = []
         for i in range(self._period):
             day = self._start_date + timedelta(days=i)
@@ -67,7 +126,7 @@ class TaskAutomatonReport:
             })
         return report
 
-    def _trend_analysis(self):
+    def _trend_analysis(self) -> TrendMetrics:
         daily = self._daily_metrics()
         done_list = [d['done_pct'] or 0 for d in daily]
         mov_avg = []
@@ -90,11 +149,11 @@ class TaskAutomatonReport:
             'streak': {'done_days': streak_done, 'late_days': streak_late}
         }
 
-    def _project_breakdown(self):
+    def _project_breakdown(self) -> dict[str, ProjectBreakdownRecord]:
         data = {}
         for t in self._tasks:
             name = t.project.name
-            rec = data.setdefault(name, {'total':0, 'done':0, 'late':0, 'in_progress':0})
+            rec = data.setdefault(name, {'total': 0, 'done': 0, 'late': 0, 'in_progress': 0})
             if t.is_completed:
                 rec['done'] += 1
             else:
@@ -108,18 +167,18 @@ class TaskAutomatonReport:
             rec['total'] += 1
         for rec in data.values():
             total = rec['total']
-            rec['done_pct'] = rec['done']/total*100 if total else None
-            rec['late_pct'] = rec['late']/total*100 if total else None
-            rec['in_progress_pct'] = rec['in_progress']/total*100 if total else None
+            rec['done_pct'] = rec['done'] / total * 100 if total else None
+            rec['late_pct'] = rec['late'] / total * 100 if total else None
+            rec['in_progress_pct'] = rec['in_progress'] / total * 100 if total else None
         return data
 
     @property
-    def _get_matrix(self):
+    def _get_matrix(self) -> NDArray[np.number]:
         matrix = self._build_matrix()
         return self._filter_empty(matrix)
 
     @property
-    def _get_overall_report(self):
+    def _get_overall_report(self) -> OverallReport:
         mat = self._get_matrix
         done = np.sum(mat == 2) / mat.size * 100 if mat.size else 0
         late = np.sum(mat == 3) / mat.size * 100 if mat.size else 0
@@ -134,16 +193,26 @@ class TaskAutomatonReport:
             return self.generate_week_report()
         return self.generate_day_report()
 
-    def generate_week_report(self):
+    def generate_week_report(self) -> WeekReport:
         overall = self._get_overall_report
-        return {**overall, 'daily': self._daily_metrics(), 'trend': self._trend_analysis(), 'by_project': self._project_breakdown()}
+        return {
+            'overall': overall['overall'],
+            'forecast': overall['forecast'],
+            'daily': self._daily_metrics(),
+            'trend': self._trend_analysis(),
+            'by_project': self._project_breakdown()
+        }
 
-    def generate_day_report(self):
+    def generate_day_report(self) -> DayReport:
         overall = self._get_overall_report
-        return {**overall, 'by_project': self._project_breakdown()}
+        return {
+            'overall': overall['overall'],
+            'forecast': overall['forecast'],
+            'by_project': self._project_breakdown(),
+        }
 
     @staticmethod
-    def _forecast(done, late):
+    def _forecast(done: float, late: float) -> str:
         if done > 0.75:
             return _("Your productivity is excellent, keep it up")
         elif done > 0.5:

@@ -24,7 +24,7 @@ class UserTasksView(ProjectMixin, DetailView):
         return project
 
 
-class UserProjectsView(SessionMixin ,ListView):
+class UserProjectsView(SessionMixin, ListView):
     template_name = 'projects/projects.html'
     success_url = reverse_lazy('users:projects')
     context_object_name = 'projects'

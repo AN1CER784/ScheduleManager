@@ -60,7 +60,7 @@
 												</div>
 											</div>
 
-											{% for task in month_tasks|get_item:day|get_keys %}
+											{% for task in month_tasks|get_item:day|get_values %}
 												<a href="{% url 'users:tasks' task.project.id %}#task-{{ task.id }}"
 												   class="text-decoration-none">
 													<div class="task-list">

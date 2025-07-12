@@ -1,9 +1,11 @@
 from django.db.backends.utils import logger
 from g4f.client import Client
 
+from tasks.models import TaskQuerySet
+
 
 class SummaryGenerator:
-    def __init__(self, tasks, prompt):
+    def __init__(self, tasks: TaskQuerySet, prompt: str):
         self._tasks = tasks
         self._prompt = prompt
         self._request_text = f"""\n\nMain purpose of creating this request is to help user to understand his tasks. 
@@ -12,7 +14,7 @@ class SummaryGenerator:
         self._structure_tasks()
         self._prompt += self._request_text
 
-    def _structure_tasks(self):
+    def _structure_tasks(self) -> None:
         for task in self._tasks:
             structured_task = {
                 "name": task.name,
@@ -33,7 +35,7 @@ class SummaryGenerator:
                                    f"Updated date and time: {structured_task['progress_updated']}\n"
                                    f"Comments: {structured_task['comments']}\n\n")
 
-    def generate_summary(self):
+    def generate_summary(self) -> str:
         client = Client()
 
         models = ("deepseek-r1-turbo", "deepseek-r1", "qvq-72b",

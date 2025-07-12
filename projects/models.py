@@ -1,3 +1,5 @@
+from typing import Self
+
 from django.db import models
 from django.db.models import Count, Q, F, Case, When, Value, ExpressionWrapper, Min, Max, CharField, \
     IntegerField
@@ -7,7 +9,7 @@ from common.models import AbstractCreatedModel
 
 
 class ProjectQuerySet(models.QuerySet):
-    def get_projects_periods(self):
+    def get_projects_periods(self) -> Self:
         projects = self.annotate(
             earliest=Min('tasks__start_datetime__date'),
             latest=Max('tasks__due_datetime__date')
@@ -32,7 +34,7 @@ class ProjectQuerySet(models.QuerySet):
         )
         return projects
 
-    def get_projects_percent_complete(self):
+    def get_projects_percent_complete(self) -> Self:
         projects = self.annotate(
             total=Count('tasks'),
             completed=Count('tasks', filter=Q(tasks__is_completed=True)),

@@ -1,9 +1,11 @@
 import calendar
 from datetime import datetime
 
+from tasks.models import TaskQuerySet
+
 
 class TaskCalendarBuilder:
-    def __init__(self, tasks):
+    def __init__(self, tasks: TaskQuerySet):
         self._tasks = tasks
         self._min_date = None
         self._max_date = None
@@ -11,18 +13,17 @@ class TaskCalendarBuilder:
         self._months = []
         self._current_index = 1
 
-    def build(self):
+    def build(self) -> None:
         if not self._tasks:
             self._handle_no_tasks()
         else:
             self._find_date_range()
             self._build_months()
 
-
-    def _handle_no_tasks(self):
+    def _handle_no_tasks(self) -> None:
         self._months.append(self._cal.monthdatescalendar(datetime.now().year, datetime.now().month))
 
-    def _find_date_range(self):
+    def _find_date_range(self) -> None:
         for task in self._tasks:
             start = task.start_datetime.date()
             if task.due_datetime is not None:
@@ -38,8 +39,7 @@ class TaskCalendarBuilder:
             if due and due > self._max_date:
                 self._max_date = due
 
-
-    def _build_months(self):
+    def _build_months(self) -> None:
         year, month = self._min_date.year, self._min_date.month
         current_year, current_month = datetime.now().year, datetime.now().month
         while (year, month) <= (self._max_date.year, self._max_date.month):
@@ -55,9 +55,9 @@ class TaskCalendarBuilder:
                 month += 1
 
     @property
-    def get_months_list(self):
+    def get_months_list(self) -> list[list[list[datetime.date]]]:
         return self._months
 
     @property
-    def get_current_index(self):
+    def get_current_index(self) -> int:
         return self._current_index

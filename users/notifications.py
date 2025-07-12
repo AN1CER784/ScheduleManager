@@ -4,8 +4,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UserSignUpNotificationBuilder:
-    @staticmethod
-    def build(user):
+    @classmethod
+    def build(cls, user):
         with translation.override(user.language):
             subject = _('Welcome to ScheduleManager')
             recipient_list = [user.email]

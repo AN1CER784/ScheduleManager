@@ -1,6 +1,8 @@
 from django.db import models
 
 from common.models import AbstractCreatedModel
+from users.models import User
+from django.core.cache import cache
 
 PERIOD_CHOICES = [
     (1, 'Daily'),
@@ -9,12 +11,18 @@ PERIOD_CHOICES = [
 
 
 class AnalysisReportQuerySet(models.QuerySet):
-    def get_reports_by_period(self, periods, user):
+    def get_reports(self, user: User) -> dict[int, list['AnalysisReport']]:
+        cache_key = f'summaries_for_user_{user.id}'
+        data = cache.get(cache_key)
+        if data is not None:
+            return data
         reports = self.filter(user=user)
         dict_periods = {}
-        for period in periods:
-            reports_by_period = [report for report in reports if report.period == period and bool(getattr(getattr(report, 'summary', None), 'summary', None))]
+        for period in (1, 7):
+            reports_by_period = [report for report in reports if report.period == period and bool(
+                getattr(getattr(report, 'summary', None), 'summary', None))]
             dict_periods[period] = reports_by_period
+        cache.set(cache_key, dict_periods, 60)
         return dict_periods
 
 
