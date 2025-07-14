@@ -427,7 +427,7 @@ msgid "Tue"
 msgstr "Вт"
 
 #: schedule/templates/schedule/calendar.html:30
-msgid "Weв"
+msgid "Wed"
 msgstr "Ср"
 
 #: schedule/templates/schedule/calendar.html:31

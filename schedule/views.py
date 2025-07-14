@@ -21,7 +21,7 @@ class ScheduleCalendarView(SessionMixin, ListView):
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
         self.user_tasks = (
-            self.get_owner_filter(Task, via='project')
+            self.get_owner_filter(model=Task, via='project')
             .select_related('project')
         )
         builder = TaskCalendarBuilder(self.user_tasks)
