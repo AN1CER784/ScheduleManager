@@ -70,7 +70,7 @@ The web app will be available at [http://localhost:80/].
 │   ├── docker-compose.yml
 │   ├── docker-compose.prod.yml
 │   ├── nginx.dev.conf
-│   ├── nginx.dev.conf
+│   ├── nginx.prod.conf
 ├── locale/ru/LC_MESSAGES    # Translation files
 ├── ScheduleManager/         # Project settings
 ├── analysis/                # Productivity analysis module
