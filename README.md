@@ -65,6 +65,12 @@ The web app will be available at [http://localhost:80/].
 ```
 /
 ├── docker/                  # Docker & env configuration
+│   ├── .env
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   ├── docker-compose.prod.yml
+│   ├── nginx.dev.conf
+│   ├── nginx.dev.conf
 ├── locale/ru/LC_MESSAGES    # Translation files
 ├── ScheduleManager/         # Project settings
 ├── analysis/                # Productivity analysis module
