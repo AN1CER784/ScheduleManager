@@ -1,4 +1,4 @@
-from typing import Protocol, Any
+from typing import Protocol, Any, Type
 
 from typing import Union
 from django.core.cache import cache
@@ -83,7 +83,7 @@ class SessionMixin:
         instance.save()
         return instance
 
-    def get_owner_filter(self: SessionProtocol, model: Model, via: bool = None):
+    def get_owner_filter(self: SessionProtocol, model: Type[Model], via: str | None = None):
         if self.request.user.is_authenticated:
             field = 'user'
             value = self.request.user
