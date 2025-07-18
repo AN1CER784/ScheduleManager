@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from django.test import TestCase
 
-from analysis.utils import get_or_create_report
+from analysis.services.reports import get_or_create_report
 from projects.models import Project
 from tasks.models import Task
 from users.models import User

@@ -1,6 +1,6 @@
-from typing import Protocol, Any, Type
-
+from typing import Protocol, Any, Type, TypeVar
 from typing import Union
+
 from django.core.cache import cache
 from django.db.models import Model, QuerySet
 from django.http import HttpRequest
@@ -8,6 +8,8 @@ from django.template.loader import render_to_string
 from django.views.generic.edit import FormMixin
 
 from projects.models import Project
+
+T = TypeVar("T", bound=Model)
 
 
 class HasRequest(Protocol):
@@ -75,7 +77,7 @@ class SessionMixin:
             self.request.session.save()
         return self.request.session.session_key
 
-    def assign_owner(self: SessionProtocol, instance: Model) -> Model:
+    def assign_owner(self: SessionProtocol, instance: T) -> T:
         if self.request.user.is_authenticated:
             instance.user = self.request.user
         else:

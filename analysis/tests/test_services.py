@@ -8,7 +8,7 @@ from analysis.services.productivity_matrix import TaskAutomatonReport
 from analysis.services.summary_generator import SummaryGenerator
 from projects.models import Project
 from tasks.models import Task
-from tasks.task_update_service import create_progress
+from tasks.task_service import create_progress
 from users.models import User
 
 

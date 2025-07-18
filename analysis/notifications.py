@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from analysis.utils import get_or_create_report
+from analysis.services.reports import get_or_create_report
 from tasks.models import Task
 from users.models import User
 

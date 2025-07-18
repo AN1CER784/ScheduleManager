@@ -2,7 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
 from common.mixins import CacheMixin
-from main.get_page_service import get_page
+from main.page_service import get_page
 
 
 class IndexView(CacheMixin, TemplateView):

@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from analysis.models import AnalysisSummary, AnalysisReport
 from analysis.tasks import make_summary
-from analysis.utils import get_or_create_report
+from analysis.services.reports import get_or_create_report
 from tasks.models import Task, TaskQuerySet
 from users.models import User
 

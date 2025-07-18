@@ -8,7 +8,7 @@ from django.views.generic import CreateView, UpdateView
 
 from common.mixins import RequestFormKwargsMixin
 from users.forms import LoginForm, ProfileForm, SignupForm
-from users.utils import update_projects_user
+from users.user_service import update_projects_user
 
 
 class UserLoginView(LoginView):

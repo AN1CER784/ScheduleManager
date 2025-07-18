@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
-from analysis.services.get_reports import get_reports_for_user
+from analysis.services.reports import get_reports_for_user
 
 
 class AnalysisView(TemplateView):

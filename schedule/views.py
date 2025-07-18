@@ -1,5 +1,3 @@
-
-
 from django.views.generic import ListView
 from django.utils.translation import gettext_lazy as _
 

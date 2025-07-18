@@ -2,17 +2,18 @@ from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 
-from common.common_services import delete_object
+from common.utils import delete_object
 from common.mixins import JsonFormMixin, SessionMixin
 from projects.forms import AddProjectForm
 from projects.mixins import ProjectMixin
+from projects.models import Project
 
 
 class AddProjectView(JsonFormMixin, ProjectMixin, SessionMixin, View):
     form_class = AddProjectForm
 
     def form_valid(self, form):
-        project = self.assign_owner(instance=form.save(commit=False))
+        project: Project = self.assign_owner(instance=form.save(commit=False))
         item_html = self.render_project(request=self.request, project=project)
         return JsonResponse(self.response(_('Project was successfully created'), item_html, True))
 

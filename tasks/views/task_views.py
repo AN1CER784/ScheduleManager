@@ -2,12 +2,12 @@ from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 
-from common.common_services import delete_object
+from common.utils import delete_object
 from common.mixins import JsonFormMixin
 from projects.mixins import ProjectMixin
 from tasks.forms import TaskCreateForm, TaskUpdateForm
 from tasks.mixins import TasksMixin
-from tasks.task_update_service import create_task_with_progress, update_progress
+from tasks.task_service import create_task_with_progress, update_progress
 
 
 class AddTaskView(JsonFormMixin, ProjectMixin, TasksMixin, View):

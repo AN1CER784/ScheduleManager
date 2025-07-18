@@ -3,11 +3,11 @@ from django.template.loader import render_to_string
 from django.views import View
 from django.utils.translation import gettext_lazy as _
 
-from common.common_services import delete_object
+from common.utils import delete_object
 from common.mixins import JsonFormMixin
 from tasks.forms import TaskCommentForm
 from tasks.mixins import TasksMixin
-from tasks.task_update_service import add_comment
+from tasks.task_service import add_comment
 
 
 class TaskAddCommentView(JsonFormMixin, TasksMixin, View):
