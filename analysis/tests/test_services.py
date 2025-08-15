@@ -7,8 +7,7 @@ from analysis.services.analysis_generator import AnalysisGenerator
 from analysis.services.productivity_matrix import TaskAutomatonReport
 from analysis.services.summary_generator import SummaryGenerator
 from projects.models import Project
-from tasks.models import Task
-from tasks.task_service import create_progress
+from tasks.models import Task, TaskProgress
 from users.models import User
 
 
@@ -40,11 +39,10 @@ class SummaryGeneratorTestCase(TestCase):
                                     due_datetime=datetime.now() + timedelta(days=1),
                                     is_completed=False,
                                     project=self.project)
-        create_progress(task1)
-        create_progress(task2)
-        create_progress(task3)
-        create_progress(task4)
         self.tasks = [task1, task2, task3, task4]
+        TaskProgress.objects.bulk_create(
+            [TaskProgress(task=task) for task in self.tasks]
+        )
 
     def test_summary_generator(self):
         prompt = "Test prompt"

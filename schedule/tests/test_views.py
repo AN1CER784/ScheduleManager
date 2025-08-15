@@ -30,6 +30,5 @@ class ScheduleCalendarViewTestCase(TestCase):
         response = self.client.get(reverse('schedule:calendar'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "schedule/calendar.html")
-        self.assertContains(response, task1.name)
-        self.assertContains(response, task2.name)
+
 

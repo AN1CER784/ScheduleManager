@@ -33,7 +33,7 @@ class DayTasksNotificationsTestCase(TestCase):
         mail_dict = builder.build(self.user, tasks)
         subject, message, recipient_list, html_message = mail_dict
         self.assertEqual(subject, 'Day analysis report')
-        self.assertIn('Your Day Productivity Report', message)
+        self.assertIn('Your Productivity Report for Day', message)
         self.assertEqual(recipient_list, ['testmail@mail.com'])
         self.assertEqual(mock_get_or_create_report.call_count, 1)
 
@@ -56,7 +56,7 @@ class WeekReportNotificationsTestCase(TestCase):
         mail_dict = builder.build(self.user)
         subject, message, recipient_list, html_message = mail_dict
         self.assertEqual(subject, 'Week analysis report')
-        self.assertIn('Your Week Productivity Report', message)
+        self.assertIn('Your Productivity Report for Week', message)
         self.assertEqual(recipient_list, ['XXXXXXXXXXXXXXXXX'])
         self.assertEqual(mock_get_or_create_report.call_count, 1)
 

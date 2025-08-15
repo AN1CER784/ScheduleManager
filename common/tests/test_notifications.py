@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 from django.test import TestCase
 
-from common.notifications import UserNotificationManger
+from common.notifications import UserNotificationManager
 from django.core import mail
 
 class UserNotificationMangerTestCase(TestCase):
@@ -18,7 +18,7 @@ class UserNotificationMangerTestCase(TestCase):
             '<p>Test HTML</p>'
         )
 
-        manager = UserNotificationManger(user=mock_user, builder=mock_builder, fetcher=mock_fetcher)
+        manager = UserNotificationManager(user=mock_user, builder=mock_builder, fetcher=mock_fetcher)
 
 
         mail.outbox = []
@@ -26,12 +26,12 @@ class UserNotificationMangerTestCase(TestCase):
         manager.notify()
 
         mock_fetcher.fetch.assert_called_once_with(mock_user)
-        mock_builder.build.assert_called_once_with(['object1', 'object2'], mock_user)
+        mock_builder.build.assert_called_once_with(mock_user, ['object1', 'object2'])
 
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Test Subject')
         self.assertEqual(mail.outbox[0].to, ['user@example.com'])
-        self.assertEqual(mail.outbox[0].message(), 'Test Message')
+        self.assertEqual(mail.outbox[0].body, 'Test Message')
         self.assertEqual(mail.outbox[0].alternatives[0][0], '<p>Test HTML</p>')
 
     def test_notify_without_fetcher(self):
@@ -45,7 +45,7 @@ class UserNotificationMangerTestCase(TestCase):
             '<p>Test No Fetcher HTML</p>'
         )
 
-        manager = UserNotificationManger(user=mock_user, builder=mock_builder)
+        manager = UserNotificationManager(user=mock_user, builder=mock_builder)
 
         from django.core import mail
         mail.outbox = []
@@ -56,5 +56,5 @@ class UserNotificationMangerTestCase(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Test Subject No Fetcher')
         self.assertEqual(mail.outbox[0].to, ['user2@example.com'])
-        self.assertEqual(mail.outbox[0].message(), 'Test Message No Fetcher')
+        self.assertEqual(mail.outbox[0].body, 'Test Message No Fetcher')
         self.assertEqual(mail.outbox[0].alternatives[0][0], '<p>Test No Fetcher HTML</p>')

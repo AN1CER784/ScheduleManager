@@ -8,11 +8,6 @@ from analysis.services.productivity_matrix import TaskAutomatonReport
 from users.models import User
 
 
-def get_reports_for_user(user: User) -> dict[int, list['AnalysisReport']]:
-    user_reports = AnalysisReport.objects.get_reports(user=user)
-    return user_reports
-
-
 def get_or_create_report(user: User, period: Literal[1, 7], start_date: Optional[datetime.date] = None,
                          end_date: Optional[datetime.date] = None) -> AnalysisReport:
     if start_date is None and end_date is None:

@@ -31,7 +31,7 @@ class ReportTestCase(TestCase):
                                          due_datetime=datetime.now() + timedelta(days=1),
                                          is_completed=False,
                                          project=self.project)
-    @patch('analysis.utils.TaskAutomatonReport.generate_report')
+    @patch('analysis.services.productivity_matrix.TaskAutomatonReport.generate_report')
     def test_generate_week_report(self, mock_generate_report):
         mock_generate_report.return_value = '{"mocked": "report"}'
         report = get_or_create_report(user=self.user, period=7)
@@ -39,7 +39,7 @@ class ReportTestCase(TestCase):
         self.assertEqual(report.period, 7)
         self.assertIsNotNone(report.report)
 
-    @patch('analysis.utils.TaskAutomatonReport.generate_report')
+    @patch('analysis.services.productivity_matrix.TaskAutomatonReport.generate_report')
     def test_generate_day_report(self, mock_generate_report):
         mock_generate_report.return_value = '{"mocked": "report"}'
         report = get_or_create_report(user=self.user, period=1)

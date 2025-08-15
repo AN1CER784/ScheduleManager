@@ -7,7 +7,6 @@ from common.utils import delete_object
 from common.mixins import JsonFormMixin
 from tasks.forms import TaskCommentForm
 from tasks.mixins import TasksMixin
-from tasks.task_service import add_comment
 
 
 class TaskAddCommentView(JsonFormMixin, TasksMixin, View):
@@ -16,7 +15,8 @@ class TaskAddCommentView(JsonFormMixin, TasksMixin, View):
     def form_valid(self, form):
         task = self.get_task(self.request)
         comment = form.save(commit=False)
-        add_comment(task=task, comment=comment)
+        comment.task = task
+        comment.save()
         item_html = self.render_comment(comment=comment, request=self.request, project=task.project)
         divider_html = render_to_string(template_name='tasks/includes/comment_divider.html', context={
             'comment_date': comment.created_date

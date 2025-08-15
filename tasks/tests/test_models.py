@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from django.test import TestCase
 
 from projects.models import Project
-from tasks.models import Task
-from tasks.task_service import create_progress, update_progress
+from tasks.models import Task, TaskProgress
+from tasks.progress_service import update_progress
 from users.models import User
 
 
@@ -18,12 +18,12 @@ class TaskModelTestCase(TestCase):
                                         due_datetime=datetime.now() + timedelta(days=1),
                                         is_completed=False,
                                         project=self.project)
+        TaskProgress.objects.create(task=self.task)
 
     def test_task_model(self):
-        create_progress(self.task.progress)
         self.assertEqual(self.task.name, 'Title for the test task')
         self.assertEqual(self.task.description, 'Description for the test task')
-        self.assertEqual((self.task.due_datetime - self.task.start_datetime)._days, 1)
+        self.assertEqual((self.task.due_datetime - self.task.start_datetime).days, 1)
         self.assertEqual(self.task.project, self.project)
         self.assertEqual(self.task.progress.percentage, 5)
         self.assertEqual(self.task.is_completed, False)

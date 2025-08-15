@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from projects.models import Project
-from tasks.models import Task
+from tasks.models import Task, TaskProgress
 from users.models import User
 
 
@@ -76,6 +76,7 @@ class CompleteTaskTestCase(TestCase):
                                         due_datetime=datetime.now() + timedelta(days=1),
                                         is_completed=False,
                                         project=self.project)
+        TaskProgress.objects.create(task=self.task)
 
     def test_complete_task(self):
         response = self.client.post(reverse('tasks:complete_task', kwargs={"id": self.project.id}),
@@ -105,6 +106,7 @@ class IncompleteTaskTestCase(TestCase):
                                         due_datetime=datetime.now() + timedelta(days=1),
                                         is_completed=False,
                                         project=self.project)
+        TaskProgress.objects.create(task=self.task)
 
     def test_incomplete_task(self):
         response = self.client.post(reverse('tasks:incomplete_task', kwargs={"id": self.project.id}),
@@ -126,6 +128,7 @@ class ChangeProgressTaskTestCase(TestCase):
                                         due_datetime=datetime.now() + timedelta(days=1),
                                         is_completed=False,
                                         project=self.project)
+        TaskProgress.objects.create(task=self.task)
 
     def test_change_progress_task(self):
         response = self.client.post(reverse('tasks:task_update_progress', kwargs={"id": self.project.id}),

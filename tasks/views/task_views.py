@@ -1,3 +1,5 @@
+from typing import Literal
+
 from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
@@ -7,7 +9,8 @@ from common.mixins import JsonFormMixin
 from projects.mixins import ProjectMixin
 from tasks.forms import TaskCreateForm, TaskUpdateForm
 from tasks.mixins import TasksMixin
-from tasks.task_service import create_task_with_progress, update_progress
+from tasks.models import TaskProgress
+from tasks.progress_service import update_progress
 
 
 class AddTaskView(JsonFormMixin, ProjectMixin, TasksMixin, View):
@@ -18,7 +21,8 @@ class AddTaskView(JsonFormMixin, ProjectMixin, TasksMixin, View):
         task = form.save(commit=False)
         task.project = self.get_project(user_id=self.request.user.id, project_id=self.kwargs.get(self.slug_url_kwarg),
                                         session_key=self.request.session.session_key)
-        create_task_with_progress(task=task)
+        task.save()
+        TaskProgress.objects.create(task=task)
         item_html = self.render_task(task=task, request=self.request, project=task.project)
         return JsonResponse(self.response(message=_('Task was successfully added'), item_html=item_html, success=True))
 
@@ -38,7 +42,7 @@ class DeleteTaskView(TasksMixin, View):
 class CompleteTaskView(TasksMixin, View):
     def post(self, request, *args, **kwargs):
         task = self.get_task(request)
-        update_progress(progress=task.progress, percentage=False)
+        update_progress(progress=task.progress, percentage=100)
         item_html = self.render_task(task=task, task_type='Done', request=request, project=task.project)
         return JsonResponse(
             self.response(message=_('Task was successfully completed'), item_html=item_html, success=True))
@@ -73,7 +77,7 @@ class TaskUpdateInfoView(TasksMixin, JsonFormMixin, View):
 
     def form_valid(self, form):
         task = form.save()
-        task_type = 'Done' if task.is_completed else "InProgress"
+        task_type: Literal['Done', 'InProgress'] = 'Done' if task.is_completed else "InProgress"
         item_html = self.render_task(task=task, request=self.request, project=task.project, task_type=task_type)
         return JsonResponse(
             self.response(message=_('Task was successfully updated'), item_html=item_html, success=True))

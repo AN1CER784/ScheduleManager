@@ -1,6 +1,8 @@
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
-from analysis.services.reports import get_reports_for_user
+
+from analysis.models import AnalysisReport
+
 
 
 class AnalysisView(TemplateView):
@@ -10,7 +12,7 @@ class AnalysisView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = _('Analysis')
         if self.request.user.is_authenticated:
-            reports = get_reports_for_user(self.request.user)
+            reports = AnalysisReport.objects.get_reports(user=self.request.user)
             if reports:
                 week_reports = reports[7]
                 day_reports = reports[1]
