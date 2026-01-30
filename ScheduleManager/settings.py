@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 from django.utils.translation import gettext_lazy as _
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +28,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(',')
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -45,7 +47,6 @@ INSTALLED_APPS = [
     'main',
     'users',
     'projects',
-    'analysis',
     'tasks',
     'schedule',
     'common'
@@ -97,8 +98,8 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': 'db',
-        'PORT': 5432,
+        'HOST': 'localhost',
+        'PORT': 5435,
         'ATOMIC_REQUESTS': True
     }
 }
@@ -106,7 +107,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://redis:6379/0",
+        "LOCATION": "redis://localhost:6379/0",
     }
 }
 
@@ -155,7 +156,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -183,6 +186,9 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+BONUS_POINTS_ON_TIME = 10
+BONUS_POINTS_OVERDUE_PENALTY = -5
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SESSION_COOKIE_SECURE = True

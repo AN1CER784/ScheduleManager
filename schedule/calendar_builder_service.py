@@ -25,9 +25,9 @@ class TaskCalendarBuilder:
 
     def _find_date_range(self) -> None:
         for task in self._tasks:
-            start = task.start_datetime.date()
-            if task.due_datetime is not None:
-                due = task.due_datetime.date()
+            start = task.created_at.date()
+            if task.deadline is not None:
+                due = task.deadline.date()
             else:
                 due = None
             if self._min_date is None or start < self._min_date:

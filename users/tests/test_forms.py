@@ -1,29 +1,44 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
+
 from users.forms import SignupForm, ProfileForm
-from users.models import User
+from users.models import User, Company
 
 
 class UserSignUpFormTestCase(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+
     def test_signup_form(self):
-        form_data = {'username': 'XXXX', 'email': 'testmail@mail.com', 'password1': 'ALEX1111!', 'password2': 'ALEX1111!'}
-        form = SignupForm(data=form_data)
+        request = self.factory.get("/")
+        request.LANGUAGE_CODE = "en"
+        form_data = {'username': 'XXXX', 'email': 'testmail@mail.com', 'password1': 'ALEX1111!',
+                     'password2': 'ALEX1111!', 'company_name': 'Acme'}
+        form = SignupForm(data=form_data, request=request)
         self.assertTrue(form.is_valid())
 
     def test_signup_form_invalid_password2(self):
-        form_data = {'username': 'XXXX', 'email': 'testmail@mail.com', 'password1': 'ALEX1111!', 'password2': 'ALEX1111'}
-        form = SignupForm(data=form_data)
+        request = self.factory.get("/")
+        request.LANGUAGE_CODE = "en"
+        form_data = {'username': 'XXXX', 'email': 'testmail@mail.com', 'password1': 'ALEX1111!',
+                     'password2': 'ALEX1111', 'company_name': 'Acme'}
+        form = SignupForm(data=form_data, request=request)
         self.assertFalse(form.is_valid())
 
     def test_signup_form_invalid_password(self):
-        form_data = {'username': 'XXXX', 'email': 'testmail@mail.com', 'password1': '1111', 'password2': '1111'}
-        form = SignupForm(data=form_data)
+        request = self.factory.get("/")
+        request.LANGUAGE_CODE = "en"
+        form_data = {'username': 'XXXX', 'email': 'testmail@mail.com', 'password1': '1111', 'password2': '1111',
+                     'company_name': 'Acme'}
+        form = SignupForm(data=form_data, request=request)
         self.assertFalse(form.is_valid())
 
 
 class ProfileFormTestCase(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='XXXX', password='1111', email='testmail@mail.com')
+        company = Company.objects.create(name="Acme")
+        self.user = User.objects.create_user(username='XXXX', password='1111', email='testmail@mail.com',
+                                             company=company)
 
     def test_profile_form(self):
         form_data = {

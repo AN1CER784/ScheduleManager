@@ -1,71 +1,77 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'deps/css/auth.css' %}">
+{% endblock %}
+
 {% block content %}
-
-	<div class="fs-3 fw-bold text-center text-success mb-2 shadow-sm p-3 bg-light rounded shadow">
-	{% trans "Sign up" %}
-	</div>
-	<div class="container bg-light p-5 rounded shadow">
-
-		<form method="post" action="{% url 'users:signup' %}" class="row g-3">
-			{% csrf_token %}
-			<div class="col-xxl-10 col-lg-12 mx-auto">
-				<label for="id_username" class="form-label">{% trans 'Username' %}</label>
-
-				<div class="input-group">
-
-					<span class="input-group-text" id="inputGroupPrepend2">@</span>
-					<input type="text" class="form-control" id="id_username" name="username" required value=
-							{% if form.username.value %}{{ form.username.value }}{% endif %}>
-
+	<div class="auth-shell">
+		<section class="auth-card">
+			<h1 class="auth-title">{% trans "Sign up" %}</h1>
+			<p class="auth-subtitle">{% trans "Create your company workspace and invite your team." %}</p>
+			<form method="post" action="{% url 'users:signup' %}" class="auth-form">
+				{% csrf_token %}
+				<div>
+					<label for="id_username" class="form-label">{% trans 'Username' %}</label>
+					<input type="text" class="form-control" id="id_username" name="username" required
+					       value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
+					{% if form.username.errors %}
+						<div class="alert alert-danger alert-dismissible fade show">{{ form.username.errors }}</div>
+					{% endif %}
 				</div>
-				{% if form.username.errors %}
-					<div class="alert alert-danger alert-dismissible fade show">{{ form.username.errors }}</div>
-				{% endif %}
-			</div>
-
-			<div class="col-xxl-10 col-lg-12 mx-auto">
-				<label for="id_email" class="form-label">Email</label>
-				<input type="email" id="id_email" class="form-control" name="email"
-				       required value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
-				{% if form.email.errors %}
-					<div class="alert alert-danger alert-dismissible fade show">{{ form.email.errors }}</div>
-				{% endif %}
-
-			</div>
-
-			<div class="col-xxl-10 col-lg-12 mx-auto">
-				<label for="id_password1" class="form-label">{% trans 'Password' %}</label>
-				<input type="password" id="id_password1" class="form-control" name="password1"
-				       required>
-				{% if form.password1.errors %}
-					<div class="alert alert-danger alert-dismissible fade show">{{ form.password1.errors }}</div>
-				{% endif %}
-
-			</div>
-			<div class="col-xxl-10 col-lg-12 mx-auto">
-				<label for="id_password2" class="form-label">{% trans 'Confirm your password' %}</label>
-				<input type="password" id="id_password2" class="form-control" name="password2"
-				       required>
-				{% if form.password2.errors %}
-					<div class="alert alert-danger alert-dismissible fade show">{{ form.password2.errors }}</div>
-				{% endif %}
-
-			</div>
-			<div class="col-12 d-flex justify-content-center">
-				<div class="form-check my-2">
+				<div>
+					<label for="id_email" class="form-label">Email</label>
+					<input type="email" id="id_email" class="form-control" name="email" required
+					       value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+					{% if form.email.errors %}
+						<div class="alert alert-danger alert-dismissible fade show">{{ form.email.errors }}</div>
+					{% endif %}
+				</div>
+				<div>
+					<label for="id_company_name" class="form-label">{% trans 'Company name' %}</label>
+					<input type="text" id="id_company_name" class="form-control" name="company_name" required
+					       value="{% if form.company_name.value %}{{ form.company_name.value }}{% endif %}">
+					{% if form.company_name.errors %}
+						<div class="alert alert-danger alert-dismissible fade show">{{ form.company_name.errors }}</div>
+					{% endif %}
+				</div>
+				<div>
+					<label for="id_password1" class="form-label">{% trans 'Password' %}</label>
+					<input type="password" id="id_password1" class="form-control" name="password1" required>
+					{% if form.password1.errors %}
+						<div class="alert alert-danger alert-dismissible fade show">{{ form.password1.errors }}</div>
+					{% endif %}
+				</div>
+				<div>
+					<label for="id_password2" class="form-label">{% trans 'Confirm your password' %}</label>
+					<input type="password" id="id_password2" class="form-control" name="password2" required>
+					{% if form.password2.errors %}
+						<div class="alert alert-danger alert-dismissible fade show">{{ form.password2.errors }}</div>
+					{% endif %}
+				</div>
+				<div class="form-check">
 					<input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
 					<label class="form-check-label" for="invalidCheck2">
 						{% trans 'Agree to terms and conditions' %}
 					</label>
 				</div>
+				<div class="auth-actions">
+					<button class="btn btn-primary" type="submit">{% trans 'Submit' %}</button>
+					<a href="{% url 'users:login' %}" class="btn btn-outline-secondary">{% trans 'Sign in' %}</a>
+				</div>
+			</form>
+		</section>
+		<aside class="auth-side">
+			<div>
+				<h4>{% trans "Company-first onboarding" %}</h4>
+				<p class="text-muted">{% trans "Set up your workspace and start assigning tasks immediately." %}</p>
 			</div>
-			<div class="col-12 text-center">
-				<button class="btn btn-success px-4 fw-bold" type="submit">{% trans 'Submit' %}</button>
+			<div class="auth-note">
+				<strong>{% trans "Already have a workspace?" %}</strong>
+				<p class="text-muted mb-0">{% trans "Log in to join your team." %}</p>
 			</div>
-		</form>
+		</aside>
 	</div>
-
-
 {% endblock %}

@@ -39,7 +39,6 @@ urlpatterns += i18n_patterns(
     path('users/projects/<int:id>/tasks/', include('tasks.urls', namespace="tasks")),
     path('users/projects/', include('projects.urls', namespace="projects")),
     path('users/schedule/', include('schedule.urls', namespace="schedule")),
-    path('analysis/', include('analysis.urls', namespace="analysis")),
 
     prefix_default_language=False
 )

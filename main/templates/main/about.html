@@ -1,21 +1,41 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
+
 {% block css %}
-	<link href="{% static 'deps/css/footer.css' %}" rel="stylesheet">
+	<link href="{% static 'deps/css/about.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-	<div class="bg-light border shadow-sm rounded p-5">
-		{{ content.content|safe }}
-	</div>
+	<section class="about-hero">
+		<h1>{% trans "About ScheduleManager" %}</h1>
+		<p class="text-muted">{% trans "A corporate task manager focused on clarity, accountability, and execution." %}</p>
+		<div class="mt-3">
+			{{ content.content|safe }}
+		</div>
+	</section>
+
+	<section class="about-grid">
+		<div class="about-card">
+			<h4>{% trans "Ownership" %}</h4>
+			<p class="text-muted">{% trans "Every task has a clear creator and assignee, with transparent responsibility." %}</p>
+		</div>
+		<div class="about-card">
+			<h4>{% trans "Control" %}</h4>
+			<p class="text-muted">{% trans "Strict status transitions keep work moving in the right direction." %}</p>
+		</div>
+		<div class="about-card">
+			<h4>{% trans "Momentum" %}</h4>
+			<p class="text-muted">{% trans "Bonus points reinforce delivery discipline without adding noise." %}</p>
+		</div>
+	</section>
 {% endblock %}
 
 {% block footer %}
-	<footer class="mt-5 bg-success bg-gradient text-white py-4">
+	<footer class="footer-modern">
 		<div class="container text-center">
-			<p class="mb-0">ScheduleManager © 2025</p>
-			<p class="mb-0">Created by <span class="fw-bold text-light">An1cer</span></p>
-			<small>All rights reserved.</small>
+			<p class="mb-0">ScheduleManager © 2026</p>
+			<small>Corporate task management platform.</small>
 		</div>
 	</footer>
-{% endblock %}
+{% endblock %}

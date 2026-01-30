@@ -1,0 +1,41 @@
+{% load static %}
+{% load i18n %}
+
+<div class="kanban-card{% if task.is_overdue %} is-overdue{% endif %}"
+     draggable="true"
+     data-task-id="{{ task.id }}"
+     data-status="{{ task.status }}"
+     data-position="{{ task.position }}">
+	<div class="kanban-card-header">
+		<div class="kanban-title">
+			<button class="kanban-open-btn" type="button" data-task-id="{{ task.id }}">
+				{{ task.name }}
+			</button>
+		</div>
+		<div class="kanban-badges">
+			<span class="badge badge-priority badge-{{ task.priority|lower }}">{{ task.get_priority_display }}</span>
+			{% if task.is_overdue %}
+				<span class="badge badge-overdue">{% trans "Overdue" %}</span>
+			{% endif %}
+		</div>
+	</div>
+	<div class="kanban-meta">
+		<div class="meta-row">
+			<span class="meta-label">{% trans "Assignee" %}</span>
+			<span class="meta-value">{{ task.assignee.username|default:_("Unassigned") }}</span>
+		</div>
+		<div class="meta-row">
+			<span class="meta-label">{% trans "Creator" %}</span>
+			<span class="meta-value">{{ task.creator.username }}</span>
+		</div>
+	</div>
+	<div class="kanban-footer">
+		<div class="meta-row">
+			<span class="meta-label">{% trans "Deadline" %}</span>
+			{% trans "Not specified" as no_deadline %}
+			<span class="meta-value">
+				{% if task.deadline %}{{ task.deadline|date:"Y-m-d H:i" }}{% else %}{{ no_deadline }}{% endif %}
+			</span>
+		</div>
+	</div>
+</div>

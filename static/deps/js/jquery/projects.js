@@ -57,14 +57,14 @@ $(document).ready(function () {
     });
     $(document).on('click', '.edit-proj-btn', function () {
         const item = $(this).closest('.project-card');
-        item.find('.project-name').addClass('d-none');
+        item.find('.project-title').addClass('d-none');
         item.find('.proj-edit-form').removeClass('d-none');
     });
 
     $(document).on('click', '.cancel-proj-edit-btn', function () {
         const item = $(this).closest('.project-card');
         item.find('.proj-edit-form').addClass('d-none');
-        item.find('.project-name').removeClass('d-none');
+        item.find('.project-title').removeClass('d-none');
     });
 
 
@@ -82,7 +82,7 @@ $(document).ready(function () {
                     const $newItem = $(response.item_html);
                     item.replaceWith($newItem);
                     form.addClass('d-none');
-                    item.find('.project-name').removeClass('d-none');
+                    item.find('.project-title').removeClass('d-none');
                     showMessage(response.message, true);
                     form.trigger('reset');
                 } else {

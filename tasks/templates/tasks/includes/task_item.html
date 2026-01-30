@@ -2,57 +2,41 @@
 {% load static %}
 {% load i18n %}
 
-<div class="accordion-item rounded bg-light shadow-sm mb-1" id="task-{{ type }}{{ task.id }}">
+<div class="accordion-item rounded bg-light shadow-sm mb-1" id="task-{{ task.status }}{{ task.id }}">
 	<div class="accordion-header d-flex justify-content-between align-items-center
             border border-secondary border-opacity-25 rounded px-2 bg-light">
 
 		<h2 class="m-0 flex-grow-1">
 			<button class="accordion-button bg-light text-black border-end border-secondary border-opacity-25 d-flex align-items-center fw-bold w-100 show-task-btn"
 			        type="button"
-			        data-task-id="{{ type }}{{ task.id }}">
-				{% if type == "InProgress" %}
-					<img src="{% static "deps/icons/person-walking.svg" %}"
-					     alt="Catalog Icon" width="20" height="20" class="img-green">
-
-				{% else %}
-					<img src="{% static "deps/icons/check2-circle.svg" %}"
-					     alt="Catalog Icon" width="20" height="20" class="img-green">
-				{% endif %}
+			        data-task-id="{{ task.status }}{{ task.id }}">
+				<img src="{% static "deps/icons/list-columns-reverse.svg" %}"
+				     alt="Task" width="18" height="18" class="img-green">
 				{{ task.name }}
 			</button>
 		</h2>
+		<span class="badge bg-secondary me-2">{{ task.get_status_display }}</span>
 		<form action="{% url 'tasks:del_task' project.id %}" method="post" class="ms-2 delete-task-form">
 			<button type="submit" class="btn btn-sm btn-danger" title="Delete Task">
 				{% csrf_token %}
 				<img src="{% static "deps/icons/trash3.svg" %}"
-				     alt="Catalog Icon" width="16" height="16">
+				     alt="Delete" width="16" height="16">
 				<input type="hidden" name="task_id" value="{{ task.id }}">
 			</button>
 		</form>
-		{% if type == "InProgress" %}
-			<form action="{% url 'tasks:complete_task' project.id %}" method="post" class="ms-2 complete-task-form">
-				<button type="submit" class="btn btn-sm btn-success" title="Mark as done">
-					{% csrf_token %}
-					<img src="{% static "deps/icons/check2-circle.svg" %}"
-					     alt="Catalog Icon" width="16" height="16">
-					<input type="hidden" name="task_id" value="{{ task.id }}">
-				</button>
-			</form>
-		{% else %}
-			<form action="{% url 'tasks:incomplete_task' project.id %}" method="post" class="ms-2 incomplete-task-form">
-				<button type="submit" class="btn btn-sm btn-success" title="Mark as pending">
-					{% csrf_token %}
-					<img src="{% static "deps/icons/person-walking.svg" %}"
-					     alt="Catalog Icon" width="16" height="16">
-					<input type="hidden" name="task_id" value="{{ task.id }}">
-				</button>
-			</form>
-		{% endif %}
 	</div>
 	<div
-			id="{{ type }}{{ task.id }}"
+			id="{{ task.status }}{{ task.id }}"
 			class="accordion-collapse collapse"
-			data-bs-parent="{% if type == "InProgress" %}#accordionInProgress{% else %}#accordionDone{% endif %}">
+			{% if task.status == "NEW" %}
+				data-bs-parent="#accordionNew"
+			{% elif task.status == "IN_PROGRESS" %}
+				data-bs-parent="#accordionInProgress"
+			{% elif task.status == "ON_REVIEW" %}
+				data-bs-parent="#accordionOnReview"
+			{% else %}
+				data-bs-parent="#accordionDone"
+			{% endif %}>
 		<div class="accordion-body bg-light d-flex flex-column">
 		<div id="project-data" data-project-id="{{ project.id }}"></div>
 			<div class="flex-grow-1">
@@ -64,12 +48,14 @@
 							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form name w-100 align-items-start" method="post">
 								{% csrf_token %}
 								<input type="hidden" name="task_id" value="{{ task.id }}">
-								<input type="hidden" name="start_datetime" value="{{ task.start_datetime|date:'Y-m-d\\TH:i:s' }}">
-								<input type="hidden" name="due_datetime" value="{{ task.due_datetime|date:'Y-m-d\\TH:i:s' }}">
+								<input type="hidden" name="description" value="{{ task.description|default_if_none:'' }}">
+								<input type="hidden" name="assignee" value="{{ task.assignee.id }}">
+								<input type="hidden" name="priority" value="{{ task.priority }}">
+								<input type="hidden" name="deadline" value="{{ task.deadline|date:'Y-m-d\\TH:i' }}">
 								<input type="text" name="name" value="{{ task.name }}"
 								       class="form-control fs-3 fw-bold w-100 "/>
-								<button type="submit" class="confirm-btn">✓</button>
-								<button type="button" class="cancel-btn">✕</button>
+								<button type="submit" class="confirm-btn">OK</button>
+								<button type="button" class="cancel-btn">X</button>
 							</form>
 						</div>
 					</div>
@@ -84,54 +70,75 @@
 				</div>
 				<div class="row">
 					<div class="col-md-6">
-						<div class="field-wrapper" data-field="start" data-id="{{ task.id }}">
+						<p class="mb-2">
+							<strong>{% trans 'Creator' %}:</strong> {{ task.creator.username }}
+						</p>
+						<div class="field-wrapper" data-field="assignee" data-id="{{ task.id }}">
 							<div class="form_errors"></div>
 							<p class="editable-field">
-								<img src="{% static "deps/icons/person-walking.svg" %}" alt="Start Icon" width="16"
-							     height="16">
-								<strong>{% trans 'Start' %}:</strong> {{ task.start_datetime }}</p>
-							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form start-datetime" method="post">
-								{% csrf_token %}
-																<input type="hidden" name="task_id" value="{{ task.id }}">
-																<input type="hidden" name="name" value="{{ task.name }}">
-								<input type="hidden" name="due_datetime" value="{{ task.due_datetime|date:'Y-m-d\\TH:i:s' }}">
-								<input type="datetime-local" name="start_datetime"
-								       value="{{ task.start_datetime|date:'Y-m-d\\TH:i:s' }}"
-								       class="form-control form-control-sm"/>
-								<button type="submit" class="confirm-btn">✓</button>
-								<button type="button" class="cancel-btn">✕</button>
-							</form>
-						</div>
-
-						<div class="field-wrapper" data-field="due" data-id="{{ task.id }}">
-							<div class="form_errors"></div>
-							<p class="editable-field">
-								<img src="{% static "deps/icons/calendar3-event.svg" %}" alt="Due Icon" width="16"
-							     height="16">
-								{% trans "Not specified" as no_due_datetime %}
-
-								<strong>{% trans 'Due' %}:</strong> {{ task.due_datetime|default_if_none:no_due_datetime|default:no_due_datetime }}</p>
-							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form due-datetime" method="post">
+								<strong>{% trans 'Assignee' %}:</strong> {{ task.assignee.username }}
+							</p>
+							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form assignee" method="post">
 								{% csrf_token %}
 								<input type="hidden" name="task_id" value="{{ task.id }}">
-																<input type="hidden" name="name" value="{{ task.name }}">
-								<input type="hidden" name="start_datetime" value="{{ task.start_datetime|date:'Y-m-d\\TH:i:s' }}">
-								<input type="datetime-local" name="due_datetime"
-								       value="{{ task.due_datetime|date:'Y-m-d\\TH:i:s' }}"
-								       class="form-control form-control-sm"/>
-								<button type="submit" class="confirm-btn">✓</button>
-								<button type="button" class="cancel-btn">✕</button>
+								<input type="hidden" name="name" value="{{ task.name }}">
+								<input type="hidden" name="description" value="{{ task.description|default_if_none:'' }}">
+								<input type="hidden" name="priority" value="{{ task.priority }}">
+								<input type="hidden" name="deadline" value="{{ task.deadline|date:'Y-m-d\\TH:i' }}">
+								<select name="assignee" class="form-select form-select-sm">
+									{% for user in assignees %}
+										<option value="{{ user.id }}" {% if user.id == task.assignee.id %}selected{% endif %}>
+											{{ user.username }}
+										</option>
+									{% endfor %}
+								</select>
+								<button type="submit" class="confirm-btn">OK</button>
+								<button type="button" class="cancel-btn">X</button>
 							</form>
 						</div>
-
-
-						{% if type == "Done" %}
-							<p class="mb-3">
-								<img src="{% static "deps/icons/check2-circle.svg" %}" alt="Completed Icon" width="16"
-								     height="16">
-								<strong>{% trans 'Completed' %}:</strong> {{ task.progress.updated_datetime }}
+						<div class="field-wrapper" data-field="deadline" data-id="{{ task.id }}">
+							<div class="form_errors"></div>
+							<p class="editable-field">
+								<img src="{% static "deps/icons/calendar3-event.svg" %}" alt="Deadline Icon" width="16"
+							     height="16">
+								{% trans "Not specified" as no_deadline %}
+								<strong>{% trans 'Deadline' %}:</strong> {{ task.deadline|default_if_none:no_deadline|default:no_deadline }}
 							</p>
-						{% endif %}
+							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form deadline" method="post">
+								{% csrf_token %}
+								<input type="hidden" name="task_id" value="{{ task.id }}">
+								<input type="hidden" name="name" value="{{ task.name }}">
+								<input type="hidden" name="description" value="{{ task.description|default_if_none:'' }}">
+								<input type="hidden" name="assignee" value="{{ task.assignee.id }}">
+								<input type="hidden" name="priority" value="{{ task.priority }}">
+								<input type="datetime-local" name="deadline"
+								       value="{{ task.deadline|date:'Y-m-d\\TH:i' }}"
+								       class="form-control form-control-sm"/>
+								<button type="submit" class="confirm-btn">OK</button>
+								<button type="button" class="cancel-btn">X</button>
+							</form>
+						</div>
+						<div class="field-wrapper" data-field="priority" data-id="{{ task.id }}">
+							<div class="form_errors"></div>
+							<p class="editable-field">
+								<strong>{% trans 'Priority' %}:</strong> {{ task.get_priority_display }}
+							</p>
+							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form priority" method="post">
+								{% csrf_token %}
+								<input type="hidden" name="task_id" value="{{ task.id }}">
+								<input type="hidden" name="name" value="{{ task.name }}">
+								<input type="hidden" name="description" value="{{ task.description }}">
+								<input type="hidden" name="assignee" value="{{ task.assignee.id }}">
+								<input type="hidden" name="deadline" value="{{ task.deadline|date:'Y-m-d\\TH:i' }}">
+								<select name="priority" class="form-select form-select-sm">
+									<option value="LOW" {% if task.priority == "LOW" %}selected{% endif %}>{% trans 'Low' %}</option>
+									<option value="MEDIUM" {% if task.priority == "MEDIUM" %}selected{% endif %}>{% trans 'Medium' %}</option>
+									<option value="HIGH" {% if task.priority == "HIGH" %}selected{% endif %}>{% trans 'High' %}</option>
+								</select>
+								<button type="submit" class="confirm-btn">OK</button>
+								<button type="button" class="cancel-btn">X</button>
+							</form>
+						</div>
 						<div class="field-wrapper" data-field="desc" data-id="{{ task.id }}">
 							<div class="form_errors"></div>
 							<p class="editable-field">
@@ -142,39 +149,87 @@
 							<form action="{% url 'tasks:task_update_info' project.id %}" class="edit-form description" method="post">
 								{% csrf_token %}
 								<input type="hidden" name="task_id" value="{{ task.id }}">
-																<input type="hidden" name="name" value="{{ task.name }}">
-								<input type="hidden" name="start_datetime" value="{{ task.start_datetime|date:'Y-m-d\\TH:i:s' }}">
-								<input type="hidden" name="due_datetime" value="{{ task.due_datetime|date:'Y-m-d\\TH:i:s' }}">
-								<input name="description"
-								          class="form-control form-control-sm" value="{{ task.description }}"/>
-								<button type="submit" class="confirm-btn">✓</button>
-								<button type="button" class="cancel-btn">✕</button>
+								<input type="hidden" name="name" value="{{ task.name }}">
+								<input type="hidden" name="assignee" value="{{ task.assignee.id }}">
+								<input type="hidden" name="priority" value="{{ task.priority }}">
+								<input type="hidden" name="deadline" value="{{ task.deadline|date:'Y-m-d\\TH:i' }}">
+								<textarea name="description"
+								          class="form-control form-control-sm">{{ task.description|default_if_none:'' }}</textarea>
+								<button type="submit" class="confirm-btn">OK</button>
+								<button type="button" class="cancel-btn">X</button>
 							</form>
 						</div>
 					</div>
 
-					{% if type == "InProgress" %}
-						<div class="col-md-8 mx-auto">
-							<div class="p-3 rounded text-center m-3">
-								<label for="status-range{{ task.id }}"
-								       class="form-label fw-semibold text-black fw-5">{% trans 'Task Progress' %}
-								</label>
-								<div class="progress-container">
-									<div class="progress">
-										<div id="progress-bar{{ task.id }}"
-										     class="progress-bar bg-success progress-bar-striped progress-bar-animated text-black fw-bold"
-										     style="width: {{ task.complete_percentage }}%;">
-											{{ task.progress.percentage }}%
-										</div>
-									</div>
-									<input type="range" class="form-range range-slider" min="5" max="100" step="5"
-									       value="{{ task.progress.percentage }}" id="status-range{{ task.id }}"
-									       name="status">
-								</div>
-							</div>
+					<div class="col-md-6">
+						<div class="d-flex flex-column gap-2">
+							{% if task.status == "NEW" and user == task.assignee %}
+								<form action="{% url 'tasks:task_change_status' project.id %}" method="post" class="status-change-form">
+									{% csrf_token %}
+									<input type="hidden" name="task_id" value="{{ task.id }}">
+									<input type="hidden" name="new_status" value="IN_PROGRESS">
+									<button type="submit" class="btn btn-sm btn-success">{% trans 'Start work' %}</button>
+								</form>
+							{% endif %}
+							{% if task.status == "IN_PROGRESS" and user == task.assignee %}
+								<form action="{% url 'tasks:task_change_status' project.id %}" method="post" class="status-change-form">
+									{% csrf_token %}
+									<input type="hidden" name="task_id" value="{{ task.id }}">
+									<input type="hidden" name="new_status" value="ON_REVIEW">
+									<button type="submit" class="btn btn-sm btn-warning">{% trans 'Send to review' %}</button>
+								</form>
+							{% endif %}
+							{% if task.status == "ON_REVIEW" and user == task.creator %}
+								<form action="{% url 'tasks:task_change_status' project.id %}" method="post" class="status-change-form">
+									{% csrf_token %}
+									<input type="hidden" name="task_id" value="{{ task.id }}">
+									<input type="hidden" name="new_status" value="IN_PROGRESS">
+									<button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Return for changes' %}</button>
+								</form>
+								<form action="{% url 'tasks:task_change_status' project.id %}" method="post" class="status-change-form">
+									{% csrf_token %}
+									<input type="hidden" name="task_id" value="{{ task.id }}">
+									<input type="hidden" name="new_status" value="DONE">
+									<button type="submit" class="btn btn-sm btn-success">{% trans 'Approve and close' %}</button>
+								</form>
+							{% endif %}
 						</div>
-					{% endif %}
+					</div>
 				</div>
+			</div>
+
+			<div class="commentBlock rounded" id="result{{ task.id }}">
+				<h6 class="text-success mt-3">{% trans 'Results' %}</h6>
+				<div class="resultList rounded px-2" style="max-height: 300px; overflow-y: auto;">
+					{% for result in task.results.all %}
+						{% include 'tasks/includes/result_item.html' %}
+					{% empty %}
+						<p class="text-muted no-results">{% trans 'No results yet' %}</p>
+					{% endfor %}
+				</div>
+				<form action="{% url 'tasks:add_result' project.id %}" method="post" class="send-result-form">
+					{% csrf_token %}
+					<div class="chat-input-wrapper bg-light p-3 rounded">
+						<div class="form_errors"></div>
+						<div class="position-relative">
+							<input type="hidden" name="task_id" value="{{ task.id }}">
+							<input
+									id="result-input{{ task.id }}"
+									class="form-control rounded-pill ps-4 pe-5"
+									placeholder="{% trans "Add result message" %}..." name="message"
+							>
+							<button
+									class="btn btn-success position-absolute top-50 end-0 translate-middle-y rounded-circle "
+									style="width:2.5rem; height:2.5rem; padding:0;"
+									title="Send" type="submit"
+							>
+								<img src="{% static "deps/icons/send-fill.svg" %}"
+								     alt="Send" width="16" height="16">
+							</button>
+
+						</div>
+					</div>
+				</form>
 			</div>
 
 			<div class="commentBlock rounded" id="comment{{ task.id }}">
@@ -207,14 +262,24 @@
 									title="Send" type="submit"
 							>
 								<img src="{% static "deps/icons/send-fill.svg" %}"
-								     alt="Catalog Icon" width="16" height="16">
+								     alt="Send" width="16" height="16">
 							</button>
 
 						</div>
 					</div>
 				</form>
 			</div>
+
+			<div class="mt-3">
+				<h6 class="text-success">{% trans 'Change history' %}</h6>
+				<div class="list-group">
+					{% for entry in task.change_logs.all %}
+						{% include 'tasks/includes/change_log_item.html' %}
+					{% empty %}
+						<div class="text-muted">{% trans 'No changes yet' %}</div>
+					{% endfor %}
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
-

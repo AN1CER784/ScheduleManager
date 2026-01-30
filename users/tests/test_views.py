@@ -3,12 +3,13 @@ from django.test import TestCase
 from django.urls import reverse
 
 from projects.models import Project
-from users.models import User
+from users.models import User, Company
 
 
 class UserLoginViewTestCase(TestCase):
     def setUp(self):
-        User.objects.create_user(username='XXXX', email='test@mail.com', password='1111')
+        company = Company.objects.create(name="Acme")
+        User.objects.create_user(username='XXXX', email='test@mail.com', password='1111', company=company)
 
     def test_login_by_username(self):
         response = self.client.post(reverse('users:login'), {'username': 'XXXX', 'password': '1111'},
@@ -33,7 +34,7 @@ class UserRegisterViewTestCase(TestCase):
     def test_register(self):
         response = self.client.post(reverse('users:signup'),
                                     {'username': 'XXXX', 'email': 'test@mail.com', 'password1': 'LLLL1111',
-                                     'password2': 'LLLL1111'},
+                                     'password2': 'LLLL1111', 'company_name': 'Acme'},
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(User.objects.filter(username='XXXX').exists())
@@ -41,7 +42,7 @@ class UserRegisterViewTestCase(TestCase):
     def test_register_invalid_password2(self):
         response = self.client.post(reverse('users:signup'),
                                     {'username': 'XXXX', 'email': 'test@mail.com', 'password1': 'LLLL1111',
-                                     'password2': 'LLLL2222'},
+                                     'password2': 'LLLL2222', 'company_name': 'Acme'},
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(User.objects.filter(username='XXXX').exists())
@@ -49,7 +50,7 @@ class UserRegisterViewTestCase(TestCase):
     def test_register_invalid_password(self):
         response = self.client.post(reverse('users:signup'),
                                     {'username': 'XXXX', 'email': 'test@mail.com', 'password1': '1111',
-                                     'password2': '1111'},
+                                     'password2': '1111', 'company_name': 'Acme'},
                                     follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(User.objects.filter(username='XXXX').exists())
@@ -57,7 +58,8 @@ class UserRegisterViewTestCase(TestCase):
 
 class UserProfileViewTestCase(TestCase):
     def setUp(self):
-        User.objects.create_user(username='XXXX', email='test@mail.com', password='1111')
+        company = Company.objects.create(name="Acme")
+        User.objects.create_user(username='XXXX', email='test@mail.com', password='1111', company=company)
         self.client.login(username='XXXX', password='1111')
 
     def test_profile(self):
@@ -97,7 +99,8 @@ class UserProfileViewTestCase(TestCase):
 
 class UserProjectsViewTestCase(TestCase):
     def setUp(self):
-        User.objects.create_user(username='XXXX', email='XXXXXXXXXXXXX', password='1111')
+        company = Company.objects.create(name="Acme")
+        User.objects.create_user(username='XXXX', email='XXXXXXXXXXXXX', password='1111', company=company)
         self.client.login(username='XXXX', password='1111')
 
     def test_projects(self):
@@ -108,19 +111,12 @@ class UserProjectsViewTestCase(TestCase):
 
 class UserTasksViewTestCase(TestCase):
     def setUp(self):
-        user = User.objects.create_user(username='XXXX', email='XXXXXXXXXXXXX', password='1111')
-        self.project = Project.objects.create(name='Test Project', user=user)
+        company = Company.objects.create(name="Acme")
+        user = User.objects.create_user(username='XXXX', email='XXXXXXXXXXXXX', password='1111', company=company)
+        self.project = Project.objects.create(name='Test Project', company=company, created_by=user)
         self.client.login(username='XXXX', password='1111')
 
     def test_tasks(self):
         response = self.client.get(reverse('users:tasks', kwargs={"id": self.project.id}))
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['user'].is_authenticated)
-
-
-class AnalysisViewTestCase(TestCase):
-    def test_analysis_view(self):
-        User.objects.create_user(username='XXXXXXXX', password='XXXXXXXXXXXX')
-        self.client.login(username='XXXXXXXX', password='XXXXXXXXXXXX')
-        response = self.client.get(reverse('users:summaries'))
-        self.assertEqual(response.status_code, 200)

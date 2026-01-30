@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load date_tasks_tags %}
+{% load common_tags %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'deps/css/schedule.css' %}">
+{% endblock %}
+
+{% block content %}
+	<div class="page-header">
+		<div>
+			<div class="page-eyebrow">{% trans 'Planning' %}</div>
+			<h1 class="page-title">{% trans 'Schedule' %}</h1>
+		</div>
+	</div>
+
+	<form id="schedule-filters" class="filter-panel" method="get">
+		<div class="filter-group">
+			<label>{% trans "Project" %}</label>
+			<select name="project" class="form-select">
+				<option value="">{% trans "All" %}</option>
+				{% for project in projects %}
+					<option value="{{ project.id }}" {% if filters.project == project.id|stringformat:"s" %}selected{% endif %}>{{ project.name }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="filter-group">
+			<label>{% trans "Assignee" %}</label>
+			<select name="assignee" class="form-select">
+				<option value="">{% trans "All" %}</option>
+				{% for user in assignees %}
+					<option value="{{ user.id }}" {% if filters.assignee == user.id|stringformat:"s" %}selected{% endif %}>{{ user.username }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="filter-group">
+			<label>{% trans "Status" %}</label>
+			<select name="status" class="form-select" multiple>
+				{% for value, label in statuses %}
+					<option value="{{ value }}" {% if value in filters.status %}selected{% endif %}>{{ label }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="filter-group">
+			<label>{% trans "Period" %}</label>
+			<select name="period" class="form-select">
+				<option value="today" {% if filters.period == "today" %}selected{% endif %}>{% trans "Today" %}</option>
+				<option value="week" {% if filters.period == "week" %}selected{% endif %}>{% trans "Week" %}</option>
+				<option value="month" {% if filters.period == "month" %}selected{% endif %}>{% trans "Month" %}</option>
+				<option value="custom" {% if filters.period == "custom" %}selected{% endif %}>{% trans "Custom" %}</option>
+			</select>
+		</div>
+		<div class="filter-group">
+			<label>{% trans "Start date" %}</label>
+			<input type="date" class="form-control" name="start_date" value="{{ filters.start_date }}">
+		</div>
+		<div class="filter-group">
+			<label>{% trans "End date" %}</label>
+			<input type="date" class="form-control" name="end_date" value="{{ filters.end_date }}">
+		</div>
+		<div class="filter-actions">
+			<button type="submit" class="btn btn-primary">{% trans "Apply" %}</button>
+			<a class="btn btn-outline-secondary" href="{% url 'schedule:calendar' %}">{% trans "Reset" %}</a>
+		</div>
+	</form>
+
+	<div class="schedule-grid">
+		<section class="schedule-card">
+			<h3>{% trans "My plan" %}</h3>
+			<div class="schedule-list">
+				<h6>{% trans "Today" %}</h6>
+				{% for task in today_tasks %}
+					<div class="schedule-item">
+						<strong>{{ task.name }}</strong>
+						<span>{{ task.project.name }}</span>
+					</div>
+				{% empty %}
+					<p class="text-muted">{% trans "No tasks for today" %}</p>
+				{% endfor %}
+				<h6 class="mt-3">{% trans "This week" %}</h6>
+				{% for task in week_tasks %}
+					<div class="schedule-item">
+						<strong>{{ task.name }}</strong>
+						<span>{{ task.deadline|date:"M d" }}</span>
+					</div>
+				{% empty %}
+					<p class="text-muted">{% trans "No tasks due this week" %}</p>
+				{% endfor %}
+				<h6 class="mt-3">{% trans "On review" %}</h6>
+				{% for task in review_tasks %}
+					<div class="schedule-item">
+						<strong>{{ task.name }}</strong>
+						<span>{{ task.assignee.username }}</span>
+					</div>
+				{% empty %}
+					<p class="text-muted">{% trans "No tasks on review" %}</p>
+				{% endfor %}
+			</div>
+		</section>
+		<section class="schedule-card">
+			<h3>{% trans "Overdue" %}</h3>
+			{% for task in overdue_tasks %}
+				<div class="schedule-item overdue">
+					<strong>{{ task.name }}</strong>
+					<span>{{ task.deadline|date:"M d" }}</span>
+				</div>
+			{% empty %}
+				<p class="text-muted">{% trans "No overdue tasks" %}</p>
+			{% endfor %}
+			<h3 class="mt-4">{% trans "Upcoming deadlines" %}</h3>
+			{% for task in upcoming_tasks %}
+				<div class="schedule-item">
+					<strong>{{ task.name }}</strong>
+					<span>{{ task.deadline|date:"M d" }}</span>
+				</div>
+			{% empty %}
+				<p class="text-muted">{% trans "No upcoming deadlines" %}</p>
+			{% endfor %}
+		</section>
+		<section class="schedule-card">
+			<h3>{% trans "Workload" %}</h3>
+			{% for item in workload %}
+				<div class="workload-row">
+					<span>{{ item.assignee__username }}</span>
+					<span class="workload-count">{{ item.count }}</span>
+				</div>
+			{% empty %}
+				<p class="text-muted">{% trans "No active tasks" %}</p>
+			{% endfor %}
+		</section>
+	</div>
+
+	<div class="schedule-tabs">
+		<button class="tab-btn active" data-target="#agenda-tab">{% trans "Agenda" %}</button>
+		<button class="tab-btn" data-target="#calendar-tab">{% trans "Calendar" %}</button>
+	</div>
+
+	<div id="agenda-tab" class="tab-panel active">
+		<h3>{% trans "Agenda" %}</h3>
+		<p class="text-muted">{{ agenda_range.0 }}  {{ agenda_range.1 }}</p>
+		<div class="agenda-list">
+			{% for task in agenda_tasks %}
+				<div class="agenda-item">
+					<div>
+						<strong>{{ task.name }}</strong>
+						<span class="text-muted">{{ task.project.name }}</span>
+					</div>
+					<span>{{ task.deadline|date:"M d, H:i" }}</span>
+				</div>
+			{% empty %}
+				<p class="text-muted">{% trans "No tasks in selected period" %}</p>
+			{% endfor %}
+		</div>
+	</div>
+
+	<div id="calendar-tab" class="tab-panel">
+		<div class="calendar-header">
+			<h3>{{ month_datetime|date:"F" }}</h3>
+		</div>
+		<div class="calendar-grid">
+			<div class="calendar-weekdays">
+				<div>{% translate 'Mon' %}</div>
+				<div>{% translate 'Tue' %}</div>
+				<div>{% translate 'Wed' %}</div>
+				<div>{% translate 'Thu' %}</div>
+				<div>{% translate 'Fri' %}</div>
+				<div>{% translate 'Sat' %}</div>
+				<div>{% translate 'Sun' %}</div>
+			</div>
+			{% get_dates_of_month month_datetime as dates_of_month %}
+			{% get_tasks_by_date dates_of_month.start_of_month dates_of_month.end_of_month as month_tasks %}
+			{% for week in current_month %}
+				<div class="calendar-row">
+					{% for day in week %}
+						<div class="calendar-day {% if day.month != month_datetime.month %}is-muted{% endif %}">
+							<div class="day-number">{{ day.day }}</div>
+							{% if month_tasks|get_item:day %}
+								<div class="day-tasks" data-day="{{ day }}">
+									{{ month_tasks|get_item:day|length }}
+								</div>
+							{% endif %}
+						</div>
+					{% endfor %}
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+	<script src="{% static 'deps/js/jquery/schedule.js' %}"></script>
+{% endblock %}

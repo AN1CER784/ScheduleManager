@@ -3,14 +3,19 @@
 {% load i18n %}
 
 {% block css %}
-	<link rel="stylesheet" href="{% static 'deps/css/tasks.css' %}">
+	<link rel="stylesheet" href="{% static 'deps/css/projects.css' %}">
 {% endblock %}
 {% block content %}
-	<div class="fs-3 fw-bold text-center text-success mb-3 shadow-sm p-3 bg-light rounded">
-		{% trans 'Projects' %}
+	<div class="page-header">
+		<div>
+			<div class="page-eyebrow">{% trans 'Workspace' %}</div>
+			<h1 class="page-title">{% trans 'Projects' %}</h1>
+		</div>
+		{% trans "+ Add project" as add_project_text %}
+		{% include 'includes/add_button.html' with button_target="addProjectModal" button_name=add_project_text %}
 	</div>
 	<div>
-		<div id="projectsContainer">
+		<div id="projectsContainer" class="project-grid">
 			{% for project in projects %}
 				{% include "projects/includes/project_item.html" with project=project %}
 			{% endfor %}
@@ -20,9 +25,6 @@
 		     style="display: none">
 			<p class="m-0">{% trans 'Add some projects here to see them in list' %}</p>
 		</div>
-			{% trans "+ Add project" as add_project_text %}
-			{% include 'includes/add_button.html' with button_target="addProjectModal" button_name=add_project_text %}
-
 		<div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel"
 		     aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">

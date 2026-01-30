@@ -3,27 +3,57 @@
 {% load i18n %}
 
 {% block css %}
-	<link href="{% static 'deps/css/footer.css' %}" rel="stylesheet">
+	<link href="{% static 'deps/css/home.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-	<div class="bg-light border shadow-sm rounded p-5 text-center">
+	<section class="hero">
+		<div>
+			<h1 class="hero-title">ScheduleManager</h1>
+			<p class="hero-subtitle">
+				{% trans "Modern task management for teams. Keep ownership, deadlines, and results clear without noise." %}
+			</p>
+			<div class="hero-actions">
+				<a href="{% if not user.is_authenticated %}{% url 'users:login' %}{% else %}{% url 'users:profile' %}{% endif %}"
+				   class="btn btn-primary btn-lg">
+					{% trans "Let's Go" %}
+				</a>
+				<a href="{% url 'users:projects' %}" class="btn btn-outline-secondary btn-lg">
+					{% trans "View projects" %}
+				</a>
+			</div>
+		</div>
+		<div class="hero-panel">
 			{{ content.content|safe }}
-		<a href="
-				{% if not user.is_authenticated %}{% url 'users:login' %}{% else %}{% url 'users:profile' %}{% endif %}"
-		   class="btn btn-success btn-lg px-5">
-			{% trans "Let's Go" %}
-		</a>
-	</div>
+		</div>
+	</section>
 
+	<section class="feature-grid">
+		<div class="feature-card">
+			<h4>{% trans "Clear workflow" %}</h4>
+			<p class="text-muted">{% trans "Four statuses, strict transitions, and transparent accountability." %}</p>
+		</div>
+		<div class="feature-card">
+			<h4>{% trans "Results & history" %}</h4>
+			<p class="text-muted">{% trans "Track outcomes and every key change on each task." %}</p>
+		</div>
+		<div class="feature-card">
+			<h4>{% trans "Reward system" %}</h4>
+			<p class="text-muted">{% trans "Built-in bonus balance for on-time delivery." %}</p>
+		</div>
+	</section>
+
+	<div class="callout">
+		<strong>{% trans "Built for companies" %}</strong>
+		<p class="mb-0 text-muted">{% trans "Projects keep teams aligned while tasks keep execution clean." %}</p>
+	</div>
 {% endblock %}
 
 {% block footer %}
-	<footer class="mt-5 bg-success bg-gradient text-white py-4">
+	<footer class="footer-modern">
 		<div class="container text-center">
-			<p class="mb-0">ScheduleManager © 2025</p>
-			<p class="mb-0">Created by <span class="fw-bold text-light">An1cer</span></p>
-			<small>All rights reserved.</small>
+			<p class="mb-0">ScheduleManager © 2026</p>
+			<small>Corporate task management platform.</small>
 		</div>
 	</footer>
-{% endblock %}
+{% endblock %}

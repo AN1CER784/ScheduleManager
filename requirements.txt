@@ -16,12 +16,10 @@ click-repl==0.3.0
 Django==5.2.1
 django-debug-toolbar==5.2.0
 frozenlist==1.7.0
-g4f==0.5.3.1
 idna==3.10
 kombu==5.5.4
 multidict==6.6.0
 nest-asyncio==1.6.0
-numpy==1.26.4
 packaging==25.0
 pillow==11.2.1
 prompt_toolkit==3.0.51

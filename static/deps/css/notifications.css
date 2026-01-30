@@ -1,0 +1,56 @@
+.notification-stack {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 1055;
+  display: grid;
+  gap: 0.75rem;
+  max-width: 360px;
+}
+
+.notice {
+  background: var(--surface);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 0.9rem 1rem;
+  display: grid;
+  grid-template-columns: 6px 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  animation: slideIn 0.3s ease;
+}
+
+.notice-bar {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.notice-success .notice-bar {
+  background: var(--accent);
+}
+
+.notice-warning .notice-bar {
+  background: var(--warning);
+}
+
+.notice-danger .notice-bar {
+  background: var(--danger);
+}
+
+.notice-message {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.notice-close {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

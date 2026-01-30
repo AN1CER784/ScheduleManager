@@ -1,59 +1,39 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
+from django.utils import timezone
 
-from tasks.forms import TaskCreateForm, TaskCommentForm, TaskUpdateForm
+from tasks.forms import TaskCreateForm, TaskCommentForm, TaskUpdateForm, TaskResultForm
+from users.models import User, Company
 
 
 class TaskCreateFormTestCase(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.company = Company.objects.create(name="Acme")
+        self.user = User.objects.create_user(username='creator', password='pass', company=self.company)
+        self.assignee = User.objects.create_user(username='assignee', password='pass', company=self.company)
+
     def test_create_task(self):
-        form_data = {'name': 'Title for the test task',
-                     'description': 'Description for the test task',
-                     'start_date': datetime.now().date() + timedelta(days=1),
-                     'start_time': datetime.now().time(), }
-        form = TaskCreateForm(data=form_data)
+        request = self.factory.get("/")
+        request.user = self.user
+        form_data = {'name': 'Task title',
+                     'description': 'Task description',
+                     'assignee': self.assignee.id,
+                     'priority': 'MEDIUM',
+                     'deadline': (timezone.now() + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M')}
+        form = TaskCreateForm(data=form_data, request=request)
         self.assertTrue(form.is_valid())
 
-    def test_create_task_with_invalid_due_date(self):
-        form_data = {'name': 'Title for the test task',
-                     'description': 'Description for the test task',
-                     'start_date': datetime.now().date(),
-                     'start_time': datetime.now().time(),
-                     'due_date': datetime.now().date() - timedelta(days=1),
-                     'due_time': datetime.now().time()}
-        form = TaskCreateForm(data=form_data)
-        self.assertFalse(form.is_valid())
-
-    def test_create_task_with_invalid_start_date(self):
-        form_data = {'name': 'Title for the test task',
-                     'description': 'Description for the test task',
-                     'start_date': datetime.now().date() - timedelta(days=1),
-                     'start_time': datetime.now().time(),
-                     'due_date': datetime.now().date(),
-                     'due_time': datetime.now().time()}
-        form = TaskCreateForm(data=form_data)
-        self.assertFalse(form.is_valid())
-
-    def test_create_task_with_invalid_name(self):
-        form_data = {'name': '#########',
-                     'description': 'Description for the test task',
-                     'start_date': datetime.now().date(),
-                     'start_time': datetime.now().time(),
-                     'due_date': datetime.now().date() + timedelta(days=1),
-                     'due_time': datetime.now().time()}
-
-        form = TaskCreateForm(data=form_data)
-        self.assertFalse(form.is_valid())
-
-    def test_create_task_with_invalid_description(self):
-        form_data = {'name': 'Title for the test task',
-                     'description': '#########',
-                     'start_date': datetime.now().date(),
-                     'start_time': datetime.now().time(),
-                     'due_date': datetime.now().date() + timedelta(days=1),
-                     'due_time': datetime.now().time()}
-
-        form = TaskCreateForm(data=form_data)
+    def test_create_task_invalid_deadline(self):
+        request = self.factory.get("/")
+        request.user = self.user
+        form_data = {'name': 'Task title',
+                     'description': 'Task description',
+                     'assignee': self.assignee.id,
+                     'priority': 'MEDIUM',
+                     'deadline': (timezone.now() - timedelta(days=400)).strftime('%Y-%m-%dT%H:%M')}
+        form = TaskCreateForm(data=form_data, request=request)
         self.assertFalse(form.is_valid())
 
 
@@ -64,50 +44,37 @@ class CommentFormTestCase(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_create_comment_with_invalid_text(self):
-        form_data = {'text': '#########'}
+        form_data = {'text': '##'}
         form = TaskCommentForm(data=form_data)
         self.assertFalse(form.is_valid())
 
 
-class TaskUpdateFormTestCase(TestCase):
-    def test_update_task(self):
-        form_data = {'name': 'Title for the test task',
-                     'description': 'Description for the test task',
-                     'start_datetime': datetime.now(),
-                     'due_datetime': datetime.now() + timedelta(days=1), }
-        form = TaskUpdateForm(data=form_data)
+class TaskResultFormTestCase(TestCase):
+    def test_create_result(self):
+        form_data = {'message': 'Result message'}
+        form = TaskResultForm(data=form_data)
         self.assertTrue(form.is_valid())
 
-    def test_update_task_with_invalid_due_date(self):
-        form_data = {'name': 'Title for the test task',
-                     'description': 'Description for the test task',
-                     'start_datetime': datetime.now(),
-                     'due_datetime': datetime.now() - timedelta(days=1),}
-        form = TaskCreateForm(data=form_data)
+    def test_create_result_invalid(self):
+        form_data = {'message': 'a'}
+        form = TaskResultForm(data=form_data)
         self.assertFalse(form.is_valid())
 
-    def test_update_task_with_invalid_start_date(self):
-        form_data = {'name': 'Title for the test task',
-                     'description': 'Description for the test task',
-                     'start_datetime': datetime.now() + timedelta(days=1) ,
-                     'due_datetime': datetime.now()}
-        form = TaskCreateForm(data=form_data)
-        self.assertFalse(form.is_valid())
 
-    def test_update_task_with_invalid_name(self):
-        form_data = {'name': '#########',
-                     'description': 'Description for the test task',
-                     'start_datetime': datetime.now(),
-                     'due_datetime': datetime.now() + timedelta(days=1),}
+class TaskUpdateFormTestCase(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.company = Company.objects.create(name="Acme")
+        self.user = User.objects.create_user(username='creator', password='pass', company=self.company)
+        self.assignee = User.objects.create_user(username='assignee', password='pass', company=self.company)
 
-        form = TaskCreateForm(data=form_data)
-        self.assertFalse(form.is_valid())
-
-    def test_update_task_with_invalid_description(self):
-        form_data = {'name': 'Title for the test task',
-                     'description': '#########',
-                     'start_datetime': datetime.now(),
-                     'due_datetime': datetime.now() + timedelta(days=1),}
-
-        form = TaskCreateForm(data=form_data)
-        self.assertFalse(form.is_valid())
+    def test_update_task(self):
+        request = self.factory.get("/")
+        request.user = self.user
+        form_data = {'name': 'Updated title',
+                     'description': 'Updated description',
+                     'assignee': self.assignee.id,
+                     'priority': 'HIGH',
+                     'deadline': (timezone.now() + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M')}
+        form = TaskUpdateForm(data=form_data, request=request)
+        self.assertTrue(form.is_valid())

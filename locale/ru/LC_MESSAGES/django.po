@@ -147,11 +147,6 @@ msgstr "Статус"
 msgid "Overdue"
 msgstr "Просрочено"
 
-#: analysis/templates/analysis/emails/report_email.html:40
-#: tasks/templates/tasks/tasks.html:69
-msgid "Due date"
-msgstr "Срок выполнения"
-
 #: analysis/templates/analysis/emails/report_email.html:48
 #: analysis/templates/analysis/includes/analysis_accordion.html:65
 msgid "Overall Statistics"
@@ -304,15 +299,15 @@ msgstr "Выбрать день"
 msgid "Generate Summary"
 msgstr "Сгенерировать отчет"
 
-#: analysis/views.py:33
+#: analysis/views/generate_summary_view.py:24
 msgid "Your summary will be generated soon"
 msgstr "Ваш отчет будет сгенерирован в ближайшее время"
 
-#: analysis/views.py:38
+#: analysis/views/generate_summary_view.py:29
 msgid "Your summary could not be generated"
 msgstr "Не удалось сгенерировать ваш отчет"
 
-#: analysis/views.py:46
+#: analysis/views/delete_summary_view.py:12
 msgid "Summary was deleted"
 msgstr "Отчет был удален"
 
@@ -335,33 +330,20 @@ msgstr "%(field)s должно быть в прошлом"
 msgid "Let's Go"
 msgstr "Поехали"
 
-#: main/views.py:14
+#: main/views/index_view.py:16
 msgid "Home page"
 msgstr "Главная страница"
 
-#: main/views.py:25
+#: main/views/about_view.py:16
 msgid "About page"
 msgstr "О нас"
 
-#: projects/forms.py:14 tasks/forms.py:36 tasks/forms.py:40 tasks/forms.py:85
-#: tasks/forms.py:89 tasks/forms.py:133 users/forms.py:41
+#: projects/forms/add_project_form.py:14 users/forms/profile_form.py:19
 msgid "Only english and russian letters are allowed, minimum 5 symbols"
 msgstr "Разрешены только английские и русские буквы, минимум 5 символов"
 
-#: projects/models.py:16
-msgid "No term"
-msgstr "Нет срока"
-
-#: projects/models.py:20 projects/models.py:25
-msgid "Start "
-msgstr "Начало "
-
-#: projects/models.py:27
-msgid " To "
-msgstr " До "
-
 #: projects/templates/projects/projects.html:10 templates/base.html:57
-#: users/views/project_views.py:33
+#: users/views/user_projects_view.py:33
 msgid "Projects"
 msgstr "Проекты"
 
@@ -394,23 +376,23 @@ msgstr "Отмена"
 msgid "Create"
 msgstr "Создать"
 
-#: projects/views.py:22
+#: projects/views/add_project_view.py:23
 msgid "Project was successfully created"
 msgstr "Проект был успешно создан"
 
-#: projects/views.py:26
+#: projects/views/add_project_view.py:27
 msgid "Error creating project"
 msgstr "Ошибка при создании проекта"
 
-#: projects/views.py:35
+#: projects/views/delete_project_view.py:13
 msgid "Project was successfully deleted"
 msgstr "Проект был успешно удален"
 
-#: projects/views.py:51
+#: projects/views/update_project_view.py:21
 msgid "Project was successfully edited"
 msgstr "Проект был успешно отредактирован"
 
-#: projects/views.py:55
+#: projects/views/update_project_view.py:25
 msgid "Project was not edited"
 msgstr "Комментарий не отредактирован"
 
@@ -454,55 +436,17 @@ msgstr "Задачи на"
 msgid "Task"
 msgstr "Задача"
 
-#: schedule/templates/schedule/calendar.html:68
-#: tasks/templates/tasks/includes/task_item.html:92
-msgid "Start"
-msgstr "Начало"
-
-#: schedule/templates/schedule/calendar.html:70
-#: tasks/templates/tasks/includes/task_item.html:113
-msgid "Due"
-msgstr "Окончание"
-
-#: schedule/views.py:32
+#: schedule/views/schedule_calendar_view.py:18
 msgid "Calendar"
 msgstr "Календарь"
 
-#: tasks/forms.py:20
-msgid "Due date and time must be after start date and time"
-msgstr "Дата и время окончания должны быть позже даты и времени начала"
-
-#: tasks/forms.py:29
-msgid "Write start date"
-msgstr "Укажите дату начала"
-
-#: tasks/forms.py:30
-msgid "Write start time"
-msgstr "Укажите время начала"
-
-#: tasks/forms.py:31
-msgid "Write due date"
-msgstr "Укажите дату окончания"
-
-#: tasks/forms.py:32
-msgid "Write due time"
-msgstr "Укажите время окончания"
-
-#: tasks/forms.py:33 tasks/forms.py:82
+#: tasks/forms/task_create_form.py:15 tasks/forms/task_update_form.py:15
 msgid "Write task title"
 msgstr "Введите название задачи"
 
-#: tasks/forms.py:37 tasks/forms.py:86
+#: tasks/forms/task_create_form.py:19 tasks/forms/task_update_form.py:19
 msgid "Write description"
 msgstr "Введите описание"
-
-#: tasks/forms.py:77
-msgid "Write start date and time"
-msgstr "Укажите дату и время начала"
-
-#: tasks/forms.py:79
-msgid "Write due date and time"
-msgstr "Укажите дату и время окончания"
 
 #: tasks/templates/tasks/includes/comment_item.html:58
 msgid "Delete"
@@ -525,10 +469,6 @@ msgstr "Описание"
 msgid "No description"
 msgstr "Нет описания"
 
-#: tasks/templates/tasks/includes/task_item.html:160
-msgid "Task Progress"
-msgstr "Прогресс задачи"
-
 #: tasks/templates/tasks/includes/task_item.html:201
 msgid "Add comment"
 msgstr "Добавить комментарий"
@@ -548,22 +488,6 @@ msgstr "+ Добавить задачу"
 #: tasks/templates/tasks/tasks.html:44
 msgid "New Task"
 msgstr "Новая задача"
-
-#: tasks/templates/tasks/tasks.html:57
-msgid "Start date"
-msgstr "Дата начала"
-
-#: tasks/templates/tasks/tasks.html:62
-msgid "Start time"
-msgstr "Время начала"
-
-#: tasks/templates/tasks/tasks.html:73
-msgid "Due time"
-msgstr "Время окончания"
-
-#: tasks/templates/tasks/tasks.html:82
-msgid "Add due date & time"
-msgstr "Добавить дату и время окончания"
 
 #: tasks/templates/tasks/tasks.html:88
 msgid "Task title"
@@ -589,68 +513,56 @@ msgstr "Выполненные"
 msgid "There is no completed task"
 msgstr "Завершенных задач нет"
 
-#: tasks/views/comment_views.py:23
+#: tasks/views/task_add_comment_view.py:21
 msgid "Comment was successfully added"
 msgstr "Комментарий успешно добавлен"
 
-#: tasks/views/comment_views.py:29
+#: tasks/views/task_add_comment_view.py:26
 msgid "Comment was not added"
 msgstr "Комментарий не добавлен"
 
-#: tasks/views/comment_views.py:37
+#: tasks/views/task_delete_comment_view.py:14
 msgid "Comment was deleted"
 msgstr "Комментарий удален"
 
-#: tasks/views/comment_views.py:51
+#: tasks/views/task_edit_comment_view.py:20
 msgid "Comment was successfully edited"
 msgstr "Комментарий успешно отредактирован"
 
-#: tasks/views/comment_views.py:55
+#: tasks/views/task_edit_comment_view.py:24
 msgid "Comment was not edited"
 msgstr "Комментарий не отредактирован"
 
-#: tasks/views/task_views.py:20
+#: tasks/views/add_task_view.py:24
 msgid "Task was successfully added"
 msgstr "Задача успешно добавлена"
 
-#: tasks/views/task_views.py:24
+#: tasks/views/add_task_view.py:29
 msgid "Task was not added"
 msgstr "Задача не добавлена"
 
-#: tasks/views/task_views.py:32
+#: tasks/views/delete_task_view.py:13
 msgid "Task was deleted"
 msgstr "Задача удалена"
 
-#: tasks/views/task_views.py:41
-msgid "Task was successfully completed"
-msgstr "Задача успешно завершена"
-
-#: tasks/views/task_views.py:51
-msgid "Task was successfully incompleted"
-msgstr "Задача помечена как незавершенная"
-
-#: tasks/views/task_views.py:61
-msgid "Task progress was successfully updated"
-msgstr "Прогресс задачи успешно обновлен"
-
-#: tasks/views/task_views.py:77
+#: tasks/views/task_update_info_view.py:40
 msgid "Task was successfully updated"
 msgstr "Задача успешно обновлена"
 
-#: tasks/views/task_views.py:81
+#: tasks/views/task_update_info_view.py:45
 msgid "Task was not updated"
 msgstr "Задача не обновлена"
 
-#: templates/base.html:49 users/views/project_views.py:17
+#: templates/base.html:49
 msgid "Schedule"
 msgstr "Расписание"
 
-#: templates/base.html:65 users/views/analysis_views.py:13
+#: templates/base.html:65
 msgid "Analysis"
 msgstr "Анализ"
 
 #: templates/base.html:75 users/templates/users/password_change_done.html:8
-#: users/templates/users/profile.html:8 users/views/user_views.py:78
+#: users/templates/users/profile.html:8 users/views/profile_view.py:78
 msgid "Profile"
 msgstr "Профиль"
 
@@ -658,7 +570,7 @@ msgstr "Профиль"
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:95 users/views/user_views.py:20
+#: templates/base.html:95 users/views/login_view.py:20
 msgid "Login"
 msgstr "Войти"
 
@@ -678,8 +590,7 @@ msgstr "Спасибо за использование нашего сервис
 msgid "The Team of ScheduleManager"
 msgstr "Команда ScheduleManager"
 
-#: users/forms.py:52 users/templates/users/password_change_form.html:25
-#: users/templates/users/password_reset_confirm.html:15
+#: users/forms/user_password_change_form.py:15
 msgid "New password"
 msgstr "Новый пароль"
 
@@ -834,65 +745,65 @@ msgstr "Подтвердите пароль"
 msgid "Agree to terms and conditions"
 msgstr "Принять условия использования"
 
-#: users/views/password_views.py:17
+#: users/views/password_change_view.py:16
 msgid "Password change"
 msgstr "Изменение пароля"
 
-#: users/views/password_views.py:21 users/views/password_views.py:78
+#: users/views/password_change_view.py:20 users/views/password_reset_confirm_view.py:17
 msgid "Password changed successfully"
 msgstr "Пароль успешно изменен"
 
-#: users/views/password_views.py:25 users/views/password_views.py:82
+#: users/views/password_change_view.py:24 users/views/password_reset_confirm_view.py:21
 msgid "Password change error"
 msgstr "Ошибка при изменении пароля"
 
-#: users/views/password_views.py:34
+#: users/views/password_change_done_view.py:10
 msgid "Password change done"
 msgstr "Изменение пароля завершено"
 
-#: users/views/password_views.py:47
+#: users/views/password_reset_view.py:18
 msgid "Password reset"
 msgstr "Сброс пароля"
 
-#: users/views/password_views.py:51
+#: users/views/password_reset_view.py:22
 msgid "Password reset email sent successfully"
 msgstr "Ссылка для сброса пароля успешно отправлена"
 
-#: users/views/password_views.py:55
+#: users/views/password_reset_view.py:26
 msgid "Password reset error"
 msgstr "Ошибка сброса пароля"
 
-#: users/views/password_views.py:64
+#: users/views/password_reset_done_view.py:10
 msgid "Check your email"
 msgstr "Проверьте почту"
 
-#: users/views/password_views.py:74
+#: users/views/password_reset_confirm_view.py:13
 msgid "Password reset confirm"
 msgstr "Подтвердите сброс пароля"
 
-#: users/views/password_views.py:91
+#: users/views/password_reset_complete_view.py:10
 msgid "Password reset complete"
 msgstr "Сброс пароля завершен"
 
-#: users/views/user_views.py:29
+#: users/views/login_view.py:24
 #, python-format
 msgid "%(username)s, You have successfully logged in"
 msgstr "%(username)s, вы успешно вошли в систему"
 
-#: users/views/user_views.py:49
+#: users/views/signup_view.py:17
 msgid "Signup"
 msgstr "Регистрация"
 
-#: users/views/user_views.py:59
+#: users/views/signup_view.py:26
 #, python-format
 msgid "%(username)s, You have successfully registered and logged in"
 msgstr "%(username)s, вы успешно зарегистрировались и вошли в систему"
 
-#: users/views/user_views.py:85
+#: users/views/profile_view.py:27
 msgid "Data updated successfully"
 msgstr "Данные успешно обновлены"
 
-#: users/views/user_views.py:89
+#: users/views/profile_view.py:31
 msgid "Data update error"
 msgstr "Ошибка обновления данных"
 

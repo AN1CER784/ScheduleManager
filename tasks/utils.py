@@ -1,14 +1,19 @@
-from datetime import date, time
+from typing import Any
 
-from django.utils import timezone
-
-
-def combine_date_and_time(date_value: date, time_value: time):
-    if not date_value or not time_value:
-        return None
-    datetime = timezone.make_aware(
-        timezone.datetime.combine(date_value, time_value),
-        timezone.get_current_timezone())
-    return datetime
+from tasks.models import Task, TaskChangeLog
 
 
+def log_task_changes(task: Task, user, changes: dict[str, tuple[Any, Any]]) -> None:
+    entries = []
+    for field_name, (old_value, new_value) in changes.items():
+        if old_value == new_value:
+            continue
+        entries.append(TaskChangeLog(
+            task=task,
+            changed_by=user,
+            field_name=field_name,
+            old_value=str(old_value) if old_value is not None else None,
+            new_value=str(new_value) if new_value is not None else None,
+        ))
+    if entries:
+        TaskChangeLog.objects.bulk_create(entries)

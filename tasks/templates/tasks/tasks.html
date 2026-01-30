@@ -1,146 +1,173 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+{% load common_tags %}
+
+{% block body_class %}layout-wide{% endblock %}
 
 {% block css %}
 	<link rel="stylesheet" href="{% static 'deps/css/tasks.css' %}">
 {% endblock %}
 {% block content %}
-
-
-	<div class="fs-3 fw-bold text-center text-success mb-3 shadow-sm p-3 bg-light rounded">
-		{{ project.name }} {% trans 'Tasks' %}
+	<div class="page-header">
+		<div>
+			<div class="page-eyebrow">{% trans 'Project' %}</div>
+			<h1 class="page-title">{{ project.name }}</h1>
+		</div>
+		{% trans "+ Add task" as button_name %}
+		{% include 'includes/add_button.html' with button_target="taskCreateModal" button_name=button_name %}
 	</div>
-	{% with project.tasks.split_pending_done as all_tasks %}
-		<div id="pending-tasks-container">
-			<h4 class="accordion-toggle d-flex justify-content-between align-items-center bg-light text-success p-3 rounded shadow-sm"
-			    data-target="#pending-content" role="button">
-				{% trans "In progress" %}
-				<img src="{% static 'deps/icons/chevron-down.svg' %}" class="toggle-icon">
-			</h4>
-			<div id="pending-content" class="accordion-section">
-				<div class="accordion" id="accordionInProgress">
-					{% for task in all_tasks.pending %}
-						{% include 'tasks/includes/task_item.html' with task=task type='InProgress' %}
-					{% endfor %}
-				</div>
-				<div id="no-tasks-placeholder"
-				     class="container bg-light p-3 rounded shadow text-secondary fs-5 justify-content-center align-items-center text-center"
-				     style="display: none">
-					<p class="m-0">{% trans 'Add some tasks here to see them in list' %}</p>
-				</div>
 
+	<form id="kanban-filters" class="filter-panel" method="get">
+		<div class="filter-group">
+			<label>{% trans "Assignee" %}</label>
+			<select name="assignee" class="form-select">
+				<option value="">{% trans "All" %}</option>
+				{% for user in assignees %}
+					<option value="{{ user.id }}" {% if filters.assignee == user.id|stringformat:"s" %}selected{% endif %}>
+						{{ user.username }}
+					</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="filter-group">
+			<label>{% trans "Creator" %}</label>
+			<select name="creator" class="form-select">
+				<option value="">{% trans "All" %}</option>
+				{% for user in creators %}
+					<option value="{{ user.id }}" {% if filters.creator == user.id|stringformat:"s" %}selected{% endif %}>
+						{{ user.username }}
+					</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="filter-group">
+			<label>{% trans "Priority" %}</label>
+			<select name="priority" class="form-select">
+				<option value="">{% trans "All" %}</option>
+				{% for value, label in priorities %}
+					<option value="{{ value }}" {% if filters.priority == value %}selected{% endif %}>
+						{{ label }}
+					</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="filter-group">
+			<label>{% trans "Deadline" %}</label>
+			<select name="deadline" class="form-select">
+				<option value="">{% trans "All" %}</option>
+				<option value="none" {% if filters.deadline == "none" %}selected{% endif %}>{% trans "No deadline" %}</option>
+				<option value="overdue" {% if filters.deadline == "overdue" %}selected{% endif %}>{% trans "Overdue" %}</option>
+				<option value="today" {% if filters.deadline == "today" %}selected{% endif %}>{% trans "Today" %}</option>
+				<option value="next7" {% if filters.deadline == "next7" %}selected{% endif %}>{% trans "Next 7 days" %}</option>
+			</select>
+		</div>
+		<div class="filter-group filter-group-wide">
+			<label>{% trans "Search" %}</label>
+			<input type="text" name="q" value="{{ filters.q }}" class="form-control" placeholder="{% trans "Search tasks" %}">
+		</div>
+		<div class="filter-group filter-group-wide">
+			<label>{% trans "Status" %}</label>
+			<div class="status-filter">
+				{% for value, label in statuses %}
+					<label class="status-pill">
+						<input type="checkbox" name="status" value="{{ value }}"
+						       {% if not filters.status or value in filters.status %}checked{% endif %}>
+						<span>{{ label }}</span>
+					</label>
+				{% endfor %}
 			</div>
-			{% trans "+ Add task" as button_name %}
-			{% include 'includes/add_button.html' with button_target="staticBackdrop" button_name=button_name %}
+		</div>
+		<div class="filter-actions">
+			<button type="submit" class="btn btn-primary">{% trans "Apply" %}</button>
+			<a class="btn btn-outline-secondary" href="{% url 'users:tasks' project.id %}">{% trans "Reset" %}</a>
+		</div>
+	</form>
 
-
-			<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-			     aria-labelledby="staticBackdropLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content shadow-lg border-0 rounded-4" style="background-color: #f8f9fa;">
-						<div class="modal-header bg-success text-white rounded-top-4">
-							<h5 class="modal-title d-flex align-items-center gap-2" id="staticBackdropLabel">
-								<i class="bi bi-journal-plus"></i> {% trans 'New Task' %}
-							</h5>
-							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-							        aria-label="Close"></button>
-						</div>
-
-						<form id="task-add-form" action="{% url 'tasks:add_task' project.id %}" method="post">
-							<div class="form_errors p-2 text-danger small"></div>
-							{% csrf_token %}
-
-							<div class="modal-body py-3">
-								<div class="row g-3">
-									<div class="col-md-6">
-										<label for="id_start_date" class="form-label">{% trans 'Start date' %}</label>
-										<input type="date" class="form-control" id="id_start_date" name="start_date"
-										       required>
-									</div>
-									<div class="col-md-6">
-										<label for="id_start_time" class="form-label">{% trans 'Start time' %}</label>
-										<input type="time" class="form-control" id="id_start_time" name="start_time"
-										       required>
-									</div>
-								</div>
-								<div class="row g-3 my-1" id="due-fields">
-									<div class="col-md-6">
-										<label for="id_due_date" class="form-label">{% trans 'Due date' %}</label>
-										<input type="date" class="form-control" id="id_due_date" name="due_date">
-									</div>
-									<div class="col-md-6">
-										<label for="id_due_time" class="form-label">{% trans 'Due time' %}</label>
-										<input type="time" class="form-control" id="id_due_time" name="due_time">
-									</div>
-								</div>
-							</div>
-							<div class="form-check form-switch form-switch-lg my-3 ms-3">
-								<input class="form-check-input" type="checkbox" id="enable_due_fields"
-								       style="cursor: pointer;">
-								<label class="form-check-label fw-semibold text-secondary" for="enable_due_fields">
-									{% trans 'Add due date & time' %}
-								</label>
-							</div>
-							<hr class="my-3">
-							<div class="row justify-content-center">
-								<div class="mb-3 col-md-11">
-									<label for="id_name" class="form-label">{% trans 'Task title' %}</label>
-									<input type="text" class="form-control" id="id_name" name="name"
-									       placeholder="{% trans "e.g. Finish project proposal" %}" required>
-								</div>
-								<div class="mb-3 col-md-11">
-									<label for="id_description" class="form-label">{% trans 'Description' %}</label>
-									<input class="form-control" id="id_description" name="description"
-									       placeholder="{% trans "Task details..." %}">
-								</div>
-							</div>
-
-							<input type="hidden" name="pproject_id" value="{{ project.id }}">
-							<div class="modal-footer bg-light border-top rounded-bottom-4">
-								<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% trans 'Cancel' %}
-								</button>
-								<button type="submit" class="btn btn-success px-4">{% trans 'Save' %}</button>
-							</div>
-						</form>
+	<div class="kanban-board"
+	     data-project-id="{{ project.id }}"
+	     data-kanban-url="{% url 'tasks:kanban_list' project.id %}"
+	     data-detail-url="{% url 'tasks:task_detail' project.id %}"
+	     data-move-url="{% url 'tasks:kanban_move' project.id %}">
+		{% for status in status_order %}
+			{% with col=kanban|get_item:status %}
+				<div class="kanban-column" data-status="{{ status }}">
+					<div class="kanban-column-header">
+						<h4 class="kanban-column-title">{{ status_labels|get_item:status }}</h4>
+						<span class="kanban-count" data-count="{{ col.count }}">{{ col.count }}</span>
+					</div>
+					<div class="kanban-list" data-status="{{ status }}"
+					     data-page="1"
+					     data-has-next="{% if col.count > col.items|length %}true{% else %}false{% endif %}">
+						{% for task in col.items %}
+							{% include 'tasks/includes/kanban_card.html' with task=task %}
+						{% endfor %}
+						<div class="kanban-sentinel"></div>
 					</div>
 				</div>
+			{% endwith %}
+		{% endfor %}
+	</div>
+
+	<div class="modal fade" id="taskCreateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+	     aria-labelledby="taskCreateModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content shadow-lg border-0 rounded-4">
+				<div class="modal-header">
+					<h5 class="modal-title" id="taskCreateModalLabel">{% trans 'New Task' %}</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form id="task-add-form" action="{% url 'tasks:add_task' project.id %}" method="post">
+					<div class="form_errors p-2 text-danger small"></div>
+					{% csrf_token %}
+					<div class="modal-body">
+						<div class="row g-3">
+							<div class="col-md-12">
+								<label for="id_name" class="form-label">{% trans 'Task title' %}</label>
+								<input type="text" class="form-control" id="id_name" name="name"
+								       placeholder="{% trans "e.g. Finish project proposal" %}" required>
+							</div>
+							<div class="col-md-12">
+								<label for="id_description" class="form-label">{% trans 'Description' %}</label>
+								<input class="form-control" id="id_description" name="description"
+								       placeholder="{% trans "Task details..." %}">
+							</div>
+							<div class="col-md-6">
+								<label for="id_assignee" class="form-label">{% trans 'Assignee' %}</label>
+								<select class="form-select" id="id_assignee" name="assignee" required>
+									{% for user in assignees %}
+										<option value="{{ user.id }}">{{ user.username }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class="col-md-6">
+								<label for="id_priority" class="form-label">{% trans 'Priority' %}</label>
+								<select class="form-select" id="id_priority" name="priority">
+									<option value="LOW">{% trans 'Low' %}</option>
+									<option value="MEDIUM" selected>{% trans 'Medium' %}</option>
+									<option value="HIGH">{% trans 'High' %}</option>
+								</select>
+							</div>
+							<div class="col-md-12">
+								<label for="id_deadline" class="form-label">{% trans 'Deadline' %}</label>
+								<input type="datetime-local" class="form-control" id="id_deadline" name="deadline">
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% trans 'Cancel' %}</button>
+						<button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+					</div>
+				</form>
 			</div>
 		</div>
-		<br>
-		<div id="done-tasks-container">
-			<h4 class="accordion-toggle d-flex justify-content-between align-items-center bg-light text-success p-3 rounded shadow-sm"
-			    data-target="#done-content" role="button">
-				{% trans "Done" %}
-				<img src="{% static 'deps/icons/chevron-down.svg' %}" class="toggle-icon">
-			</h4>
-
-			<div id="done-content" class="accordion-section">
-				<div class="accordion" id="accordionDone">
-					{% for task in all_tasks.done %}
-						{% include 'tasks/includes/task_item.html' with task=task type='Done' %}
-					{% endfor %}
-				</div>
-				<div id="no-completed-tasks-placeholder"
-				     class="container bg-light p-3 rounded shadow text-secondary fs-5 justify-content-center align-items-center text-center"
-				     style="display: none">
-					<p class="m-0">{% trans 'There is no completed task' %}</p>
-				</div>
-			</div>
-		</div>
-
-	{% endwith %}
-
-
-
+	</div>
 {% endblock %}
 
 {% block additional_content %}
-	<div id="taskDetails" class="bg-light rounded shadow-sm p-4 d-none me-lg-5">
-	</div>
+	<div id="taskDetails" class="task-detail-panel d-none col-12 col-lg-4"></div>
 {% endblock %}
 
 {% block js %}
 	<script src="{% static 'deps/js/jquery/tasks.js' %}"></script>
-	<script src="{% static "deps/js/add-task.js" %}"></script>
 {% endblock %}

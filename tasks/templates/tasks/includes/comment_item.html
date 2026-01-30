@@ -5,7 +5,7 @@
 	<div class="text-nowrap me-3 small align-content-center">{{ comment.created_time }}</div>
 	<div class="bg-light border border-success-subtle rounded p-2 w-100 shadow-sm position-relative">
 		<div class="comment-view">
-			<div class="fw-semibold text-success mb-1">{{ comment.task.project.user.username }}</div>
+			<div class="fw-semibold text-success mb-1">{{ comment.author.username }}</div>
 			<div class="text-body">
 				<p class="mb-0">{{ comment.text }}</p>
 			</div>
@@ -15,7 +15,7 @@
 		      class="comment-edit-form d-none">
 			{% csrf_token %}
 			<input type="hidden" name="comment_id" value="{{ comment.id }}">
-			<div class="fw-semibold text-success mb-1">{{ comment.task.project.user.username }}</div>
+			<div class="fw-semibold text-success mb-1">{{ comment.author.username }}</div>
 			<div class="form_errors">
 			</div>
 			<div class="d-flex align-items-center">

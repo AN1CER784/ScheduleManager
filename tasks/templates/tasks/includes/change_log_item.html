@@ -1,0 +1,11 @@
+{% load i18n %}
+
+<div class="list-group-item list-group-item-action">
+	<div class="small text-muted">
+		{{ entry.created_at }} В· {{ entry.changed_by.username }}
+	</div>
+	<div>
+		<strong>{{ entry.field_name }}</strong>:
+		{{ entry.old_value|default:"--" }} -> {{ entry.new_value|default:"--" }}
+	</div>
+</div>
