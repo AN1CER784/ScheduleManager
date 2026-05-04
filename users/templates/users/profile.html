@@ -65,6 +65,19 @@
 					<label for="id_company" class="form-label">{% trans 'Company' %}</label>
 					<input type="text" id="id_company" class="form-control" value="{{ user.company }}" disabled>
 				</div>
+				<div class="form-row">
+					<label for="id_language" class="form-label">{% trans 'Language' %}</label>
+					<select name="language" class="form-control" id="id_language" required>
+						{% for value, label in form.language.field.choices %}
+							<option value="{{ value }}" {% if form.language.value == value %}selected{% endif %}>
+								{{ label }}
+							</option>
+						{% endfor %}
+					</select>
+					{% if form.language.errors %}
+						<div class="alert alert-danger alert-dismissible fade show">{{ form.language.errors }}</div>
+					{% endif %}
+				</div>
 				<div class="profile-actions">
 					<button class="btn btn-primary" type="submit">{% trans 'Submit' %}</button>
 					<a href="{% url 'users:password_change' %}" class="btn btn-outline-secondary">

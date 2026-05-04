@@ -809,3 +809,7 @@ msgstr "Ошибка обновления данных"
 
 #~ msgid "You"
 #~ msgstr "Вы"
+
+#: users/templates/users/profile.html:69
+msgid "Language"
+msgstr "Язык"

@@ -60,9 +60,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
-    'common.middlewares.ChangeUserLanguageMiddleware',
-
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
@@ -194,3 +191,5 @@ BONUS_POINTS_OVERDUE_PENALTY = -5
 # SESSION_COOKIE_SECURE = True
 # SECURE_SSL_REDIRECT = True
 # CSRF_COOKIE_SECURE = True
+
+CSRF_TRUSTED_ORIGINS = ['https://adequately-touched-firebrat.cloudpub.ru', 'http://localhost:8000']

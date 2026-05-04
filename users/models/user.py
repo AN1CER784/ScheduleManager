@@ -27,7 +27,7 @@ class User(AbstractUser):
         ADMIN = "ADMIN", "Company admin"
 
     image = models.ImageField(upload_to='users_images', null=True, blank=True)
-    language = models.CharField(max_length=10, default='en-us', choices=settings.LANGUAGES)
+    language = models.CharField(max_length=10, default='en', choices=settings.LANGUAGES)
     company = models.ForeignKey(Company, on_delete=models.PROTECT, related_name="users")
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.EMPLOYEE)
     bonus_balance = models.IntegerField(default=0)

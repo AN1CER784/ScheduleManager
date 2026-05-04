@@ -48,15 +48,3 @@ class LanguageRedirectMiddleware:
         response.setdefault('Content-Language', request.LANGUAGE_CODE)
         return response
 
-
-class ChangeUserLanguageMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        if request.user.is_authenticated:
-            if request.user.language != request.LANGUAGE_CODE:
-                request.user.language = request.LANGUAGE_CODE
-                request.user.save()
-        response = self.get_response(request)
-        return response
