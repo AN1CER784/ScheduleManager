@@ -28,9 +28,11 @@ All Python dependencies are listed in `requirements.txt`.
 
 ---
 
-## Docker Setup
+## Simplified Local Run
 
-1. **Create or edit** the `.env` file in the `docker/` directory with the following variables:
+For local development, it is simpler to run Django from a local virtual environment and lift only PostgreSQL + Redis through Docker from the project root.
+
+1. **Create or edit** the `.env` file in the project root with the following variables:
 
    ```dotenv
    POSTGRES_DB=
@@ -43,11 +45,62 @@ All Python dependencies are listed in `requirements.txt`.
    DEBUG=                     # True or False
    ```
 
-2. **Build and run** containers:
+2. **Create and activate** a virtual environment:
+
+   ```bash
+   python -m venv .venv
+   # Windows PowerShell
+   .\.venv\Scripts\Activate
+   # Linux / macOS
+   source .venv/bin/activate
+   ```
+
+3. **Install Python dependencies**:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Start infrastructure from the project root**:
+
+   ```bash
+   docker compose up -d
+   ```
+
+5. **Apply migrations and run Django**:
+
+   ```bash
+   python manage.py migrate
+   python manage.py runserver
+   ```
+
+This will start:
+
+* PostgreSQL
+* Redis
+
+The web app will be available at [http://localhost:8000/].
+
+If needed, start Celery separately in additional terminals:
+
+```bash
+celery -A ScheduleManager worker -l info
+celery -A ScheduleManager beat -l info
+```
+
+---
+
+## Docker Setup
+
+If you need the full containerized environment with Nginx, Django and Celery inside containers:
+
+1. **Create or edit** the `.env` file in the project root.
+
+2. **Run docker compose from the `docker/` directory**:
 
    ```bash
    cd docker
-   docker-compose up --build # for localhost (development)
+   docker compose up --build
    ```
 
 This will start:
